@@ -44,10 +44,19 @@ app.get("/api/config.js", (_req, res) => {
   );
 });
 
-app.get("/api/health", (_req, res) => res.json({
-  ok: true, service: "alpha-api", authConfigured, databaseConfigured,
-  adminAccessConfigured: Boolean(ADMIN_EMAIL && supabaseAdmin)
-}));
+app.get("/api/health", async (_req, res) => {
+  let waitlistConnected = false;
+  if (supabaseAdmin) {
+    const { error } = await supabaseAdmin.from("waitlist").select("id", { head: true }).limit(1);
+    waitlistConnected = !error;
+    if (error) console.error("waitlist health check failed:", error.message);
+  }
+  res.json({
+    ok: true, service: "alpha-api", authConfigured, databaseConfigured,
+    waitlistConnected,
+    adminAccessConfigured: Boolean(ADMIN_EMAIL && supabaseAdmin)
+  });
+});
 
 // Verify Supabase sessions server-side and allow only the configured administrator.
 app.post("/api/admin/check", async (req, res) => {
