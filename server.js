@@ -15,6 +15,7 @@ const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || process
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
 const authConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
+const JUPITER_API_KEY = (process.env.JUPITER_API_KEY || "").trim();
 const databaseConfigured = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
 
 const supabaseAdmin = databaseConfigured
@@ -338,6 +339,181 @@ app.get("/api/gecko", geckoLimiter, async (req, res) => {
     return res.status(502).json({ error: "Market data is temporarily unavailable." });
   }
 });
+
+// Jupiter Tokens V2 is the primary trending-token provider.
+// Keyless access is supported; a free API key can be added later via JUPITER_API_KEY.
+const jupiterLimiter = rateLimit({
+  windowMs: 60 * 1000, limit: 60,
+  standardHeaders: "draft-7", legacyHeaders: false,
+  message: { error: "Jupiter market-data request limit reached. Please wait a moment." }
+});
+const jupiterCache = new Map();
+const jupiterInflight = new Map();
+const jupiterPriceHistory = new Map();
+let jupiterQueue = Promise.resolve();
+let jupiterNextRequestAt = 0;
+const JUPITER_FRESH_MS = 55 * 1000;
+const JUPITER_STALE_MS = 10 * 60 * 1000;
+const JUPITER_HISTORY_SAMPLE_MS = 55 * 1000;
+const jupiterWait = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+const recordJupiterPriceSnapshot = (tokens, sampledAt) => {
+  if (!Array.isArray(tokens) || !Number.isFinite(sampledAt)) return;
+  for (const token of tokens) {
+    const mint = String(token?.id || "");
+    const price = Number(token?.usdPrice);
+    if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint) || !(price > 0)) continue;
+    let history = jupiterPriceHistory.get(mint);
+    if (!history) {
+      history = [];
+      jupiterPriceHistory.set(mint, history);
+    }
+    const last = history[history.length - 1];
+    if (last && sampledAt - last.at < JUPITER_HISTORY_SAMPLE_MS) continue;
+    history.push({ at: sampledAt, price });
+    while (history.length > 40 || history.length && sampledAt - history[0].at > 45 * 60 * 1000) history.shift();
+  }
+  if (jupiterPriceHistory.size > 1200) {
+    const oldest = jupiterPriceHistory.keys().next().value;
+    jupiterPriceHistory.delete(oldest);
+  }
+};
+
+const jupiterRollingChange = (mint, currentPrice, minutes, at = Date.now()) => {
+  const history = jupiterPriceHistory.get(mint) || [];
+  const targetAt = at - minutes * 60 * 1000;
+  const baseline = [...history].reverse().find(sample => sample.at <= targetAt);
+  if (!baseline || at - baseline.at > (minutes * 60 * 1000) + 150 * 1000 || !(baseline.price > 0)) return null;
+  return ((currentPrice / baseline.price) - 1) * 100;
+};
+
+const getJupiterTrending = async (providerInterval) => {
+  const apiPath = "/toptrending/" + providerInterval + "?limit=100";
+  const cached = jupiterCache.get(apiPath);
+  const cacheAge = cached ? Date.now() - cached.time : Infinity;
+  if (cached && cacheAge < JUPITER_FRESH_MS) return cached;
+
+  let pending = jupiterInflight.get(apiPath);
+  if (!pending) {
+    pending = (async () => {
+      const performRequest = async () => {
+        const minGap = JUPITER_API_KEY ? 1100 : 2100;
+        const wait = Math.max(0, jupiterNextRequestAt - Date.now());
+        if (wait) await jupiterWait(wait);
+        jupiterNextRequestAt = Date.now() + minGap;
+
+        const headers = { Accept: "application/json" };
+        if (JUPITER_API_KEY) headers["x-api-key"] = JUPITER_API_KEY;
+        const upstream = await fetch("https://api.jup.ag/tokens/v2" + apiPath, {
+          headers,
+          signal: AbortSignal.timeout(12000)
+        });
+        const body = await upstream.json().catch(() => ({}));
+
+        if (upstream.status === 429) {
+          const retryHeader = Number(upstream.headers.get("retry-after") || 0);
+          const cooldown = retryHeader > 0
+            ? Math.min(120000, Math.max(10000, retryHeader * 1000))
+            : 30000;
+          jupiterNextRequestAt = Math.max(jupiterNextRequestAt, Date.now() + cooldown);
+          const error = new Error("Jupiter's free Tokens API is temporarily rate-limited.");
+          error.status = 429;
+          error.retryAfter = Math.ceil(cooldown / 1000);
+          throw error;
+        }
+        if (!upstream.ok) {
+          const error = new Error("Jupiter Tokens API returned HTTP " + upstream.status + ".");
+          error.status = upstream.status;
+          throw error;
+        }
+        const tokens = Array.isArray(body) ? body : Array.isArray(body.tokens) ? body.tokens : Array.isArray(body.data) ? body.data : null;
+        if (!tokens) {
+          const error = new Error("Jupiter Tokens API returned an unexpected response.");
+          error.status = 502;
+          throw error;
+        }
+        const entry = { time: Date.now(), data: tokens };
+        jupiterCache.set(apiPath, entry);
+        if (jupiterCache.size > 32) jupiterCache.delete(jupiterCache.keys().next().value);
+        return entry;
+      };
+
+      const queued = jupiterQueue.then(performRequest, performRequest);
+      jupiterQueue = queued.then(() => undefined, () => undefined);
+      return queued;
+    })();
+    jupiterInflight.set(apiPath, pending);
+    pending.finally(() => {
+      if (jupiterInflight.get(apiPath) === pending) jupiterInflight.delete(apiPath);
+    }).catch(() => {});
+  }
+
+  try {
+    return await pending;
+  } catch (error) {
+    if (cached && Date.now() - cached.time < JUPITER_STALE_MS) {
+      return { ...cached, stale: true, error: error.message };
+    }
+    throw error;
+  }
+};
+
+app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
+  const interval = String(req.query.interval || "5m");
+  if (!["5m", "15m", "30m", "1h", "24h"].includes(interval)) {
+    return res.status(400).json({ error: "Unsupported interval. Use 5m, 15m, 30m, 1h or 24h." });
+  }
+  // Jupiter provides native rankings for 5m, 1h and 24h. 15m/30m
+  // use genuine rolling prices collected from the 5m trending feed.
+  const providerInterval = interval === "15m" || interval === "30m" ? "5m" : interval;
+  try {
+    const entry = await getJupiterTrending(providerInterval);
+    const data = entry.data.map(token => {
+      const mint = String(token?.id || "");
+      const price = Number(token?.usdPrice) || 0;
+      return {
+        ...token,
+        priceChange15m: price ? jupiterRollingChange(mint, price, 15, entry.time) : null,
+        priceChange30m: price ? jupiterRollingChange(mint, price, 30, entry.time) : null
+      };
+    });
+    recordJupiterPriceSnapshot(entry.data, entry.time);
+    res.set("X-Data-Cache", entry.stale ? "STALE" : (Date.now() - entry.time < 1500 ? "MISS" : "HIT"));
+    if (entry.stale) res.set("X-Data-Stale-Age", String(Math.round((Date.now() - entry.time) / 1000)));
+    return res.set("Cache-Control", "public, max-age=20").json({
+      provider: "jupiter-tokens-v2",
+      interval,
+      providerInterval,
+      fetchedAt: new Date(entry.time).toISOString(),
+      stale: Boolean(entry.stale),
+      tokens: data
+    });
+  } catch (error) {
+    console.error("Jupiter trending proxy error:", error.message);
+    if (error.status === 429) {
+      res.set("Retry-After", String(error.retryAfter || 30));
+      return res.status(503).json({ error: "Jupiter's free API is temporarily rate-limited. Please retry shortly." });
+    }
+    return res.status(502).json({ error: "Jupiter market data is temporarily unavailable." });
+  }
+});
+
+// Warm one 5m price-history stream every minute. This powers genuine 15m/30m
+// changes without asking the browser to fan out extra API calls.
+const warmJupiterHistory = async () => {
+  try {
+    const entry = await getJupiterTrending("5m");
+    recordJupiterPriceSnapshot(entry.data, entry.time);
+  } catch (error) {
+    console.warn("Jupiter price-history warmup skipped:", error.message);
+  }
+};
+const jupiterWarmTimer = setTimeout(() => {
+  warmJupiterHistory();
+  const timer = setInterval(warmJupiterHistory, 60 * 1000);
+  timer.unref?.();
+}, 5000);
+jupiterWarmTimer.unref?.();
 
 app.use(express.static(path.join(__dirname, "public"), {
   etag: true,
