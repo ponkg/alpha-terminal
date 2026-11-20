@@ -172,7 +172,25 @@ kbd{border:1px solid color-mix(in srgb,var(--fg) 30%,transparent);padding:1px 6p
 
 /* chart view inside coin tracker */
 .cv{display:flex;flex-direction:column;flex:1;min-height:0}.cv[hidden]{display:none!important}
-.cvh{display:flex;align-items:center;gap:12px;margin-bottom:10px}.cvh .btn{padding:6px 12px}.cvh b{font-size:15px}.tabs a{font-size:11px;color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);padding:5px 10px;margin-left:auto}.tabs a:hover{background:var(--ac);color:#fff}.cvh a{margin-left:auto;font-size:10px;letter-spacing:.08em}
+.cvh{display:flex;align-items:center;gap:12px;margin-bottom:10px;min-height:42px}
+.coin-logo{width:38px;height:38px;flex:none}
+.coin-title{min-width:0;display:flex;flex-direction:column;gap:2px}
+.coin-title>div:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.coin-ca{font-size:10px;color:var(--mut);letter-spacing:.03em}
+.feed-chip{margin-left:auto;border:1px solid var(--bd);padding:4px 7px;font-size:9px;letter-spacing:.08em;white-space:nowrap}
+.pump-row{display:grid;grid-template-columns:38px minmax(120px,1.6fr) repeat(3,minmax(70px,.8fr));gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid color-mix(in srgb,var(--fg) 14%,transparent);cursor:pointer}
+.pump-row:hover{background:color-mix(in srgb,var(--ac) 7%,transparent)}
+.pump-logo{width:34px;height:34px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;position:relative;font-size:20px;color:var(--mut);overflow:hidden}
+.pump-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:var(--card)}
+.pump-token{min-width:0;display:flex;flex-direction:column}
+.pump-token b{font-size:13px}.pump-token small,.pump-token code{font-size:10px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pump-metrics{display:flex;flex-direction:column;text-align:right;min-width:0}
+.pump-metrics b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pump-metrics small{font-size:9px;color:var(--mut);letter-spacing:.07em}
+.pump-metrics a{color:inherit}
+.coin-feed-row{display:flex}
+@media(max-width:650px){.pump-row{grid-template-columns:34px minmax(90px,1.3fr) minmax(65px,.7fr) minmax(55px,.6fr);gap:7px}.pump-row .creator{display:none}.pump-metrics b{font-size:10px}.cvh{gap:7px}.cvh #cvs{display:none}.feed-chip{font-size:8px}}
+.cvh .btn{padding:6px 12px}.cvh b{font-size:15px}.tabs a{font-size:11px;color:var(--fg);border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);padding:5px 10px;margin-left:auto}.tabs a:hover{background:var(--ac);color:#fff}.cvh a{margin-left:auto;font-size:10px;letter-spacing:.08em}
 /* animations: open/close, value flashes, boot, crosshair, scanlines */
 @keyframes wopen{from{opacity:0;transform:scale(.96) translateY(6px)}to{opacity:1;transform:none}}
 @keyframes wclose{to{opacity:0;transform:scale(.96) translateY(4px)}}
@@ -204,7 +222,7 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
 <header class="hero" id="top"><div class="cl" aria-hidden="true"><b style="--x:2%;--y:-8%;--w:52vw;--h:42vw"><i style="--c:#1b4f82;--o:.9;--a:m1;--d:24s;--dl:0s"></i></b><b style="--x:60%;--y:2%;--w:44vw;--h:30vw"><i style="--c:#3f8fd0;--o:.55;--a:m2;--d:30s;--dl:0s"></i></b><b style="--x:30%;--y:60%;--w:60vw;--h:32vw"><i style="--c:#bcd9f0;--o:.9;--a:m3;--d:34s;--dl:0s"></i></b><b style="--x:-8%;--y:58%;--w:46vw;--h:26vw"><i style="--c:#fff;--o:.95;--a:m4;--d:28s;--dl:0s"></i></b><b style="--x:62%;--y:36%;--w:34vw;--h:22vw"><i style="--c:#fff;--o:.7;--a:m5;--d:36s;--dl:0s"></i></b><b style="--x:40%;--y:-10%;--w:30vw;--h:24vw"><i style="--c:#123c66;--o:.6;--a:m2;--d:27s;--dl:-8s"></i></b><b style="--x:-5%;--y:28%;--w:34vw;--h:26vw"><i style="--c:#80b6e0;--o:.7;--a:m5;--d:31s;--dl:-12s"></i></b><b style="--x:45%;--y:22%;--w:38vw;--h:20vw"><i style="--c:#fff;--o:.6;--a:m1;--d:38s;--dl:-15s"></i></b><b style="--x:72%;--y:52%;--w:36vw;--h:28vw"><i style="--c:#3f8fd0;--o:.5;--a:m3;--d:29s;--dl:-5s"></i></b><b style="--x:18%;--y:10%;--w:32vw;--h:20vw"><i style="--c:#e6f1fa;--o:.8;--a:m4;--d:33s;--dl:-20s"></i></b></div><div class="glow"></div><div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div><div class="hl"><h1 aria-label="See the meta before it moves.">See the<span class="ty" id="ty" aria-hidden="true">[meta]</span>before it moves.</h1><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and shows where the next wave of opportunity is forming.</p><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a><a href="#" class="blk" data-open="w-how">How it works</a></div><p class="tr">Private beta. Built for Solana traders, researchers and narrative hunters.</p></div><div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
-<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING GECKOTERMINAL…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av" alt="" hidden referrerpolicy="no-referrer"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span><div class="so" id="cvso"></div></div><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">GECKOTERMINAL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc"><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
+<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING GECKOTERMINAL…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">PUMPPORTAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc"><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 X FEED</span><span>TRACKED ACCOUNTS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="tabs" id="t2tabs"></div><div class="in"><input id="t2q" placeholder="filter by account or $ticker" autocomplete="off" spellcheck="false" aria-label="Filter feed"></div><div id="t2list"></div><p class="k" id="t2n" style="margin-top:10px">SAMPLE POSTS — NOT LIVE</p></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
 <div class="win card tool" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEYS</span><span>LOOKUP</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="in"><input id="t4q" placeholder="look up a key or action" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></div><div id="t4list"></div><p class="mut" style="font-size:12px;margin-top:12px">New windows split the focused one along its longer side. Alt is the reliable modifier; the Windows key only works where the browser receives it. Keys 1 to 4 without a modifier also toggle windows when no field is focused.</p></div></div>
@@ -307,38 +325,144 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 const fm=n=>n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n<1e5?1:0)+'K':'$'+Math.round(n||0),F=p=>(p>0?'+':'')+p+'%',C=p=>p>=0?'up':'dn';
 const mkTabs=(el,labels,fn)=>{labels.forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>{fn(i);[...el.children].forEach((c,j)=>c.classList.toggle('on',i===j))};el.appendChild(x)});el.children[0].click()};
 const ldr=t=>'<div class="ld"><i></i><i></i><i></i><span>'+t+'</span></div>';
-// 1 meta tracker: GeckoTerminal public API (free, no key, ~30 calls/min)
-const GT='/api/gecko?path=',CA={};let lastCall=0;
-const gt=async(p,ttl=55000)=>{const c=CA[p];if(c&&Date.now()-c.t<ttl)return c.d;const w=Math.max(0,lastCall+2100-Date.now());lastCall=Date.now()+w;await new Promise(r=>setTimeout(r,w));const r=await fetch(GT+encodeURIComponent(p),{headers:{Accept:'application/json'}});if(!r.ok)throw new Error(r.status===429?'Rate limited by GeckoTerminal. Retrying shortly.':'GeckoTerminal error '+r.status);const d=await r.json();CA[p]={t:Date.now(),d};return d};
-const META=[['Political Figures',/trump|biden|harris|obama|maga|putin|vance|kamala|election|\b(vote|gavel|president|congress)\b/],['Celebrity',/elon|musk|kanye|drake|swift|kardashian|beyonce|ronaldo|messi|mrbeast|snoop|diddy|\bye\b/],['AI Agents',/\b(ai|gpt|bot|llm|grok|agi)\b|agent|neural|sentient|autonom/],['AI Infrastructure',/gpu|compute|\b(node|nodes|mesh|depin|oracle|infra|cloud|data)\b|render|cluster/],['Animal Memes',/\b(dog|doge|cat|kitty|frog|pepe|bear|bull|bird|fish|whale|ape|monkey|penguin|hamster|wolf|inu|toad|owl|duck|goat|cow|pig|horse|rabbit|bonk|wif|shib)\b|doge|pepe|kitty|hamster|penguin/],['Internet Culture',/\b(npc|chad|sigma|wojak|rizz|skibidi|based|ratio|lore|vibe|brainrot|cope|fren|meme)\b|gigachad|brainrot/]];
-const SKIP=/^(SOL|WSOL|USDC|USDT|USD1|PYUSD|JUP|JITOSOL|MSOL)$/i,TF1=['m5','m15','m30','h1','h24'];
-const med=a=>{a=a.filter(x=>x!=null&&isFinite(x)).sort((x,y)=>x-y);return a.length?a[a.length>>1]:null};
+// 1 PumpPortal launch + migration tracker.
+const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+const WSOL='So11111111111111111111111111111111111111112';
+const PUMP={launches:[],migrations:[],connected:false,tradeConfigured:false,socket:null,retry:null,retryDelay:1200};
+const tokenMetadata=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
-const parse=j=>{const inc={};(j.included||[]).forEach(i=>inc[i.id]=i.attributes);return(j.data||[]).map(d=>{const at=d.attributes,t=inc[(d.relationships.base_token.data||{}).id]||{},pc=at.price_change_percentage||{};return{sym:(t.symbol||at.name.split(' / ')[0]||'?').trim(),name:t.name||'',mint:t.address||((d.relationships.base_token.data||{}).id||'').replace(/^solana_/,''),pool:at.address,liq:+at.reserve_in_usd||0,vol:+((at.volume_usd||{}).h24)||0,ch:{m5:+pc.m5,m15:+pc.m15,m30:+pc.m30,h1:+pc.h1,h24:+pc.h24},age:Date.now()-Date.parse(at.pool_created_at),price:+at.base_token_price_usd}})};
-const loadT1=async()=>{const n=$('#t1n');try{n.textContent='REFRESHING FROM GECKOTERMINAL…';const R=await Promise.all(['trending_pools','new_pools','pools'].map(e=>gt('/networks/solana/'+e+'?include=base_token&page=1')));const m={};R.flatMap(parse).forEach(p=>{if(p.mint&&p.liq>=3000&&!SKIP.test(p.sym)&&(!m[p.mint]||m[p.mint].liq<p.liq))m[p.mint]=p});POOLS=Object.values(m);t1ts=Date.now();TRP=parse(R[0]);NEWP=parse(R[1]);renderT1();rf();}catch(e){n.textContent=e.message+' (offline or blocked?)'}};
-const lifecycle=(g,m5,h1)=>{const fresh=g.filter(p=>p.age<6*36e5).length/g.length;return h1<0&&m5<=0?'Cooling':fresh>=.5&&h1>=0?'Emerging':m5>0&&h1>0&&m5*12>h1?'Accelerating':h1>=0?'Crowded':'Cooling'};
-const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
-const renderT1=()=>{if(!POOLS.length)return;const f=TF1[tk1],G=META.map(([n,re])=>({n,g:POOLS.filter(p=>re.test((p.name+' '+p.sym).toLowerCase()))})).filter(x=>x.g.length>=2);
-const rows=G.map(x=>{const p=med(x.g.map(q=>q.ch[f]));return{n:x.n,g:x.g,p:p==null?0:rd(p),life:lifecycle(x.g,med(x.g.map(q=>q.ch.m5))||0,med(x.g.map(q=>q.ch.h1))||0),vol:x.g.reduce((s,q)=>s+q.vol,0)}}).sort((a,b)=>b.p-a.p);
-AW.upd($('#t1list'),ST1,rows.map(r=>`<details><summary><span class="mn">${r.n}</span><span class="s2">${r.life}</span><span class="pc ${C(r.p)}" data-k="m:${r.n}">${F(r.p)}</span></summary><div class="cns"><div class="cn"><span class="mut">${r.g.length} tokens · 24h vol ${fm(r.vol)}</span></div>${r.g.sort((a,b)=>b.vol-a.vol).slice(0,6).map(q=>{const c=isFinite(q.ch[f])?rd(q.ch[f]):0;return`<div class="cn" data-c="${esc('$'+q.sym)}" data-p="${q.pool}" data-m="${q.mint}" title="Open chart"><span>$${esc(q.sym)} <span class="mut">liq ${fm(q.liq)}</span></span><span class="${C(c)}" data-k="c:${q.mint}">${F(c)}</span></div>`}).join('')}</div></details>`).join('')||'<p class="mut" style="padding:10px 0">No tokens matched a meta in this snapshot.</p>');
-$('#t1n').textContent='LIVE · GECKOTERMINAL · '+new Date(t1ts).toLocaleTimeString()+' · '+POOLS.length+' POOLS · '+G.reduce((s,x)=>s+x.g.length,0)+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS'};
-const ST1={};
-mkTabs($('#t1tabs'),['5 min','15 min','30 min','1 hour','24 hours'],k=>{tk1=k;renderT1()});
-$('#t1tabs').insertAdjacentHTML('beforeend','<a href="https://j7tracker.io/" target="_blank" rel="noopener">J7 Tracker ↗</a>');
-$('#t1list').innerHTML=ldr('LOADING LIVE DATA')+'<div class="sk"></div><div class="sk"></div><div class="sk"></div>';
-new MutationObserver(()=>{if(!A.W.t1.hidden&&Date.now()-t1ts>50000)loadT1()}).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
-new MutationObserver(()=>{if(!A.W.t2.hidden&&Date.now()-t1ts>50000)loadT1()}).observe(A.W.t2,{attributes:true,attributeFilter:['hidden']});
-setInterval(()=>{if(!document.hidden&&((!A.W.t1.hidden&&$('#t1v2').hidden)||!A.W.t2.hidden))loadT1()},60000);
-// 2 feed: free on-chain events from GeckoTerminal (new + trending pools); X posts are sample
-const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything. NFA.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
+let currentPumpTrades=[],lastPumpTrade=null,solUsd=0,metaMarketCapSol=0,activeMint='';
+const getTokenMeta=async mint=>{
+  const cached=tokenMetadata.get(mint);
+  if(cached&&Date.now()-cached.time<30000)return cached.data;
+  const response=await fetch('/api/token-meta?mint='+encodeURIComponent(mint),{headers:{Accept:'application/json'}});
+  const data=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(data.error||'Token metadata unavailable.');
+  tokenMetadata.set(mint,{time:Date.now(),data});
+  return data;
+};
+const shortCA=m=>m?m.slice(0,4)+'…'+m.slice(-4):'';
+const eventTime=e=>Number(e.receivedAt||e.timestamp||Date.now());
+const eventMcap=e=>Number(e.marketCapSol||e.marketCapQuote||0);
+const pumpAge=e=>ago(Math.max(0,Date.now()-eventTime(e)));
+const pumpLogo=async mint=>{
+  try{
+    const meta=await getTokenMeta(mint);
+    if(meta.imageUrl){
+      document.querySelectorAll('[data-pump-logo="'+mint+'"]').forEach(img=>{
+        img.src=meta.imageUrl;img.hidden=false;
+        img.onerror=()=>{img.hidden=true};
+      });
+    }
+  }catch(e){}
+};
+const connectPumpPortal=()=>{
+  if(PUMP.socket&&[WebSocket.CONNECTING,WebSocket.OPEN].includes(PUMP.socket.readyState))return;
+  if(!window.WebSocket)return;
+  const scheme=location.protocol==='https:'?'wss:':'ws:';
+  const socket=new WebSocket(scheme+'//'+location.host+'/ws/pumpportal');
+  PUMP.socket=socket;
+  socket.onopen=()=>{
+    PUMP.retryDelay=1200;
+    if(activeMint)socket.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+    $('#t1n').textContent='PUMPPORTAL · CONNECTED · WAITING FOR LAUNCH EVENTS';
+  };
+  socket.onmessage=message=>{
+    let packet;try{packet=JSON.parse(message.data)}catch(e){return}
+    if(packet.type==='status'){
+      PUMP.connected=!!packet.connected;PUMP.tradeConfigured=!!packet.tradeConfigured;
+      if(packet.message)$('#chn').textContent=packet.message;
+      $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+(PUMP.tradeConfigured?' · LIVE TRADES ENABLED':' · LAUNCHES + MIGRATIONS FREE');
+      return;
+    }
+    if(packet.type==='snapshot'){
+      PUMP.launches=(packet.newTokens||[]).slice(0,120);
+      PUMP.migrations=(packet.migrations||[]).slice(0,80);
+      t1ts=Date.now();renderT1();rf();return;
+    }
+    if(packet.type==='newToken'&&packet.data){
+      const item=packet.data;
+      PUMP.launches=[item,...PUMP.launches.filter(x=>x.mint!==item.mint)].slice(0,120);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='migration'&&packet.data){
+      const item=packet.data;
+      PUMP.migrations=[item,...PUMP.migrations.filter(x=>x.signature!==item.signature)].slice(0,80);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='trade'&&packet.data){
+      applyPumpTrade(packet.data);return;
+    }
+    if(packet.type==='error')$('#chn').textContent=packet.error||'PumpPortal stream error';
+  };
+  socket.onclose=()=>{
+    PUMP.connected=false;
+    if(PUMP.socket===socket)PUMP.socket=null;
+    if(!document.hidden){
+      clearTimeout(PUMP.retry);
+      PUMP.retry=setTimeout(connectPumpPortal,PUMP.retryDelay);
+      PUMP.retryDelay=Math.min(PUMP.retryDelay*1.8,20000);
+    }
+  };
+  socket.onerror=()=>{try{socket.close()}catch(e){}};
+};
+const pumpSubscribe=mint=>{
+  activeMint=mint||'';
+  const ws=PUMP.socket;
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({action:'unsubscribe'}));
+  if(BASE58.test(activeMint))ws.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+};
+const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
+const renderT1=()=>{
+  const events=eventRows();
+  const rows=events.map(e=>{
+    const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),name=String(e.name||'');
+    const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
+    const state=tk1===0?'NEW':'MIGRATED';
+    return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open live token chart">'+
+      '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
+      '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(name||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
+      '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
+      '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
+      '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
+    '</div>';
+  }).join('');
+  $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
+  events.slice(0,60).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
+  $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS')+' · '+(PUMP.tradeConfigured?'TOKEN TRADES ENABLED':'TRADE STREAM NEEDS API KEY');
+};
+const loadT1=()=>{connectPumpPortal();renderT1()};
+mkTabs($('#t1tabs'),['New launches','Migrations'],k=>{tk1=k;renderT1()});
+$('#t1list').innerHTML=ldr('CONNECTING TO PUMPPORTAL')+'<div class="sk"></div><div class="sk"></div>';
+new MutationObserver(()=>{
+  if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
+  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
+}).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
+setInterval(()=>{
+  if(document.hidden)return;
+  if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}
+},15000);
+// 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
+const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
 let t2tab=0;
-const ago=ms=>{const m=Math.round(ms/6e4);return m<1?'just now':m<60?m+'m ago':m<2880?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
-const rf=()=>{const q=$('#t2q').value.trim().toLowerCase();let h;
-if(t2tab===0){const ev=[...NEWP.slice().sort((a,b)=>a.age-b.age).slice(0,15).map(p=>['NEW POOL',p,'liq '+fm(p.liq)+' · 24h vol '+fm(p.vol)+' · '+ago(p.age)]),...TRP.slice(0,8).map(p=>['TRENDING',p,F(rd(p.ch.h1||0))+' 1h · liq '+fm(p.liq)+' · 24h vol '+fm(p.vol)])].filter(e=>e[1].mint&&(!q||('$'+e[1].sym+' '+e[1].name).toLowerCase().includes(q)));
-h=ev.map(e=>`<div class="px" data-c="${esc('$'+e[1].sym)}" data-p="${e[1].pool}" data-m="${e[1].mint}" style="cursor:pointer" title="Open chart"><b>$${esc(e[1].sym)}</b><span class="mut">${e[0]}</span><div>${e[2]}</div></div>`).join('')||(NEWP.length?'<p class="mut" style="padding:10px 0">No events match.</p>':ldr('LOADING ON-CHAIN EVENTS')+'<div class="sk"></div><div class="sk"></div>')}
-else h=PS.filter(p=>!q||(p[0]+p[2]).toLowerCase().includes(q)).map(p=>`<div class="px"><b>${p[0]}</b><span class="mut">${p[1]} ago</span><div>${esc(p[2])}</div></div>`).join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
-$('#t2list').innerHTML=h;$('#t2n').textContent=t2tab===0?'LIVE · GECKOTERMINAL NEW + TRENDING SOLANA POOLS · CLICK AN EVENT FOR ITS CHART':'SAMPLE POSTS — NOT LIVE'};
-$('#t2q').oninput=rf;mkTabs($('#t2tabs'),['On-chain','X accounts'],i=>{t2tab=i;rf()});
+const rf=()=>{
+  const q=$('#t2q').value.trim().toLowerCase();
+  let html;
+  if(t2tab===0){
+    const items=[
+      ...PUMP.launches.slice(0,30).map(e=>({e,kind:'NEW LAUNCH'})),
+      ...PUMP.migrations.slice(0,30).map(e=>({e,kind:'MIGRATION'}))
+    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('$'+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
+    html=items.map(x=>'<div class="px pump-feed-row" data-c="$'+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b>$'+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
+  } else {
+    html=PS.filter(p=>!q||(p[0]+' '+p[2]).toLowerCase().includes(q)).map(p=>'<div class="px"><b>'+p[0]+'</b><span class="mut">'+p[1]+' ago</span><div>'+esc(p[2])+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
+  }
+  $('#t2list').innerHTML=html;
+  $('#t2n').textContent=t2tab===0?'LIVE · PUMPPORTAL NEW TOKEN + MIGRATION EVENTS':'SAMPLE POSTS — NOT LIVE';
+};
+$('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
+$('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 // 3 scanner: GeckoTerminal token info + pool data (free). Signals, not a guarantee.
 const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
 $('#t3f').onsubmit=async e=>{e.preventDefault();const q=$('#t3q').value.trim(),R=$('#t3r'),id=++scanN;if(!q)return;
@@ -370,12 +494,143 @@ let chart=null,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',
 const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
 const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
 const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
-const lgd=(c,v)=>{if(!c){$('#chg').textContent='';return}const f=x=>mode==='mcap'?fk(x):x.toFixed(PR),ch=(c.close-c.open)/c.open*100;$('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':esc(QS))+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · '+esc(DEX)+' · geckoterminal<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v))};
+const lgd=(c,v)=>{
+ if(!c){$('#chg').textContent='';return}
+ const f=x=>mode==='mcap'?fk(x):pf(x),ch=c.open?((c.close-c.open)/c.open*100):0;
+ $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · PUMPPORTAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
+};
 const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}chart=LightweightCharts.createChart($('#chc'),{autoSize:true,rightPriceScale:{borderVisible:false},timeScale:{timeVisible:true,borderVisible:false},...copts()});series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});chart.subscribeCrosshairMove(p=>{const c=p.seriesData&&p.seriesData.get(series);if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}else if(CAN.length){const l=CAN[CAN.length-1];lgd(l,l.v)}});return true};
-const loadStats=async()=>{const p=curP;try{const j=await gt('/networks/solana/pools/'+p,25000);if(p!==curP)return;const a=j.data.attributes,pc=a.price_change_percentage||{},px=+a.base_token_price_usd,fdv=+a.fdv_usd||+a.market_cap_usd||0,c1=+pc.h1;SUP=px&&fdv?fdv/px:0;QS=(a.name.split(' / ')[1]||'SOL').split(' ')[0];DEX=((j.data.relationships.dex||{}).data||{}).id||'dex';$('#bq').textContent=QS;$('#cvst').innerHTML=[['PRICE',pf(px)],['LIQUIDITY',fm(+a.reserve_in_usd)],['MCAP',fdv?'$'+fk(fdv):'n/a'],['24H VOL',fm(+((a.volume_usd||{}).h24))],['1H',isFinite(c1)?F(rd(c1)):'n/a',isFinite(c1)?C(c1):''],['AGE',ago(Date.now()-Date.parse(a.pool_created_at)).replace(' ago','')]].map(x=>'<div><small>'+x[0]+'</small><b class="'+(x[2]||'')+'">'+x[1]+'</b></div>').join('')}catch(e){}};
-const loadInfo=async()=>{const m=curM;try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes;if(m!==curM)return;if(/^https:\/\//.test(a.image_url||'')){$('#cvi').src=a.image_url;$('#cvi').hidden=false}$('#cvnm').textContent=a.name||'';const L=[],w=(a.websites||[]).find(x=>/^https?:\/\//.test(x));if(/^[A-Za-z0-9_]{1,15}$/.test(a.twitter_handle||''))L.push('<a target="_blank" rel="noopener" href="https://x.com/'+a.twitter_handle+'">X</a>');if(w)L.push('<a target="_blank" rel="noopener" href="'+esc(w)+'">Web</a>');if(/^[A-Za-z0-9_]{3,}$/.test(a.telegram_handle||''))L.push('<a target="_blank" rel="noopener" href="https://t.me/'+a.telegram_handle+'">TG</a>');$('#cvso').innerHTML=L.join('')}catch(e){}};
-const loadChart=async fit=>{const ov=$('#chl');if(fit)ov.hidden=false;try{if(!mkC())return;await STP;const[,u,ag]=TFS[tf],j=await gt('/networks/solana/pools/'+curP+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,25000),k=mode==='mcap'&&SUP?SUP:1,L=j.data.attributes.ohlcv_list.slice().reverse();if(!L.length)throw new Error('No candles for this pool yet.');CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));const last=CAN[CAN.length-1].close;PR=k>1?2:Math.min(12,Math.max(2,3-Math.floor(Math.log10(last))));series.applyOptions({priceFormat:{type:'custom',formatter:x=>k>1?fk(x):x.toFixed(PR),minMove:k>1?.01:Math.pow(10,-PR)}});series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));if(fit)chart.timeScale().fitContent();lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);$('#chn').textContent='LIVE · GECKOTERMINAL OHLCV · '+new Date().toLocaleTimeString()}catch(e){$('#chn').textContent=e.message}finally{ov.hidden=true}};
-const loadTrades=async()=>{const el=$('#bmc'),p=curP;try{const j=await gt('/networks/solana/pools/'+p+'/trades',20000);if(p!==curP||tab!==1)return;el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>USD</span><span>PRICE</span><span>MAKER</span></div>'+(j.data||[]).slice(0,60).map(t=>{const a=t.attributes,b=a.kind==='buy',px=+(b?a.price_to_in_usd:a.price_from_in_usd),mk=a.tx_from_address||'';return'<div class="trd"><span class="mut">'+new Date(a.block_timestamp).toLocaleTimeString([],{hour12:false})+'</span><span class="'+(b?'up':'dn')+'">'+(b?'BUY':'SELL')+'</span><span class="'+(b?'up':'dn')+'">'+fm(+a.volume_in_usd)+'</span><span>'+pf(px)+'</span><span>'+(/^[A-Za-z0-9]{20,}$/.test(a.tx_hash||'')?'<a target="_blank" rel="noopener" href="https://solscan.io/tx/'+a.tx_hash+'">':'<a>')+esc(mk.slice(0,4)+'…'+mk.slice(-4))+'</a></span></div>'}).join('')||'<p class="mut">No recent trades.</p>';$('#chn').textContent='LIVE · GECKOTERMINAL TRADES · '+new Date().toLocaleTimeString()}catch(e){if(tab===1)el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'}};
+const loadStats=async()=>{
+ const mint=curM;
+ try{
+   const [meta,solMeta]=await Promise.all([getTokenMeta(mint),getTokenMeta(WSOL).catch(()=>null)]);
+   if(mint!==curM)return;
+   if(solMeta?.priceUsd)solUsd=Number(solMeta.priceUsd);
+   if(meta.pairAddress&&BASE58.test(meta.pairAddress))curP=meta.pairAddress;
+   const px=Number(meta.priceUsd)||0,mc=Number(meta.marketCap||meta.fdv)||0;
+   metaMarketCapSol=eventMcap(lastPumpTrade||{});
+   $('#cvst').innerHTML=[
+     ['PRICE',px?pf(px):'Awaiting trades'],
+     ['MCAP',mc?'$'+fk(mc):(metaMarketCapSol?fk(metaMarketCapSol)+' SOL':'—')],
+     ['LIQUIDITY',meta.liquidityUsd?fm(meta.liquidityUsd):'—'],
+     ['24H VOL',meta.volume24h?fm(meta.volume24h):'—'],
+     ['POOL',esc(meta.dexId||'PUMP.FUN')],
+     ['AGE',meta.pairCreatedAt?ago(Date.now()-meta.pairCreatedAt).replace(' ago',''):'NEW']
+   ].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+   if(meta.url)$('#cvl').href=meta.url;
+   $('#pumpstatus').textContent=PUMP.tradeConfigured?'PUMPPORTAL · LIVE':'PUMPPORTAL · KEY NEEDED';
+ }catch(e){
+   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['MCAP','—'],['LIQUIDITY','—'],['24H VOL','—'],['SOURCE','PUMPPORTAL'],['STATUS','WAITING']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+ }
+};
+const loadInfo=async()=>{
+ const mint=curM;
+ try{
+   const a=await getTokenMeta(mint);
+   if(mint!==curM)return;
+   $('#cvt').textContent=a.symbol?'$'+a.symbol:cur;
+   $('#cvnm').textContent=a.name||'';
+   $('#cvca').textContent=mint;
+   $('#cvi').hidden=true;
+   if(a.imageUrl){$('#cvi').src=a.imageUrl;$('#cvi').hidden=false}
+   const L=[];
+   (a.socials||[]).forEach(x=>{
+     if(x.type==='twitter'||x.platform==='twitter')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">X</a>');
+     if(x.type==='telegram'||x.platform==='telegram')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">TG</a>');
+   });
+   (a.websites||[]).forEach(x=>{const url=typeof x==='string'?x:x.url;if(/^https:\/\//.test(url||''))L.push('<a target="_blank" rel="noopener" href="'+esc(url)+'">WEB</a>')});
+   $('#cvso').innerHTML=L.join('');
+   if(a.pairAddress&&BASE58.test(a.pairAddress))curP=a.pairAddress;
+ }catch(e){
+   $('#cvt').textContent=cur;$('#cvca').textContent=mint;
+ }
+};
+const candleSeconds=()=>[60,300,900,3600,14400,86400][tf]||300;
+const chartValue=trade=>{
+ const mcSol=eventMcap(trade);
+ if(!mcSol)return 0;
+ const mcUsd=solUsd?mcSol*solUsd:0;
+ if(mode==='mcap')return ccy==='usd'?mcUsd:mcSol;
+ return ccy==='usd'?(mcUsd/1e9):(mcSol/1e9);
+};
+const updateChartFromTrade=trade=>{
+ if(trade.mint!==curM||!mkC())return;
+ const value=chartValue(trade);if(!(value>0))return;
+ const step=candleSeconds(),time=Math.floor(eventTime(trade)/1000/step)*step;
+ const amountSol=Number(trade.solAmount||trade.quoteAmount||0);
+ const volume=amountSol*(ccy==='usd'&&solUsd?solUsd:1);
+ const last=CAN[CAN.length-1];
+ let candle;
+ if(last&&last.time===time){
+   last.high=Math.max(last.high,value);last.low=Math.min(last.low,value);last.close=value;last.v=(last.v||0)+volume;candle=last;
+ }else{
+   candle={time,open:last?last.close:value,high:value,low:value,close:value,v:volume};CAN.push(candle);
+   if(CAN.length>500)CAN.shift();
+ }
+ const formatValue=mode==='mcap'?fk(value):pf(value);
+ PR=12;
+ series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+ series.update({time,open:candle.open,high:candle.high,low:candle.low,close:candle.close});
+ vol.update({time,value:candle.v||volume,color:candle.close>=candle.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'});
+ $('#chn').textContent='LIVE · PUMPPORTAL · '+new Date(eventTime(trade)).toLocaleTimeString();
+ $('#pumpstatus').textContent='PUMPPORTAL · LIVE';
+ lgd(candle,candle.v);
+ const mcSol=eventMcap(trade),mcUsd=solUsd?mcSol*solUsd:0;
+ const cells=[
+   ['PRICE',ccy==='usd'&&solUsd?pf(mcUsd/1e9):pf(mcSol/1e9)],
+   ['MCAP',ccy==='usd'&&solUsd?'$'+fk(mcUsd):fk(mcSol)+' SOL'],
+   ['TRADE',amountSol?amountSol.toFixed(3)+' SOL':'—'],
+   ['TRADER',shortCA(trade.traderPublicKey)],
+   ['TYPE',String(trade.txType||'TRADE').toUpperCase()],
+   ['POOL',trade.pool||'PUMP']
+ ];
+ $('#cvst').innerHTML=cells.map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
+};
+const applyPumpTrade=trade=>{
+ if(trade.mint!==curM)return;
+ lastPumpTrade=trade;
+ currentPumpTrades.unshift(trade);currentPumpTrades=currentPumpTrades.slice(0,100);
+ updateChartFromTrade(trade);
+ if(tab===1)loadTrades();
+};
+const loadChart=async fit=>{
+ const ov=$('#chl');if(fit)ov.hidden=false;
+ try{
+   if(!mkC())return;
+   await STP;
+   const pool=curP;
+   if(!BASE58.test(pool)){
+     CAN=[];series.setData([]);vol.setData([]);
+     $('#chn').textContent=PUMP.tradeConfigured?'WAITING FOR PUMPPORTAL TRADES · NO HISTORICAL CANDLES':'ADD PUMPPORTAL API KEY FOR LIVE TRADES';
+     return;
+   }
+   const[,u,ag]=TFS[tf],j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,25000);
+   const k=mode==='mcap'&&SUP?SUP:1,L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
+   if(!L.length)throw new Error('No historical candles; waiting for live PumpPortal trades.');
+   CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));
+   PR=12;
+   series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+   series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+   vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
+   if(fit)chart.timeScale().fitContent();
+   lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
+   $('#chn').textContent='HISTORICAL BACKFILL · GECKOTERMINAL · LIVE UPDATES PUMPPORTAL';
+   // Reapply trades that arrived while the historical request was loading.
+   currentPumpTrades.slice().reverse().forEach(t=>updateChartFromTrade(t));
+ }catch(e){$('#chn').textContent=e.message}
+ finally{ov.hidden=true}
+};
+const loadTrades=async()=>{
+ const el=$('#bmc');
+ const items=currentPumpTrades.slice(0,60);
+ el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>SOL</span><span>MCAP</span><span>MAKER</span></div>'+
+ items.map(t=>{
+   const buy=t.txType==='buy',maker=String(t.traderPublicKey||''),mc=eventMcap(t);
+   const time=new Date(eventTime(t)).toLocaleTimeString([],{hour12:false});
+   return '<div class="trd"><span class="mut">'+time+'</span><span class="'+(buy?'up':'dn')+'">'+(buy?'BUY':'SELL')+'</span><span class="'+(buy?'up':'dn')+'">'+Number(t.solAmount||t.quoteAmount||0).toFixed(3)+'</span><span>'+fk(mc)+' SOL</span><span><a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(maker)+'">'+esc(shortCA(maker))+'</a></span></div>';
+ }).join('')||'<p class="mut">Waiting for live trades. A PumpPortal API key is required for token trade subscriptions.</p>';
+ $('#chn').textContent=PUMP.tradeConfigured?'LIVE · PUMPPORTAL TOKEN TRADES':'TOKEN TRADE STREAM NOT CONFIGURED';
+};
 const BM=m=>'<a class="btn o" target="_blank" rel="noopener" href="https://app.bubblemaps.io/sol/token/'+encodeURIComponent(m)+'">Open Bubblemaps ↗</a>';
 const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
 const showTab=i=>{tab=i;[...$('#chtabs').children].forEach((c,j)=>c.classList.toggle('on',i===j));const c=i===0;$('#chtf').hidden=!c;$('#chb').hidden=!c;$('#chc').hidden=!c;$('#bmc').hidden=c;if(i===0)loadChart(true);else if(i===1){$('#bmc').innerHTML=ldr('LOADING TRADES')+'<div class="sk"></div>';loadTrades()}else showBubble()};
@@ -388,13 +643,16 @@ TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadCha
 [['%',2],['log',1],['auto',0]].forEach((c,i)=>mkB($('#chb'),'sc',c[0],i===2,()=>{chart&&chart.priceScale('right').applyOptions({mode:c[1]});$('#chb').querySelectorAll('[data-g=sc]').forEach((b,j)=>b.classList.toggle('on',i===j))}));
 $('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
 setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
-const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'COIN TRACKER';A.scr(s)};
-const openCoin=(tk,p,m)=>{cur=tk;curP=p;curM=m;SUP=0;CAN=[];$('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';$('#cvl').href='https://www.geckoterminal.com/solana/pools/'+encodeURIComponent(p);setV(true);STP=loadStats();loadInfo();showTab(tab)};
-$('#cvb').onclick=()=>setV(false);
-$('#cvs').onclick=()=>{if(A.W.t3.hidden)A.open('t3');$('#t3q').value=curM;$('#t3f').requestSubmit()};
+const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c)connectPumpPortal()};
+const openCoin=(tk,p,m)=>{
+ cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;activeMint=m;SUP=1e9;CAN=[];currentPumpTrades=[];lastPumpTrade=null;metaMarketCapSol=0;solUsd=0;
+ $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
+ $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
+ setV(true);STP=loadStats();loadInfo();pumpSubscribe(m);showTab(tab);
+});
 const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
-setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0)loadChart(false);else if(tab===1)loadTrades()}},30000);
+setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},30000);
 $('#t1list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 // theme
 const thm=$('#thm'),rootEl=document.documentElement;
