@@ -167,7 +167,18 @@ app.get("/api/gecko", geckoLimiter, async (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, "public"), {
-  etag: true, maxAge: process.env.NODE_ENV === "production" ? "1h" : 0
+  etag: true,
+  maxAge: process.env.NODE_ENV === "production" ? "1h" : 0,
+  setHeaders(res, filePath) {
+    // Never cache HTML: it contains the public waitlist and admin-only login UI.
+    // This prevents browsers or intermediary caches from reviving an old signup screen after a deploy.
+    if (path.extname(filePath).toLowerCase() === ".html") {
+      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+      res.setHeader("CDN-Cache-Control", "no-store");
+      res.setHeader("Pragma", "no-cache");
+      res.setHeader("Expires", "0");
+    }
+  }
 }));
 app.get("*", (_req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
 app.listen(PORT, "0.0.0.0", () => console.log("alpha running on port " + PORT));
