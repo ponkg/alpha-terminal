@@ -366,13 +366,28 @@ const pumpLogo=async mint=>{
     const meta=await getTokenMeta(mint);
     if(meta.imageUrl){
       document.querySelectorAll('[data-pump-logo="'+mint+'"]').forEach(img=>{
-        img.src=meta.imageUrl;img.hidden=false;
+        img.src=meta.imageUrl;
+        img.hidden=false;
         img.onerror=()=>{img.hidden=true};
       });
     }
     document.querySelectorAll('.pump-row[data-m="'+mint+'"]').forEach(row=>{
-      const title=row.querySelector('.pump-token b'),subtitle=row.querySelector('.pump-token small');
-      if(title&&meta.symbol)title.textContent='
+      const title=row.querySelector('.pump-token b');
+      const subtitle=row.querySelector('.pump-token small');
+      if(title&&meta.symbol)title.textContent='$'+meta.symbol;
+      if(subtitle&&meta.name)subtitle.textContent=meta.name;
+    });
+    document.querySelectorAll('.pump-feed-row[data-m="'+mint+'"]').forEach(row=>{
+      const title=row.querySelector('b');
+      const details=row.querySelector('div');
+      if(title&&meta.symbol)title.textContent='$'+meta.symbol;
+      if(details&&meta.name){
+        const parts=details.textContent.split(' · ');
+        parts[0]=meta.name;
+        details.textContent=parts.join(' · ');
+      }
+    });
+  }catch(e){}
 };
 const connectPumpPortal=async()=>{
   if(PUMP.ticketing||PUMP.socket&&[WebSocket.CONNECTING,WebSocket.OPEN].includes(PUMP.socket.readyState))return;
