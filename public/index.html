@@ -575,6 +575,7 @@ const narrativeGroups=()=>{
 };
 const narrativeState=p=>p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
+ const openedName=$('#t1list').querySelector('.narrative-group[open] .narrative-name')?.textContent||'';
  const groups=narrativeGroups();
  const matched=groups.reduce((sum,g)=>sum+g.tokens.length,0);
  const html=groups.map((group,index)=>{
@@ -590,7 +591,7 @@ const renderT1=()=>{
     '<div class="narrative-change">'+change+'</div>'+
    '</div>';
   }).join('');
-  return '<details class="narrative-group" '+(index===0?'open':'')+'>'+
+  return '<details class="narrative-group" '+(group.name===openedName||(!openedName&&index===0)?'open':'')+'>'+
    '<summary><span class="narrative-name">'+esc(group.name)+'</span>'+
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
    '<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b></summary>'+
@@ -655,7 +656,6 @@ new MutationObserver(()=>{
 }).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
 setInterval(()=>{
  if(document.hidden)return;
- if(!A.W.t1.hidden&&$('#t1v2').hidden)renderT1();
  if(!A.W.t2.hidden){connectPumpPortal();rf()}
 },15000);
 setInterval(()=>{
