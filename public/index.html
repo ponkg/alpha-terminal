@@ -342,6 +342,7 @@ const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const WSOL='So11111111111111111111111111111111111111112';
 const PUMP={launches:[],migrations:[],connected:false,tradeConfigured:false,socket:null,retry:null,retryDelay:1200};
 const tokenMetadata=new Map();
+const logoAttempts=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
 let currentPumpTrades=[],lastPumpTrade=null,solUsd=0,metaMarketCapSol=0,activeMint='';
 const getTokenMeta=async mint=>{
@@ -358,6 +359,9 @@ const eventTime=e=>Number(e.receivedAt||e.timestamp||Date.now());
 const eventMcap=e=>Number(e.marketCapSol||e.marketCapQuote||0);
 const pumpAge=e=>ago(Math.max(0,Date.now()-eventTime(e)));
 const pumpLogo=async mint=>{
+  const last=logoAttempts.get(mint)||0;
+  if(Date.now()-last<120000)return;
+  logoAttempts.set(mint,Date.now());
   try{
     const meta=await getTokenMeta(mint);
     if(meta.imageUrl){
@@ -454,7 +458,7 @@ const renderT1=()=>{
     '</div>';
   }).join('');
   $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
-  events.slice(0,60).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
+  events.slice(0,10).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
   $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS')+' · '+(PUMP.tradeConfigured?'TOKEN TRADES ENABLED':'TRADE STREAM NEEDS API KEY');
 };
 const loadT1=()=>{connectPumpPortal();renderT1()};
@@ -487,7 +491,7 @@ const rf=()=>{
   $('#t2n').textContent=t2tab===0?'LIVE · PUMPPORTAL NEW TOKEN + MIGRATION EVENTS':'SAMPLE POSTS — NOT LIVE';
 };
 $('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
-$('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+
 // 3 scanner: GeckoTerminal token info + pool data (free). Signals, not a guarantee.
 const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
 $('#t3f').onsubmit=async e=>{e.preventDefault();const q=$('#t3q').value.trim(),R=$('#t3r'),id=++scanN;if(!q)return;
