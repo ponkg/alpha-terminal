@@ -86,24 +86,52 @@ app.get("/api/token-meta", tokenMetaLimiter, async (req, res) => {
       .filter(p => p.chainId === "solana" && String(p.baseToken?.address || "").toLowerCase() === mint.toLowerCase())
       .sort((a, b) => Number(b.liquidity?.usd || 0) - Number(a.liquidity?.usd || 0));
     const p = pairs[0];
-    if (!p) return res.status(404).json({ error: "No indexed Solana market found for this token yet." });
+    let embeddedMeta = {};
+    // For fresh launches that have not been indexed by DexScreener yet,
+    // use the metadata URI included in PumpPortal's create event.
+    if (!p) {
+      const launch = recentPumpLaunches.find(x => String(x.mint || "").toLowerCase() === mint.toLowerCase());
+      let uri = String(launch?.uri || "");
+      if (uri.startsWith("ipfs://")) uri = "https://ipfs.io/ipfs/" + uri.slice(7).replace(/^ipfs\//, "");
+      if (uri.startsWith("ar://")) uri = "https://arweave.net/" + uri.slice(5);
+      if (uri.startsWith("https://")) {
+        try {
+          const target = new URL(uri);
+          const allowed = ["ipfs.io", "arweave.net", "gateway.pinata.cloud", "cf-ipfs.com", "dweb.link"];
+          if (allowed.includes(target.hostname)) {
+            const mr = await fetch(target, { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(6500) });
+            const length = Number(mr.headers.get("content-length") || 0);
+            if (mr.ok && (!length || length <= 262144)) embeddedMeta = await mr.json();
+          }
+        } catch (metaError) {
+          console.warn("token URI metadata lookup failed:", metaError.message);
+        }
+      }
+    }
+    const image = p?.info?.imageUrl || p?.info?.header || embeddedMeta.image || embeddedMeta.image_url || null;
+    let imageUrl = typeof image === "string" ? image : null;
+    if (imageUrl?.startsWith("ipfs://")) imageUrl = "https://ipfs.io/ipfs/" + imageUrl.slice(7).replace(/^ipfs\//, "");
+    if (imageUrl?.startsWith("ar://")) imageUrl = "https://arweave.net/" + imageUrl.slice(5);
     const data = {
       mint,
-      name: p.baseToken?.name || "",
-      symbol: p.baseToken?.symbol || "",
-      imageUrl: p.info?.imageUrl || p.info?.header || null,
-      priceUsd: Number(p.priceUsd) || 0,
-      liquidityUsd: Number(p.liquidity?.usd) || 0,
-      fdv: Number(p.fdv) || 0,
-      marketCap: Number(p.marketCap || p.fdv) || 0,
-      volume24h: Number(p.volume?.h24) || 0,
-      pairAddress: p.pairAddress || "",
-      dexId: p.dexId || "",
-      pairCreatedAt: Number(p.pairCreatedAt) || null,
-      url: p.url || "",
-      websites: p.info?.websites || [],
-      socials: p.info?.socials || []
+      name: p?.baseToken?.name || embeddedMeta.name || "",
+      symbol: p?.baseToken?.symbol || embeddedMeta.symbol || "",
+      imageUrl: imageUrl?.startsWith("https://") ? imageUrl : null,
+      priceUsd: Number(p?.priceUsd) || 0,
+      liquidityUsd: Number(p?.liquidity?.usd) || 0,
+      fdv: Number(p?.fdv) || 0,
+      marketCap: Number(p?.marketCap || p?.fdv) || 0,
+      volume24h: Number(p?.volume?.h24) || 0,
+      pairAddress: p?.pairAddress || "",
+      dexId: p?.dexId || "",
+      pairCreatedAt: Number(p?.pairCreatedAt) || null,
+      url: p?.url || "",
+      websites: p?.info?.websites || (embeddedMeta.website ? [{ url: embeddedMeta.website }] : []),
+      socials: p?.info?.socials || []
     };
+    if (!p && !data.name && !data.symbol && !data.imageUrl) {
+      return res.status(404).json({ error: "No token metadata is indexed for this address yet." });
+    }
     tokenMetaCache.set(mint, { time: Date.now(), data });
     if (tokenMetaCache.size > 500) tokenMetaCache.delete(tokenMetaCache.keys().next().value);
     return res.json(data);
