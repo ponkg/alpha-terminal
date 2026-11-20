@@ -547,7 +547,8 @@ const tokenCategory=token=>{
  return rule?rule.name:'';
 };
 const tokenPct=stats=>{
- const value=Number(stats?.priceChange);
+ if(stats?.priceChange==null)return null;
+ const value=Number(stats.priceChange);
  return Number.isFinite(value)?value*100:null;
 };
 const readJupiterTokens=payload=>{
