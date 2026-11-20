@@ -256,6 +256,17 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
  .narrative-token .pump-token small{display:none}
  .narrative-liq,.narrative-change{font-size:9px}
 }
+
+/* Real-data boot progress */
+#boot{cursor:wait;display:flex;flex-direction:column}
+#boot .boot-title{color:var(--fg);letter-spacing:.12em;margin-bottom:8px}
+#boot .boot-log{font-size:12px;line-height:1.9}
+#boot .boot-data{position:absolute;left:28px;right:28px;bottom:calc(env(safe-area-inset-bottom,0px) + 34px);max-width:560px}
+#boot .boot-data-head{display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:11px;letter-spacing:.12em;margin-bottom:9px}
+#boot .boot-data-head b{font-size:12px;color:var(--fg);font-weight:600}
+#boot .boot-track{height:4px;width:100%;background:color-mix(in srgb,var(--fg) 14%,transparent);overflow:hidden}
+#boot .boot-fill{height:100%;width:0;background:var(--ac);transition:width .22s ease}
+#boot .boot-detail{font-size:10px;line-height:1.6;color:var(--mut);margin-top:8px;letter-spacing:.04em}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -397,7 +408,7 @@ const ago=ms=>{const m=Math.round(ms/60000);return m<1?'just now':m<60?m+'m ago'
 const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
 // 1 PumpPortal launch + migration tracker.
 const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
-const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,retryDelay:1200};
+const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,retryDelay:1200,snapshotReady:false,snapshotWaiters:[]};
 const tokenMetadata=new Map();
 const logoAttempts=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
@@ -480,6 +491,8 @@ const connectPumpPortal=async()=>{
     if(packet.type==='snapshot'){
       PUMP.launches=(packet.newTokens||[]).slice(0,120);
       PUMP.migrations=(packet.migrations||[]).slice(0,80);
+      PUMP.snapshotReady=true;
+      PUMP.snapshotWaiters.splice(0).forEach(resolve=>resolve(true));
       t1ts=Date.now();renderT1();rf();return;
     }
     if(packet.type==='newToken'&&packet.data){
@@ -607,29 +620,91 @@ const renderT1=()=>{
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
  $('#t1n').textContent='LIVE · GECKOTERMINAL · '+time+' · '+narrativePools.length+' POOLS · '+matched+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS';
 };
-const loadT1=async(force=false)=>{
+const loadT1=async(force=false,onProgress=null)=>{
  if(narrativeLoadPromise)return narrativeLoadPromise;
  const duration=NARRATIVE_WINDOWS[narrativeWindow].duration;
  const path='/networks/solana/trending_pools?include=base_token&duration='+duration+'&page=1';
  narrativeLoadPromise=(async()=>{
   $('#t1n').textContent='CONNECTING TO GECKOTERMINAL…';
+  onProgress?.(12,'LOADING DATA','Requesting current Solana trending pools');
   try{
    const payload=await gt(path,force?0:55000);
+   onProgress?.(48,'LOADING DATA','Parsing live pool, volume, liquidity and price-change data');
    narrativePools=readGeckoPools(payload);
    narrativeUpdated=Date.now();
    renderT1();
+   return {ok:true,cached:false,pools:narrativePools.length};
   }catch(error){
    if(narrativePools.length){
     renderT1();
     $('#t1n').textContent='CACHED · GECKOTERMINAL · '+(error.message||'Refresh unavailable');
+    return {ok:true,cached:true,pools:narrativePools.length,error:error.message};
    }else{
     $('#t1list').innerHTML='<p class="narrative-empty">'+esc(error.message||'GeckoTerminal market data is temporarily unavailable.')+'</p>';
     $('#t1n').textContent='GECKOTERMINAL · WAITING FOR MARKET DATA';
+    return {ok:false,cached:false,pools:0,error:error.message||'Market data unavailable'};
    }
   }
  })().finally(()=>{narrativeLoadPromise=null});
  return narrativeLoadPromise;
 };
+const waitForPumpSnapshot=(timeout=2500)=>{
+ if(PUMP.snapshotReady)return Promise.resolve(true);
+ return new Promise(resolve=>{
+  let settled=false;
+  const finish=value=>{
+   if(settled)return;settled=true;clearTimeout(timer);resolve(value);
+  };
+  const timer=setTimeout(()=>finish(false),timeout);
+  PUMP.snapshotWaiters.push(finish);
+ });
+};
+const preloadImage=src=>new Promise(resolve=>{
+ if(!src||!/^https:\/\//i.test(src)||!window.Image)return resolve(false);
+ const image=new Image();let settled=false;
+ const finish=ok=>{if(settled)return;settled=true;clearTimeout(timer);resolve(ok)};
+ const timer=setTimeout(()=>finish(false),4500);
+ image.onload=()=>finish(true);image.onerror=()=>finish(false);image.src=src;
+ if(image.complete)finish(image.naturalWidth>0);
+});
+const preloadTerminalData=async report=>{
+ report(6,'LOADING DATA','Connecting to GeckoTerminal live market data');
+ const market=await loadT1(true,(percent,label,detail)=>report(percent,label,detail));
+ if(!market.ok){
+  report(76,'LIVE DATA UNAVAILABLE','No sample data will be substituted; the live feed can retry in the tracker');
+ }else{
+  const unique=[...new Map(narrativePools.map(token=>[token.mint,token])).values()]
+   .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity).slice(0,12);
+  let finished=0;
+  const total=unique.length;
+  report(52,'LOADING DATA','Preloading metadata and coin logos · 0/'+total);
+  for(let start=0;start<total;start+=4){
+   const batch=unique.slice(start,start+4);
+   await Promise.all(batch.map(async token=>{
+    try{
+     if(!token.imageUrl){
+      const meta=await getTokenMeta(token.mint);
+      if(meta.imageUrl)token.imageUrl=meta.imageUrl;
+      if(meta.symbol)token.symbol=meta.symbol;
+      if(meta.name)token.name=meta.name;
+     }
+     if(token.imageUrl)await preloadImage(token.imageUrl);
+    }catch(error){}
+    finished++;
+    report(52+(finished/Math.max(1,total))*29,'LOADING DATA','Preloading metadata and coin logos · '+finished+'/'+total);
+   }));
+  }
+  renderT1();
+ }
+ report(84,'LOADING DATA','Connecting to PumpPortal free launch and migration streams');
+ const snapshot=waitForPumpSnapshot(3000);
+ await connectPumpPortal();
+ const pumpReady=await snapshot;
+ report(96,'LOADING DATA',pumpReady?'PumpPortal snapshot received':'Market data loaded · PumpPortal snapshot pending');
+ return {market:market.ok,pumpPortal:pumpReady,pools:market.pools||0,logos:finishedCount()};
+};
+const finishedCount=()=>[...new Map(narrativePools.map(token=>[token.mint,token])).values()].filter(token=>token.imageUrl).length;
+
 const renderNarrativeTabs=()=>{
  const tabs=$('#t1tabs');tabs.innerHTML='';
  NARRATIVE_WINDOWS.forEach((windowOption,index)=>{
@@ -842,7 +917,44 @@ const U={name:'',addr:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
 const showU=()=>{ub.textContent=U.addr?`${U.name} · ${short(U.addr)}`:`${U.name} · connect wallet`};
 const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
-const boot=cb=>{if(A.RM||$('#boot')){if(!$('#boot'))cb();return}const o=document.createElement('div');o.id='boot';document.body.appendChild(o);const L=['ALPHA <GO> TERMINAL','> authenticating session ........ OK','> initialising workspace ......... OK','> loading sample data (not live) . OK','> ready'];let i=0,done=false;const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>o.remove(),380)};o.onclick=fin;const nx=()=>{if(done)return;if(i<L.length){const d=document.createElement('div');d.textContent=L[i++];o.appendChild(d);setTimeout(nx,170)}else setTimeout(fin,260)};nx()};
+const boot=cb=>{
+ if(A.RM||$('#boot')){if(!$('#boot'))cb();return}
+ const o=document.createElement('div');o.id='boot';
+ const title=document.createElement('div');title.className='boot-title';title.textContent='ALPHA <GO> TERMINAL';o.appendChild(title);
+ const log=document.createElement('div');log.className='boot-log';o.appendChild(log);
+ const panel=document.createElement('div');panel.className='boot-data';
+ const head=document.createElement('div');head.className='boot-data-head';
+ const label=document.createElement('span');label.textContent='LOADING DATA';
+ const value=document.createElement('b');value.textContent='0%';
+ head.append(label,value);
+ const track=document.createElement('div');track.className='boot-track';
+ const fill=document.createElement('div');fill.className='boot-fill';track.appendChild(fill);
+ const detail=document.createElement('div');detail.className='boot-detail';detail.textContent='Waiting for live market data…';
+ panel.append(head,track,detail);o.appendChild(panel);document.body.appendChild(o);
+ let done=false,current=0;
+ const addLine=message=>{const line=document.createElement('div');line.textContent=message;log.appendChild(line)};
+ const progress=(percent,status,message)=>{
+  current=Math.max(current,Math.min(100,Math.round(percent)));
+  label.textContent=status||'LOADING DATA';value.textContent=current+'%';fill.style.width=current+'%';
+  detail.textContent=message||'Loading live terminal data…';
+ };
+ const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>o.remove(),380)};
+ const run=async()=>{
+  addLine('> authenticating session ........ OK');
+  addLine('> initialising workspace ....... OK');
+  progress(3,'LOADING DATA','Requesting live Solana market data…');
+  let result={market:false,pumpPortal:false,pools:0,logos:0};
+  try{result=await preloadTerminalData(progress)}catch(error){progress(92,'LIVE DATA PARTIAL','The terminal will retry live feeds when opened')}
+  addLine(result.market?'> live market data ............... OK':'> live market data ............... UNAVAILABLE');
+  addLine(result.pumpPortal?'> PumpPortal snapshot ............. OK':'> PumpPortal snapshot ............. PENDING');
+  progress(100,result.market?'DATA READY':'LIVE DATA UNAVAILABLE',
+   result.market?result.pools+' live pools · '+result.logos+' coin logos prepared':'No sample data loaded · live feed will retry in terminal');
+  addLine('> ready');
+  await new Promise(resolve=>setTimeout(resolve,420));
+  fin();
+ };
+ run();
+};
 const login=()=>{$('#ae').textContent='';boot(enter)};
 ub.onclick=async()=>{if(U.addr){try{await navigator.clipboard.writeText(U.addr);ub.textContent='address copied'}catch(e){}setTimeout(showU,1500);return}
 try{U.addr=await conn();showU()}catch(e){ub.textContent=/not found/.test(e.message)?'Phantom not found':'Connection rejected';setTimeout(showU,2500)}};
