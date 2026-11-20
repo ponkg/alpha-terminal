@@ -478,20 +478,18 @@ const connectPumpPortal=async()=>{
     socket=new WebSocket(scheme+'//'+location.host+'/ws/pumpportal?ticket='+encodeURIComponent(result.ticket));
     PUMP.socket=socket;
   }catch(error){
-    $('#t1n').textContent=error.message||'Could not connect to PumpPortal.';
-    $('#chn').textContent=error.message||'Admin session required.';
+    $('#chn').textContent=error.message||'Could not connect to PumpPortal.';
     return;
   }finally{PUMP.ticketing=false}
   socket.onopen=()=>{
     PUMP.retryDelay=1200;
-    $('#t1n').textContent='PUMPPORTAL · CONNECTED · WAITING FOR LAUNCH EVENTS';
+    $('#chn').textContent='PUMPPORTAL FREE LAUNCH + MIGRATION STREAM CONNECTED';
   };
   socket.onmessage=message=>{
     let packet;try{packet=JSON.parse(message.data)}catch(e){return}
     if(packet.type==='status'){
       PUMP.connected=!!packet.connected;
-      if(packet.message)$('#chn').textContent=packet.message;
-      $('#t1n').textContent='PUMPPORTAL FREE FEEDS · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+' · LAUNCHES + MIGRATIONS';
+      $('#chn').textContent=packet.message||('PUMPPORTAL '+(PUMP.connected?'CONNECTED':'RECONNECTING'));
       return;
     }
     if(packet.type==='snapshot'){
