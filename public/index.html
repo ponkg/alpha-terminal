@@ -826,19 +826,25 @@ $('#t3f').onsubmit=async e=>{
    )).sort((x,y)=>y.liq-x.liq);
    if(!ranked.length)throw new Error('No indexed Solana pool found for "'+q+'". Try the token contract address.');
    mint=ranked[0].mint;symbol=ranked[0].sym;tokenName=ranked[0].name;searchPool=ranked[0].poolAddress;
+   var searchPoolAttributes=ranked[0].attributes;
   }
   if(id!==scanN)return;
-  R.innerHTML=ldr('LOADING TOKEN INFO AND POOLS');
-  const [infoResult,poolResult]=await Promise.all([
-   gt('/networks/solana/tokens/'+mint+'/info',120000).catch(error=>({__error:error.message})),
-   gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000)
-  ]);
+  R.innerHTML=ldr('LOADING TOKEN INFO'+(searchPoolAttributes?'':' AND POOLS'));
+  const infoPromise=gt('/networks/solana/tokens/'+mint+'/info',120000).catch(error=>({__error:error.message}));
+  let infoResult,poolAttributes=searchPoolAttributes||null;
+  if(poolAttributes){
+   infoResult=await infoPromise;
+  }else{
+   const poolResult=await gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000);
+   [infoResult]=await Promise.all([infoPromise]);
+   const pools=Array.isArray(poolResult?.data)?poolResult.data:[];
+   const sortedPools=pools.filter(item=>item?.attributes).sort((x,y)=>
+    (Number(y.attributes.reserve_in_usd)||0)-(Number(x.attributes.reserve_in_usd)||0)
+   );
+   poolAttributes=(sortedPools[0]||{}).attributes||null;
+  }
   if(id!==scanN)return;
-  const pools=Array.isArray(poolResult?.data)?poolResult.data:[];
-  const sortedPools=pools.filter(item=>item?.attributes).sort((x,y)=>
-   (Number(y.attributes.reserve_in_usd)||0)-(Number(x.attributes.reserve_in_usd)||0)
-  );
-  const pl=(sortedPools.find(item=>item.attributes.address===searchPool)||sortedPools[0])?.attributes;
+  const pl=poolAttributes;
   if(!pl)throw new Error('GeckoTerminal has no indexed pool for this token yet. Try again later or use its pool address.');
   const a=infoResult?.data?.attributes||{};
   const holders=a.holders||null,distribution=holders?.distribution_percentage||null;
