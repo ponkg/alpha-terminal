@@ -4,7 +4,7 @@ A deployable full-stack MVP based on the supplied alpha terminal prototype.
 
 ## Stack
 - Node.js + Express on Render Free
-- Supabase Auth for email/password registration and login
+- Supabase Auth for administrator-only email/password login (public signup is disabled during closed beta)
 - Supabase Postgres for the waitlist and referral records
 - GeckoTerminal proxy served by Express
 
@@ -22,15 +22,16 @@ The Render Blueprint pre-fills the project URL and publishable key. Add the secr
 
 Supabase Free currently includes 500 MB database storage and 50,000 monthly active users. Free projects may pause after one week of inactivity and do not include automatic backups. See https://supabase.com/pricing.
 
-## Supabase Auth
-Email/password authentication is enabled by default on hosted Supabase projects. Email confirmation is enabled by default too. Keep confirmation enabled for the beta unless you have a reason to disable it.
+## Supabase Auth — closed beta
+The public site has no registration form. Visitors can only request early access through the original X-handle waitlist. The terminal login is reserved for one administrator email.
 
-After Render creates the site URL, open **Authentication → URL Configuration**:
-- Set Site URL to `https://YOUR-SERVICE.onrender.com`
-- Add that same origin to the Redirect URLs allow list
-- For local development, also allow `http://localhost:3000/**`
+1. In Supabase, open **Authentication → Sign In / Providers → Email** and turn off **Allow new users to sign up**. Existing accounts can still sign in. Create the administrator account manually from **Authentication → Users** if it does not already exist. See https://supabase.com/docs/guides/auth/general-configuration.
+2. In Render, set `ADMIN_EMAIL` to the exact email address of that existing Supabase Auth administrator account. The server validates the Supabase access token and rejects any other email. Until `ADMIN_EMAIL` and `SUPABASE_SECRET_KEY` are configured, admin login fails closed.
+3. After Render creates the site URL, open **Authentication → URL Configuration**:
+   - Set Site URL to `https://YOUR-SERVICE.onrender.com`
+   - Add that same origin to the Redirect URLs allow list
 
-The registration form sends users back to the current site after email confirmation, and the browser restores the Supabase session. Supabase default email sending is limited to 2 messages per hour and is best-effort; configure custom SMTP before inviting more than a small test group. See https://supabase.com/docs/guides/auth/passwords.
+The public waitlist is separate from Supabase Auth accounts. Waitlist submissions are saved in `public.waitlist` and do not create a login. Supabase's default email sender is best-effort and limited to 2 emails per hour; configure custom SMTP before sending more auth emails. See https://supabase.com/docs/guides/auth/passwords.
 
 ## Run locally
 Requires Node.js 20+.
@@ -54,7 +55,7 @@ Render Free web services spin down after 15 minutes without inbound traffic. The
 - The browser receives only the publishable key.
 - The waitlist table has Row Level Security enabled and no client read/write policies; the backend uses the secret key for waitlist operations.
 - The waitlist endpoint has request-rate limiting and a honeypot field.
-- The browser account gate is for the current MVP experience. Any future user-specific API or private account data must validate the user Supabase access token server-side and enforce RLS.
+- Admin terminal access is checked server-side against `ADMIN_EMAIL`; the browser never receives the Supabase secret key.
 - Phantom is a wallet connection within an authenticated session, not a substitute for account authentication.
 - Google/X OAuth are not enabled in this version.
 - Some scanner/holder views may use illustrative or provider-dependent data. Narrative classification remains heuristic, not a validated trading signal.
