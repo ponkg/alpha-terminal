@@ -32,7 +32,7 @@ const waitlistLimiter = rateLimit({
   message: { error: "Too many attempts. Please try again in a little while." }
 });
 const geckoLimiter = rateLimit({
-  windowMs: 60 * 1000, limit: 12,
+  windowMs: 60 * 1000, limit: 30,
   standardHeaders: "draft-7", legacyHeaders: false,
   message: { error: "Market-data request limit reached. Please wait a moment." }
 });
@@ -240,8 +240,14 @@ app.post("/api/waitlist", waitlistLimiter, async (req, res) => {
 });
 
 const geckoCache = new Map();
+const geckoInflight = new Map();
 let geckoQueue = Promise.resolve();
 let geckoNextRequestAt = 0;
+const GECKO_FRESH_MS = 60 * 1000;
+const GECKO_STALE_MS = 15 * 60 * 1000;
+const GECKO_MIN_GAP_MS = 7000;
+const waitMs = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 app.get("/api/gecko", geckoLimiter, async (req, res) => {
   const apiPath = String(req.query.path || "");
   if (!apiPath.startsWith("/networks/solana/") && !apiPath.startsWith("/tokens/")) {
@@ -250,35 +256,86 @@ app.get("/api/gecko", geckoLimiter, async (req, res) => {
   if (apiPath.includes("..") || apiPath.length > 500) {
     return res.status(400).json({ error: "Invalid market-data path." });
   }
+
   const cached = geckoCache.get(apiPath);
-  if (cached && Date.now() - cached.time < 60000) return res.json(cached.data);
+  const age = cached ? Date.now() - cached.time : Infinity;
+  if (cached && age < GECKO_FRESH_MS) {
+    res.set("X-Data-Cache", "HIT");
+    return res.json(cached.data);
+  }
+
+  // Coalesce the same URL across browser tabs/users. Never fan out duplicate
+  // requests to GeckoTerminal for a pool/candle range that is already loading.
+  let pending = geckoInflight.get(apiPath);
+  if (!pending) {
+    pending = (async () => {
+      const performRequest = async () => {
+        const wait = Math.max(0, geckoNextRequestAt - Date.now());
+        if (wait) await waitMs(wait);
+        geckoNextRequestAt = Date.now() + GECKO_MIN_GAP_MS;
+
+        const upstream = await fetch("https://api.geckoterminal.com/api/v2" + apiPath, {
+          headers: { Accept: "application/json;version=20230302" },
+          signal: AbortSignal.timeout(12000)
+        });
+        const body = await upstream.json().catch(() => ({}));
+
+        if (upstream.status === 429) {
+          const retryHeader = Number(upstream.headers.get("retry-after") || 0);
+          const cooldown = retryHeader > 0
+            ? Math.min(120000, Math.max(15000, retryHeader * 1000))
+            : 30000;
+          geckoNextRequestAt = Math.max(geckoNextRequestAt, Date.now() + cooldown);
+          const error = new Error("GeckoTerminal rate limited the free public API.");
+          error.status = 429;
+          error.retryAfter = Math.ceil(cooldown / 1000);
+          throw error;
+        }
+        if (!upstream.ok) {
+          const error = new Error("GeckoTerminal returned HTTP " + upstream.status + ".");
+          error.status = upstream.status;
+          throw error;
+        }
+
+        geckoCache.set(apiPath, { time: Date.now(), data: body });
+        if (geckoCache.size > 400) {
+          const oldestKey = geckoCache.keys().next().value;
+          geckoCache.delete(oldestKey);
+        }
+        return body;
+      };
+
+      const queued = geckoQueue.then(performRequest, performRequest);
+      geckoQueue = queued.then(() => undefined, () => undefined);
+      return queued;
+    })();
+    geckoInflight.set(apiPath, pending);
+    pending.finally(() => {
+      if (geckoInflight.get(apiPath) === pending) geckoInflight.delete(apiPath);
+    }).catch(() => {});
+  }
+
   try {
-    // GeckoTerminal public API is limited to about 10 calls/min. Serialize upstream
-    // requests and leave a 7-second gap globally across all app users.
-    const performRequest = async () => {
-      const wait = Math.max(0, geckoNextRequestAt - Date.now());
-      if (wait) await new Promise(resolve => setTimeout(resolve, wait));
-      geckoNextRequestAt = Date.now() + 7000;
-      const upstream = await fetch("https://api.geckoterminal.com/api/v2" + apiPath, {
-        headers: { Accept: "application/json;version=20230302" },
-        signal: AbortSignal.timeout(12000)
+    const data = await pending;
+    res.set("X-Data-Cache", "MISS");
+    return res.set("Cache-Control", "public, max-age=30").json(data);
+  } catch (error) {
+    // Stale data is much better than an empty chart during a temporary 429.
+    const latest = geckoCache.get(apiPath);
+    const staleAge = latest ? Date.now() - latest.time : Infinity;
+    if (latest && staleAge < GECKO_STALE_MS) {
+      res.set("X-Data-Cache", "STALE");
+      res.set("X-Data-Stale-Age", String(Math.round(staleAge / 1000)));
+      return res.set("Cache-Control", "public, max-age=15").json(latest.data);
+    }
+    if (error.status === 429) {
+      res.set("Retry-After", String(error.retryAfter || 30));
+      return res.status(503).json({
+        error: "GeckoTerminal's free API is temporarily rate-limited. Cached data is not available yet; retry shortly."
       });
-      const body = await upstream.json();
-      return { upstream, body };
-    };
-    const request = geckoQueue.then(performRequest, performRequest);
-    geckoQueue = request.then(() => undefined, () => undefined);
-    const { upstream, body } = await request;
-    if (!upstream.ok) return res.status(upstream.status).json({
-      error: upstream.status === 429
-        ? "Market-data provider is rate limiting. Retry shortly."
-        : "Market-data provider returned " + upstream.status + "."
-    });
-    geckoCache.set(apiPath, { time: Date.now(), data: body });
-    if (geckoCache.size > 250) geckoCache.delete(geckoCache.keys().next().value);
-    res.set("Cache-Control", "public, max-age=30").json(body);
-  } catch {
-    res.status(502).json({ error: "Market-data provider is temporarily unavailable." });
+    }
+    console.error("GeckoTerminal proxy error:", error.message);
+    return res.status(502).json({ error: "Market data is temporarily unavailable." });
   }
 });
 
