@@ -12,6 +12,7 @@ const PORT = Number(process.env.PORT || 3000);
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "";
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
 const authConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 const databaseConfigured = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
 
@@ -44,8 +45,31 @@ app.get("/api/config.js", (_req, res) => {
 });
 
 app.get("/api/health", (_req, res) => res.json({
-  ok: true, service: "alpha-api", authConfigured, databaseConfigured
+  ok: true, service: "alpha-api", authConfigured, databaseConfigured,
+  adminAccessConfigured: Boolean(ADMIN_EMAIL && supabaseAdmin)
 }));
+
+// Verify Supabase sessions server-side and allow only the configured administrator.
+app.post("/api/admin/check", async (req, res) => {
+  if (!ADMIN_EMAIL || !supabaseAdmin) {
+    return res.status(503).json({ error: "Administrator access is not configured. Set ADMIN_EMAIL in the Render environment." });
+  }
+  const authorization = req.get("authorization") || "";
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  if (!match) return res.status(401).json({ error: "Please sign in again." });
+
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(match[1]);
+    if (error || !data?.user) return res.status(401).json({ error: "Your session is invalid or expired. Please sign in again." });
+    if ((data.user.email || "").trim().toLowerCase() !== ADMIN_EMAIL) {
+      return res.status(403).json({ error: "This account is not authorized for administrator access." });
+    }
+    return res.json({ ok: true });
+  } catch (error) {
+    console.error("admin access check failed:", error.message);
+    return res.status(401).json({ error: "Could not verify your administrator session." });
+  }
+});
 
 app.post("/api/waitlist", waitlistLimiter, async (req, res) => {
   if (!databaseConfigured) return res.status(503).json({ error: "Waitlist storage is not configured yet." });
