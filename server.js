@@ -452,7 +452,7 @@ function connectPumpPortal() {
       broadcastPump({ type: "newToken", data: item });
       return;
     }
-    if (["complete", "create_pool", "migration"].includes(event.txType) || (event.source === "pumpswap" && event.isCanonicalPool === true)) {
+    if (["migrate", "complete", "create_pool", "migration"].includes(event.txType) || (event.source === "pumpswap" && event.isCanonicalPool === true)) {
       const item = { ...event, receivedAt };
       recentPumpMigrations.unshift(item);
       if (recentPumpMigrations.length > 80) recentPumpMigrations.length = 80;
