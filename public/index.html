@@ -678,7 +678,7 @@ const openCoin=(tk,p,m)=>{
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
  $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
  setV(true);STP=loadStats();loadInfo();pumpSubscribe(m);showTab(tab);
-});
+};
 const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},30000);
