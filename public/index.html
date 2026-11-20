@@ -340,7 +340,7 @@ const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
 // 1 PumpPortal launch + migration tracker.
 const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const WSOL='So11111111111111111111111111111111111111112';
-const PUMP={launches:[],migrations:[],connected:false,tradeConfigured:false,socket:null,retry:null,retryDelay:1200};
+const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,retryDelay:1200};
 const tokenMetadata=new Map();
 const logoAttempts=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
@@ -410,15 +410,14 @@ const connectPumpPortal=async()=>{
   }finally{PUMP.ticketing=false}
   socket.onopen=()=>{
     PUMP.retryDelay=1200;
-    if(activeMint)socket.send(JSON.stringify({action:'subscribe',mint:activeMint}));
     $('#t1n').textContent='PUMPPORTAL · CONNECTED · WAITING FOR LAUNCH EVENTS';
   };
   socket.onmessage=message=>{
     let packet;try{packet=JSON.parse(message.data)}catch(e){return}
     if(packet.type==='status'){
-      PUMP.connected=!!packet.connected;PUMP.tradeConfigured=!!packet.tradeConfigured;
+      PUMP.connected=!!packet.connected;
       if(packet.message)$('#chn').textContent=packet.message;
-      $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+(PUMP.tradeConfigured?' · LIVE TRADES ENABLED':' · LAUNCHES + MIGRATIONS FREE');
+      $('#t1n').textContent='PUMPPORTAL FREE FEEDS · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+' · LAUNCHES + MIGRATIONS';
       return;
     }
     if(packet.type==='snapshot'){
@@ -436,9 +435,6 @@ const connectPumpPortal=async()=>{
       PUMP.migrations=[item,...PUMP.migrations.filter(x=>x.signature!==item.signature)].slice(0,80);
       t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
     }
-    if(packet.type==='trade'&&packet.data){
-      applyPumpTrade(packet.data);return;
-    }
     if(packet.type==='error')$('#chn').textContent=packet.error||'PumpPortal stream error';
   };
   socket.onclose=()=>{
@@ -455,9 +451,8 @@ const connectPumpPortal=async()=>{
 const pumpSubscribe=mint=>{
   activeMint=mint||'';
   const ws=PUMP.socket;
-  if(!ws||ws.readyState!==WebSocket.OPEN)return;
-  ws.send(JSON.stringify({action:'unsubscribe'}));
-  if(BASE58.test(activeMint))ws.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+  // Paid PumpPortal per-token subscriptions are deliberately not used in this free build.
+
 };
 const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
 const renderT1=()=>{
@@ -476,7 +471,7 @@ const renderT1=()=>{
   }).join('');
   $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
   events.slice(0,10).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
-  $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS')+' · '+(PUMP.tradeConfigured?'TOKEN TRADES ENABLED':'TRADE STREAM NEEDS API KEY');
+  $('#t1n').textContent='PUMPPORTAL FREE · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS');
 };
 const loadT1=()=>{connectPumpPortal();renderT1()};
 mkTabs($('#t1tabs'),['New launches','Migrations'],k=>{tk1=k;renderT1()});
@@ -549,24 +544,25 @@ const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').text
 const loadStats=async()=>{
  const mint=curM;
  try{
-   const [meta,solMeta]=await Promise.all([getTokenMeta(mint),getTokenMeta(WSOL).catch(()=>null)]);
+   const meta=await getTokenMeta(mint);
    if(mint!==curM)return;
-   if(solMeta?.priceUsd)solUsd=Number(solMeta.priceUsd);
    if(meta.pairAddress&&BASE58.test(meta.pairAddress))curP=meta.pairAddress;
    const px=Number(meta.priceUsd)||0,mc=Number(meta.marketCap||meta.fdv)||0;
-   metaMarketCapSol=eventMcap(lastPumpTrade||{});
+   SUP=px&&mc?mc/px:0;
    $('#cvst').innerHTML=[
-     ['PRICE',px?pf(px):'Awaiting trades'],
-     ['MCAP',mc?'$'+fk(mc):(metaMarketCapSol?fk(metaMarketCapSol)+' SOL':'—')],
+     ['PRICE',px?pf(px):'—'],
      ['LIQUIDITY',meta.liquidityUsd?fm(meta.liquidityUsd):'—'],
+     ['MCAP',mc?'$'+fk(mc):'—'],
      ['24H VOL',meta.volume24h?fm(meta.volume24h):'—'],
-     ['POOL',esc(meta.dexId||'PUMP.FUN')],
+     ['DEX',meta.dexId||'—'],
      ['AGE',meta.pairCreatedAt?ago(Date.now()-meta.pairCreatedAt).replace(' ago',''):'NEW']
-   ].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+   ].map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
    if(meta.url)$('#cvl').href=meta.url;
-   $('#pumpstatus').textContent=PUMP.tradeConfigured?'PUMPPORTAL · LIVE':'PUMPPORTAL · KEY NEEDED';
+   $('#pumpstatus').textContent='FREE DATA · NO PAID FEED';
+   if(curM===mint&&curP&&tab===0)loadChart(true);
+   if(curM===mint&&curP&&tab===1)loadTrades();
  }catch(e){
-   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['MCAP','—'],['LIQUIDITY','—'],['24H VOL','—'],['SOURCE','PUMPPORTAL'],['STATUS','WAITING']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['LIQUIDITY','—'],['MCAP','—'],['24H VOL','—'],['DEX','—'],['AGE','NEW']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
  }
 };
 const loadInfo=async()=>{
@@ -591,54 +587,6 @@ const loadInfo=async()=>{
    $('#cvt').textContent=cur;$('#cvca').textContent=mint;
  }
 };
-const candleSeconds=()=>[60,300,900,3600,14400,86400][tf]||300;
-const chartValue=trade=>{
- const mcSol=eventMcap(trade);
- if(!mcSol)return 0;
- const mcUsd=solUsd?mcSol*solUsd:0;
- if(mode==='mcap')return ccy==='usd'?mcUsd:mcSol;
- return ccy==='usd'?(mcUsd/1e9):(mcSol/1e9);
-};
-const updateChartFromTrade=trade=>{
- if(trade.mint!==curM||!mkC())return;
- const value=chartValue(trade);if(!(value>0))return;
- const step=candleSeconds(),time=Math.floor(eventTime(trade)/1000/step)*step;
- const amountSol=Number(trade.solAmount||trade.quoteAmount||0);
- const volume=amountSol*(ccy==='usd'&&solUsd?solUsd:1);
- const last=CAN[CAN.length-1];
- let candle;
- if(last&&last.time===time){
-   last.high=Math.max(last.high,value);last.low=Math.min(last.low,value);last.close=value;last.v=(last.v||0)+volume;candle=last;
- }else{
-   candle={time,open:last?last.close:value,high:value,low:value,close:value,v:volume};CAN.push(candle);
-   if(CAN.length>500)CAN.shift();
- }
- const formatValue=mode==='mcap'?fk(value):pf(value);
- PR=12;
- series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
- series.update({time,open:candle.open,high:candle.high,low:candle.low,close:candle.close});
- vol.update({time,value:candle.v||volume,color:candle.close>=candle.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'});
- $('#chn').textContent='LIVE · PUMPPORTAL · '+new Date(eventTime(trade)).toLocaleTimeString();
- $('#pumpstatus').textContent='PUMPPORTAL · LIVE';
- lgd(candle,candle.v);
- const mcSol=eventMcap(trade),mcUsd=solUsd?mcSol*solUsd:0;
- const cells=[
-   ['PRICE',ccy==='usd'&&solUsd?pf(mcUsd/1e9):pf(mcSol/1e9)],
-   ['MCAP',ccy==='usd'&&solUsd?'$'+fk(mcUsd):fk(mcSol)+' SOL'],
-   ['TRADE',amountSol?amountSol.toFixed(3)+' SOL':'—'],
-   ['TRADER',shortCA(trade.traderPublicKey)],
-   ['TYPE',String(trade.txType||'TRADE').toUpperCase()],
-   ['POOL',trade.pool||'PUMP']
- ];
- $('#cvst').innerHTML=cells.map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
-};
-const applyPumpTrade=trade=>{
- if(trade.mint!==curM)return;
- lastPumpTrade=trade;
- currentPumpTrades.unshift(trade);currentPumpTrades=currentPumpTrades.slice(0,100);
- updateChartFromTrade(trade);
- if(tab===1)loadTrades();
-};
 const loadChart=async fit=>{
  const ov=$('#chl');if(fit)ov.hidden=false;
  try{
@@ -647,35 +595,40 @@ const loadChart=async fit=>{
    const pool=curP;
    if(!BASE58.test(pool)){
      CAN=[];series.setData([]);vol.setData([]);
-     $('#chn').textContent=PUMP.tradeConfigured?'WAITING FOR PUMPPORTAL TRADES · NO HISTORICAL CANDLES':'ADD PUMPPORTAL API KEY FOR LIVE TRADES';
+     $('#chn').textContent='WAITING FOR A FREE INDEXED SOLANA POOL';
      return;
    }
-   const[,u,ag]=TFS[tf],j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,25000);
-   const k=mode==='mcap'&&SUP?SUP:1,L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
-   if(!L.length)throw new Error('No historical candles; waiting for live PumpPortal trades.');
+   const[,u,ag]=TFS[tf];
+   const j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,60000);
+   const k=mode==='mcap'&&SUP?SUP:1;
+   const L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
+   if(!L.length)throw new Error('No historical candles are available for this pool yet.');
    CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));
-   PR=12;
-   series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+   const last=CAN[CAN.length-1].close;
+   PR=k>1?2:Math.min(12,Math.max(2,3-Math.floor(Math.log10(last))));
+   series.applyOptions({priceFormat:{type:'custom',formatter:x=>k>1?fk(x):x.toFixed(PR),minMove:k>1?.01:Math.pow(10,-PR)}});
    series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
    vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
    if(fit)chart.timeScale().fitContent();
    lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
-   $('#chn').textContent='HISTORICAL BACKFILL · GECKOTERMINAL · LIVE UPDATES PUMPPORTAL';
-   // Reapply trades that arrived while the historical request was loading.
-   currentPumpTrades.slice().reverse().forEach(t=>updateChartFromTrade(t));
+   $('#chn').textContent='FREE PUBLIC DATA · GECKOTERMINAL OHLCV · '+new Date().toLocaleTimeString();
  }catch(e){$('#chn').textContent=e.message}
  finally{ov.hidden=true}
 };
 const loadTrades=async()=>{
- const el=$('#bmc');
- const items=currentPumpTrades.slice(0,60);
- el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>SOL</span><span>MCAP</span><span>MAKER</span></div>'+
- items.map(t=>{
-   const buy=t.txType==='buy',maker=String(t.traderPublicKey||''),mc=eventMcap(t);
-   const time=new Date(eventTime(t)).toLocaleTimeString([],{hour12:false});
-   return '<div class="trd"><span class="mut">'+time+'</span><span class="'+(buy?'up':'dn')+'">'+(buy?'BUY':'SELL')+'</span><span class="'+(buy?'up':'dn')+'">'+Number(t.solAmount||t.quoteAmount||0).toFixed(3)+'</span><span>'+fk(mc)+' SOL</span><span><a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(maker)+'">'+esc(shortCA(maker))+'</a></span></div>';
- }).join('')||'<p class="mut">Waiting for live trades. A PumpPortal API key is required for token trade subscriptions.</p>';
- $('#chn').textContent=PUMP.tradeConfigured?'LIVE · PUMPPORTAL TOKEN TRADES':'TOKEN TRADE STREAM NOT CONFIGURED';
+ const el=$('#bmc'),pool=curP;
+ if(!BASE58.test(pool)){el.innerHTML='<p class="mut">Trades will appear when a market is indexed for this token.</p>';return}
+ try{
+   const j=await gt('/networks/solana/pools/'+pool+'/trades',60000);
+   if(pool!==curP||tab!==1)return;
+   el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>USD</span><span>PRICE</span><span>MAKER</span></div>'+
+    (j.data||[]).slice(0,60).map(t=>{
+      const a=t.attributes,b=a.kind==='buy',px=+(b?a.price_to_in_usd:a.price_from_in_usd),mk=a.tx_from_address||'';
+      const tx=a.tx_hash||'';
+      return '<div class="trd"><span class="mut">'+new Date(a.block_timestamp).toLocaleTimeString([],{hour12:false})+'</span><span class="'+(b?'up':'dn')+'">'+(b?'BUY':'SELL')+'</span><span class="'+(b?'up':'dn')+'">'+fm(+a.volume_in_usd)+'</span><span>'+pf(px)+'</span><span>'+(tx?'<a target="_blank" rel="noopener" href="https://solscan.io/tx/'+encodeURIComponent(tx)+'">':'')+esc(mk.slice(0,4)+'…'+mk.slice(-4))+(tx?'</a>':'')+'</span></div>';
+    }).join('')||'<p class="mut">No recent trades.</p>';
+   $('#chn').textContent='FREE PUBLIC DATA · GECKOTERMINAL TRADES · '+new Date().toLocaleTimeString();
+ }catch(e){if(tab===1)el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'}
 };
 const BM=m=>'<a class="btn o" target="_blank" rel="noopener" href="https://app.bubblemaps.io/sol/token/'+encodeURIComponent(m)+'">Open Bubblemaps ↗</a>';
 const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
@@ -691,14 +644,14 @@ $('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
 setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
 const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c)connectPumpPortal()};
 const openCoin=(tk,p,m)=>{
- cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;activeMint=m;SUP=1e9;CAN=[];currentPumpTrades=[];lastPumpTrade=null;metaMarketCapSol=0;solUsd=0;
+ cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;SUP=0;CAN=[];solUsd=0;
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
  $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
- setV(true);STP=loadStats();loadInfo();pumpSubscribe(m);showTab(tab);
+ setV(true);STP=loadStats();loadInfo();showTab(tab);
 };
 const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
-setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},30000);
+setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},60000);
 $('#t1list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 // theme
 const thm=$('#thm'),rootEl=document.documentElement;
