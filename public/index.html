@@ -419,10 +419,11 @@ const enter=()=>{b.classList.add('app');showU();Object.values(A.W).forEach(w=>w.
 const exit=()=>{const wasApp=b.classList.contains('app');b.classList.remove('app');if(wasApp&&authClient)authClient.auth.signOut({scope:'local'}).catch(()=>{});U.name='';U.addr='';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();try{history.replaceState(null,'',location.pathname+location.search)}catch(x){location.hash=''}};
 $('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured yet. Add the Supabase project URL and publishable key to Render.';return}
  const button=$('#af').querySelector('button[type=submit]');button.disabled=true;button.textContent='Signing in…';
- try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;U.name=data.user?.user_metadata?.display_name||data.user?.email?.split('@')[0]||'alpha user';U.addr='';$('#ap').value='';login()}
- catch(err){$('#ae').textContent=err.message||'Could not sign in. Please try again.'}
+ try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;await verifyAdmin(data.session);U.name=data.user?.email?.split('@')[0]||'admin';U.addr='';$('#ap').value='';login()}
+ catch(err){if(authClient)await authClient.auth.signOut({scope:'local'}).catch(()=>{});$('#ae').textContent=err.message||'Could not sign in. Please try again.'}
  finally{button.disabled=false;button.textContent='Log in'}};
 
+const verifyAdmin=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/admin/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify administrator access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account is not authorized for administrator access.')};
 if(authClient){authClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&b.classList.contains('app'))exit()})}
 const TW=[...ids,'w-legal'].map(i=>A.W[i]),hero=$('#top');let root=null,foc=null,R={};
 const leaves=(n,o=[])=>{n.id?o.push(n):(leaves(n.a,o),leaves(n.b,o));return o};
@@ -452,6 +453,6 @@ if(mod&&d){e.preventDefault();if(e.ctrlKey)rs(d);else{const n=foc&&nb(foc,d);if(
 const m=e.code.match(/^(Digit|Numpad)([1-4])$/);if(m){if(!mod&&(typing||e.ctrlKey))return;e.preventDefault();tog('t'+m[2]);return}
 if(e.key==='?'&&!typing){e.preventDefault();tog('t4')}});
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
-if(authClient){authClient.auth.getSession().then(({data,error})=>{if(error)throw error;if(data.session){U.name=data.session.user?.user_metadata?.display_name||data.session.user?.email?.split('@')[0]||'alpha user';U.addr='';boot(enter)}}).catch(error=>console.warn('Supabase session restore failed:',error.message))}
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){await verifyAdmin(data.session);U.name=data.session.user?.email?.split('@')[0]||'admin';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase admin session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
 </script></body></html>
