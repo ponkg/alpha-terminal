@@ -317,6 +317,45 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 :root[data-theme=dark] .cl{filter:blur(82px) saturate(.92)!important;opacity:.96}
 :root[data-theme=dark] .hero::after{mix-blend-mode:multiply!important;opacity:.12!important}
 
+
+/* Stronger blue clouding and visible film grain, tuned against the supplied Alpha film frame. */
+.hero{
+  background-color:#dceaf8!important;
+  background-image:
+    radial-gradient(ellipse 48% 58% at 7% 5%,rgba(54,111,174,.46) 0%,rgba(78,135,190,.34) 30%,rgba(128,171,208,.16) 57%,transparent 82%),
+    radial-gradient(ellipse 37% 34% at 88% 17%,rgba(86,145,199,.30) 0%,rgba(130,173,210,.16) 50%,transparent 82%),
+    radial-gradient(ellipse 35% 38% at 64% 83%,rgba(78,139,195,.25) 0%,rgba(151,187,216,.14) 48%,transparent 82%),
+    radial-gradient(ellipse 44% 36% at 13% 87%,rgba(105,158,204,.22) 0%,rgba(173,203,228,.12) 56%,transparent 84%),
+    linear-gradient(135deg,#dceaf8 0%,#edf5fc 48%,#e1eef9 100%)!important;
+}
+.cl{
+  inset:-24%!important;
+  filter:blur(72px) saturate(1.12)!important;
+  opacity:.94!important;
+}
+.cl b i{
+  background:radial-gradient(ellipse at 50% 50%,
+    color-mix(in srgb,var(--c) 70%,#d7e8f7) 0%,
+    color-mix(in srgb,var(--c) 52%,#e0edf8) 36%,
+    color-mix(in srgb,var(--c) 28%,#eaf3fb) 60%,
+    transparent 84%)!important;
+}
+.hero::before{
+  background:radial-gradient(ellipse 58% 68% at 50% 52%,
+    rgba(248,252,255,.48) 0%,
+    rgba(240,247,253,.09) 58%,
+    transparent 84%)!important;
+}
+.hero::after{
+  opacity:.27!important;
+  mix-blend-mode:multiply!important;
+  background-size:220px 220px!important;
+  animation:gr .9s steps(1) infinite!important;
+}
+:root[data-theme=dark] .hero{background-color:#dceaf8!important}
+:root[data-theme=dark] .cl{filter:blur(72px) saturate(1.12)!important;opacity:.94!important}
+:root[data-theme=dark] .hero::after{opacity:.27!important;mix-blend-mode:multiply!important}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
