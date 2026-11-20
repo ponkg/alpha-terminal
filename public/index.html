@@ -325,6 +325,18 @@ const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&qu
 const fm=n=>n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n<1e5?1:0)+'K':'$'+Math.round(n||0),F=p=>(p>0?'+':'')+p+'%',C=p=>p>=0?'up':'dn';
 const mkTabs=(el,labels,fn)=>{labels.forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>{fn(i);[...el.children].forEach((c,j)=>c.classList.toggle('on',i===j))};el.appendChild(x)});el.children[0].click()};
 const ldr=t=>'<div class="ld"><i></i><i></i><i></i><span>'+t+'</span></div>';
+// GeckoTerminal remains as historical OHLCV backfill and token-holder data.
+const GT='/api/gecko?path=',CA={};let lastCall=0;
+const gt=async(p,ttl=55000)=>{
+ const cached=CA[p];if(cached&&Date.now()-cached.t<ttl)return cached.d;
+ const wait=Math.max(0,lastCall+2100-Date.now());lastCall=Date.now()+wait;
+ await new Promise(resolve=>setTimeout(resolve,wait));
+ const response=await fetch(GT+encodeURIComponent(p),{headers:{Accept:'application/json'}});
+ if(!response.ok)throw new Error(response.status===429?'Rate limited by GeckoTerminal. Retrying shortly.':'GeckoTerminal error '+response.status);
+ const data=await response.json();CA[p]={t:Date.now(),d:data};return data;
+};
+const ago=ms=>{const m=Math.round(ms/60000);return m<1?'just now':m<60?m+'m ago':m<2880?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
+const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
 // 1 PumpPortal launch + migration tracker.
 const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const WSOL='So11111111111111111111111111111111111111112';
