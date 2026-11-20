@@ -96,13 +96,13 @@ app.get("/api/token-meta", tokenMetaLimiter, async (req, res) => {
   const cached = tokenMetaCache.get(mint);
   if (cached && Date.now() - cached.time < 30000) return res.json(cached.data);
   try {
-    const upstream = await fetch("https://api.dexscreener.com/latest/dex/tokens/" + encodeURIComponent(mint), {
+    const upstream = await fetch("https://api.dexscreener.com/token-pairs/v1/solana/" + encodeURIComponent(mint), {
       headers: { Accept: "application/json" },
       signal: AbortSignal.timeout(10000)
     });
     if (!upstream.ok) return res.status(upstream.status).json({ error: "Token metadata provider returned " + upstream.status + "." });
     const body = await upstream.json();
-    const pairs = (body.pairs || [])
+    const pairs = (Array.isArray(body) ? body : body.pairs || [])
       .filter(p => p.chainId === "solana" && String(p.baseToken?.address || "").toLowerCase() === mint.toLowerCase())
       .sort((a, b) => Number(b.liquidity?.usd || 0) - Number(a.liquidity?.usd || 0));
     const p = pairs[0];
