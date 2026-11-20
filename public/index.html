@@ -586,7 +586,8 @@ const narrativeGroups=()=>{
  [...bestByMint.values()].forEach(token=>{
   const category=tokenCategory(token);
   if(!category)return;
-  const change=Number(token.changes[field]);
+  const rawChange=token.changes[field];
+  const change=rawChange==null?null:Number(rawChange);
   token.change=Number.isFinite(change)?change:null;
   if(!groups.has(category))groups.set(category,[]);
   groups.get(category).push(token);
@@ -652,7 +653,7 @@ const loadT1=async(force=false,onProgress=null)=>{
    const tokens=readJupiterTokens(payload);
    if(!tokens.length)throw new Error('Jupiter returned no usable Solana tokens.');
    onProgress?.(54,'LOADING DATA','Received '+tokens.length+' live tokens · parsing market stats');
-   if(requestId===narrativeRequestSequence&&interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
+   if(interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
     narrativePools=tokens;narrativeUpdated=payload.fetchedAt?Date.parse(payload.fetchedAt):Date.now();renderT1();
    }
    return {ok:true,cached:!!payload.stale,tokens,pools:tokens.length,error:payload.stale?'Showing cached Jupiter data':''};
@@ -741,7 +742,7 @@ const renderNarrativeTabs=()=>{
  link.textContent='J7 Tracker ↗';tabs.appendChild(link);
 };
 renderNarrativeTabs();
-$('#t1list').innerHTML=ldr('CONNECTING TO GECKOTERMINAL')+'<div class="sk"></div><div class="sk"></div>';
+$('#t1list').innerHTML=ldr('CONNECTING TO JUPITER')+'<div class="sk"></div><div class="sk"></div>';
 new MutationObserver(()=>{
  if(!A.W.t1.hidden){loadT1()}
  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
