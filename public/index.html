@@ -339,12 +339,11 @@ const ago=ms=>{const m=Math.round(ms/60000);return m<1?'just now':m<60?m+'m ago'
 const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
 // 1 PumpPortal launch + migration tracker.
 const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
-const WSOL='So11111111111111111111111111111111111111112';
 const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,retryDelay:1200};
 const tokenMetadata=new Map();
 const logoAttempts=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
-let currentPumpTrades=[],lastPumpTrade=null,solUsd=0,metaMarketCapSol=0,activeMint='';
+let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
 const getTokenMeta=async mint=>{
   const cached=tokenMetadata.get(mint);
   if(cached&&Date.now()-cached.time<30000)return cached.data;
@@ -538,7 +537,7 @@ const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputed
 const lgd=(c,v)=>{
  if(!c){$('#chg').textContent='';return}
  const f=x=>mode==='mcap'?fk(x):pf(x),ch=c.open?((c.close-c.open)/c.open*100):0;
- $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · PUMPPORTAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
+ $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · GECKOTERMINAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
 };
 const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}chart=LightweightCharts.createChart($('#chc'),{autoSize:true,rightPriceScale:{borderVisible:false},timeScale:{timeVisible:true,borderVisible:false},...copts()});series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});chart.subscribeCrosshairMove(p=>{const c=p.seriesData&&p.seriesData.get(series);if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}else if(CAN.length){const l=CAN[CAN.length-1];lgd(l,l.v)}});return true};
 const loadStats=async()=>{
@@ -591,7 +590,6 @@ const loadChart=async fit=>{
  const ov=$('#chl');if(fit)ov.hidden=false;
  try{
    if(!mkC())return;
-   await STP;
    const pool=curP;
    if(!BASE58.test(pool)){
      CAN=[];series.setData([]);vol.setData([]);
