@@ -267,6 +267,12 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 #boot .boot-track{height:4px;width:100%;background:color-mix(in srgb,var(--fg) 14%,transparent);overflow:hidden}
 #boot .boot-fill{height:100%;width:0;background:var(--ac);transition:width .22s ease}
 #boot .boot-detail{font-size:10px;line-height:1.6;color:var(--mut);margin-top:8px;letter-spacing:.04em}
+
+#boot .boot-title{color:var(--fg);letter-spacing:.12em;margin-bottom:8px}
+#boot .boot-log>div:first-child{color:var(--ac);letter-spacing:normal;margin-bottom:0}
+#boot .boot-data-head{color:var(--fg);letter-spacing:.12em;margin-bottom:9px}
+#boot div:last-child::after{content:none}
+#boot .boot-log>div:last-child::after{content:"█";margin-left:6px;animation:bl 1s steps(1) infinite}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -675,7 +681,7 @@ const preloadTerminalData=async report=>{
  }else{
   const unique=[...new Map(narrativePools.map(token=>[token.mint,token])).values()]
    .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity).slice(0,12);
-  let finished=0;
+  let finished=0,logoSuccess=0;
   const total=unique.length;
   report(52,'LOADING DATA','Preloading metadata and coin logos · 0/'+total);
   for(let start=0;start<total;start+=4){
@@ -688,7 +694,7 @@ const preloadTerminalData=async report=>{
       if(meta.symbol)token.symbol=meta.symbol;
       if(meta.name)token.name=meta.name;
      }
-     if(token.imageUrl)await preloadImage(token.imageUrl);
+     if(token.imageUrl&&await preloadImage(token.imageUrl))logoSuccess++;
     }catch(error){}
     finished++;
     report(52+(finished/Math.max(1,total))*29,'LOADING DATA','Preloading metadata and coin logos · '+finished+'/'+total);
@@ -701,10 +707,8 @@ const preloadTerminalData=async report=>{
  await connectPumpPortal();
  const pumpReady=await snapshot;
  report(96,'LOADING DATA',pumpReady?'PumpPortal snapshot received':'Market data loaded · PumpPortal snapshot pending');
- return {market:market.ok,pumpPortal:pumpReady,pools:market.pools||0,logos:finishedCount()};
+ return {market:market.ok,pumpPortal:pumpReady,pools:market.pools||0,logos:logoSuccess};
 };
-const finishedCount=()=>[...new Map(narrativePools.map(token=>[token.mint,token])).values()].filter(token=>token.imageUrl).length;
-
 const renderNarrativeTabs=()=>{
  const tabs=$('#t1tabs');tabs.innerHTML='';
  NARRATIVE_WINDOWS.forEach((windowOption,index)=>{
