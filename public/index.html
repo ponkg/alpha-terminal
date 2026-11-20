@@ -343,7 +343,7 @@ const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,ret
 const tokenMetadata=new Map();
 const logoAttempts=new Map();
 let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
-let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
+
 const getTokenMeta=async mint=>{
   const cached=tokenMetadata.get(mint);
   if(cached&&Date.now()-cached.time<30000)return cached.data;
@@ -446,12 +446,6 @@ const connectPumpPortal=async()=>{
     }
   };
   socket.onerror=()=>{try{socket.close()}catch(e){}};
-};
-const pumpSubscribe=mint=>{
-  activeMint=mint||'';
-  const ws=PUMP.socket;
-  // Paid PumpPortal per-token subscriptions are deliberately not used in this free build.
-
 };
 const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
 const renderT1=()=>{
