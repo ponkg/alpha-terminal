@@ -14,7 +14,6 @@ const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "";
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
-const PUMPPORTAL_API_KEY = (process.env.PUMPPORTAL_API_KEY || "").trim();
 const authConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 const databaseConfigured = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
 
@@ -57,7 +56,6 @@ app.get("/api/health", async (_req, res) => {
     ok: true, service: "alpha-api", authConfigured, databaseConfigured,
     waitlistConnected,
     adminAccessConfigured: Boolean(ADMIN_EMAIL && supabaseAdmin),
-    pumpPortalTradeConfigured: Boolean(PUMPPORTAL_API_KEY)
   });
 });
 
@@ -289,8 +287,6 @@ app.get("*", (_req, res) => res.sendFile(path.join(__dirname, "public", "index.h
 // One upstream PumpPortal connection serves every terminal session.
 const httpServer = app.listen(PORT, "0.0.0.0", () => console.log("alpha running on port " + PORT));
 const pumpClients = new Set();
-const pumpSubscriptions = new Map(); // mint -> Set<WebSocket clients>
-const clientMint = new Map(); // one active mint per browser socket
 const recentPumpLaunches = [];
 const recentPumpMigrations = [];
 const pumpWss = new WebSocketServer({ noServer: true, maxPayload: 4096 });
@@ -301,33 +297,8 @@ let pumpReconnectTimer = null;
 const sendPumpClient = (client, payload) => {
   if (client.readyState === WebSocket.OPEN) client.send(JSON.stringify(payload));
 };
-const pumpUpstreamSend = payload => {
-  if (pumpSocket?.readyState === WebSocket.OPEN) pumpSocket.send(JSON.stringify(payload));
-};
 const broadcastPump = payload => {
   for (const client of pumpClients) sendPumpClient(client, payload);
-};
-const subscribeUpstreamMint = mint => {
-  if (PUMPPORTAL_API_KEY && pumpSocket?.readyState === WebSocket.OPEN) {
-    pumpUpstreamSend({ method: "subscribeTokenTrade", keys: [mint] });
-  }
-};
-const unsubscribeUpstreamMint = mint => {
-  if (PUMPPORTAL_API_KEY && pumpSocket?.readyState === WebSocket.OPEN) {
-    pumpUpstreamSend({ method: "unsubscribeTokenTrade", keys: [mint] });
-  }
-};
-const releasePumpClient = client => {
-  const mint = clientMint.get(client);
-  if (!mint) return;
-  clientMint.delete(client);
-  const listeners = pumpSubscriptions.get(mint);
-  if (!listeners) return;
-  listeners.delete(client);
-  if (listeners.size === 0) {
-    pumpSubscriptions.delete(mint);
-    unsubscribeUpstreamMint(mint);
-  }
 };
 
 pumpWss.on("connection", client => {
@@ -340,57 +311,10 @@ pumpWss.on("connection", client => {
   sendPumpClient(client, {
     type: "status",
     connected: pumpSocket?.readyState === WebSocket.OPEN,
-    tradeConfigured: Boolean(PUMPPORTAL_API_KEY)
+    freeStreams: ["newToken", "migration"]
   });
-
-  client.on("message", raw => {
-    let message;
-    try { message = JSON.parse(raw.toString()); }
-    catch { return sendPumpClient(client, { type: "error", error: "Invalid message." }); }
-
-    if (message.action === "unsubscribe") {
-      releasePumpClient(client);
-      return;
-    }
-    if (message.action !== "subscribe") return;
-    const mint = String(message.mint || "");
-    if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
-      return sendPumpClient(client, { type: "error", error: "Invalid Solana token address." });
-    }
-    if (!PUMPPORTAL_API_KEY) {
-      return sendPumpClient(client, {
-        type: "status",
-        connected: pumpSocket?.readyState === WebSocket.OPEN,
-        tradeConfigured: false,
-        message: "Add PUMPPORTAL_API_KEY in Render to enable live token trades."
-      });
-    }
-    const now = Date.now();
-    if (client.lastMintSwitch && now - client.lastMintSwitch < 1200) {
-      return sendPumpClient(client, { type: "error", error: "Please wait before switching tokens." });
-    }
-    client.lastMintSwitch = now;
-    if (clientMint.get(client) === mint) return;
-    releasePumpClient(client);
-    if (!pumpSubscriptions.has(mint) && pumpSubscriptions.size >= 100) {
-      return sendPumpClient(client, { type: "error", error: "Live token subscription capacity reached." });
-    }
-    const isNew = !pumpSubscriptions.has(mint);
-    if (isNew) pumpSubscriptions.set(mint, new Set());
-    pumpSubscriptions.get(mint).add(client);
-    clientMint.set(client, mint);
-    if (isNew) subscribeUpstreamMint(mint);
-    sendPumpClient(client, { type: "subscribed", mint });
-  });
-
-  client.on("close", () => {
-    releasePumpClient(client);
-    pumpClients.delete(client);
-  });
-  client.on("error", () => {
-    releasePumpClient(client);
-    pumpClients.delete(client);
-  });
+  client.on("close", () => pumpClients.delete(client));
+  client.on("error", () => pumpClients.delete(client));
 });
 
 httpServer.on("upgrade", (request, socket, head) => {
@@ -418,23 +342,15 @@ httpServer.on("upgrade", (request, socket, head) => {
 
 function connectPumpPortal() {
   if (pumpReconnectTimer) clearTimeout(pumpReconnectTimer);
-  const url = PUMPPORTAL_API_KEY
-    ? "wss://pumpportal.fun/api/data?api-key=" + encodeURIComponent(PUMPPORTAL_API_KEY)
-    : "wss://pumpportal.fun/api/data";
-  const upstream = new WebSocket(url);
+  // Only the free launch and migration feeds are subscribed to here.
+  const upstream = new WebSocket("wss://pumpportal.fun/api/data");
   pumpSocket = upstream;
   upstream.on("open", () => {
     pumpReconnectDelay = 1000;
-    // Ecosystem-wide launches/migrations are free; token-trade subscriptions are opt-in and metered.
     upstream.send(JSON.stringify({ method: "subscribeNewToken" }));
     upstream.send(JSON.stringify({ method: "subscribeMigration" }));
-    if (PUMPPORTAL_API_KEY) {
-      for (const mint of pumpSubscriptions.keys()) {
-        upstream.send(JSON.stringify({ method: "subscribeTokenTrade", keys: [mint] }));
-      }
-    }
-    broadcastPump({ type: "status", connected: true, tradeConfigured: Boolean(PUMPPORTAL_API_KEY) });
-    console.log("PumpPortal data websocket connected; token trade key " + (PUMPPORTAL_API_KEY ? "configured" : "not configured"));
+    broadcastPump({ type: "status", connected: true, freeStreams: ["newToken", "migration"] });
+    console.log("PumpPortal free launch + migration websocket connected");
   });
   upstream.on("message", raw => {
     let event;
@@ -452,27 +368,21 @@ function connectPumpPortal() {
       broadcastPump({ type: "newToken", data: item });
       return;
     }
-    if (["migrate", "complete", "create_pool", "migration"].includes(event.txType) || (event.source === "pumpswap" && event.isCanonicalPool === true)) {
+    if (["migrate", "complete", "create_pool", "migration"].includes(event.txType) ||
+        (event.source === "pumpswap" && event.isCanonicalPool === true)) {
       const item = { ...event, receivedAt };
       recentPumpMigrations.unshift(item);
       if (recentPumpMigrations.length > 80) recentPumpMigrations.length = 80;
       broadcastPump({ type: "migration", data: item });
-      return;
-    }
-    if ((event.txType === "buy" || event.txType === "sell") && event.mint) {
-      const listeners = pumpSubscriptions.get(String(event.mint));
-      if (!listeners?.size) return;
-      const item = { ...event, receivedAt };
-      for (const client of listeners) sendPumpClient(client, { type: "trade", data: item });
     }
   });
   upstream.on("error", error => {
-    console.error("PumpPortal websocket error:", error.message);
+    console.error("PumpPortal free websocket error:", error.message);
     try { upstream.terminate(); } catch {}
   });
   upstream.on("close", () => {
     if (pumpSocket === upstream) pumpSocket = null;
-    broadcastPump({ type: "status", connected: false, tradeConfigured: Boolean(PUMPPORTAL_API_KEY) });
+    broadcastPump({ type: "status", connected: false, freeStreams: ["newToken", "migration"] });
     const delay = pumpReconnectDelay;
     pumpReconnectDelay = Math.min(pumpReconnectDelay * 2, 30000);
     pumpReconnectTimer = setTimeout(connectPumpPortal, delay);
