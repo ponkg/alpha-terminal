@@ -61,6 +61,28 @@ app.get("/api/health", async (_req, res) => {
   });
 });
 
+// Mint short-lived, single-use WebSocket tickets only for the configured admin.
+const pumpTickets = new Map();
+app.post("/api/pump-ticket", async (req, res) => {
+  if (!ADMIN_EMAIL || !supabaseAdmin) return res.status(503).json({ error: "Administrator access is not configured." });
+  const authorization = req.get("authorization") || "";
+  const match = authorization.match(/^Bearer\\s+(.+)$/i);
+  if (!match) return res.status(401).json({ error: "Admin session required." });
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(match[1]);
+    if (error || !data?.user || (data.user.email || "").trim().toLowerCase() !== ADMIN_EMAIL) {
+      return res.status(403).json({ error: "Administrator access required." });
+    }
+    const ticket = randomBytes(24).toString("base64url");
+    pumpTickets.set(ticket, Date.now() + 30000);
+    for (const [key, expiry] of pumpTickets) if (expiry < Date.now()) pumpTickets.delete(key);
+    return res.json({ ticket, expiresIn: 30 });
+  } catch (error) {
+    console.error("PumpPortal ticket issue failed:", error.message);
+    return res.status(401).json({ error: "Could not verify admin session." });
+  }
+});
+
 // Resolve token metadata (including its logo) from the mint/contract address.
 const tokenMetaCache = new Map();
 const tokenMetaLimiter = rateLimit({
@@ -376,6 +398,16 @@ httpServer.on("upgrade", (request, socket, head) => {
   try { pathname = new URL(request.url, "http://localhost").pathname; }
   catch { socket.destroy(); return; }
   if (pathname !== "/ws/pumpportal") {
+    socket.destroy();
+    return;
+  }
+  let ticket = "";
+  try { ticket = new URL(request.url, "http://localhost").searchParams.get("ticket") || ""; }
+  catch { socket.destroy(); return; }
+  const expiresAt = pumpTickets.get(ticket);
+  pumpTickets.delete(ticket);
+  if (!expiresAt || expiresAt < Date.now()) {
+    socket.write("HTTP/1.1 401 Unauthorized\\r\\nConnection: close\\r\\n\\r\\n");
     socket.destroy();
     return;
   }
