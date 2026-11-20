@@ -273,6 +273,10 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 #boot .boot-data-head{color:var(--fg);letter-spacing:.12em;margin-bottom:9px}
 #boot div:last-child::after{content:none}
 #boot .boot-log>div:last-child::after{content:"█";margin-left:6px;animation:bl 1s steps(1) infinite}
+
+/* Keep the chart measurable inside the draggable terminal window. */
+.cv{width:100%;min-width:0}
+.chw{position:relative;display:block;width:100%;height:clamp(280px,42vh,440px);min-height:280px;flex:0 0 auto;overflow:hidden}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -295,7 +299,7 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 <div class="row"><span class="mut">X handle</span><b id="sh"></b></div><div class="row"><span class="mut">Successful referrals</span><b id="sr">0</b></div><div class="row"><span class="mut">Status</span><b id="ss">On the waitlist</b></div>
 <div class="lk"><input id="sl" readonly aria-label="Your invite link"></div>
 <div class="bt"><button class="btn" id="cb">Copy invite link</button><button class="btn o" id="xb">Share on X</button><button class="btn o" id="nb" hidden>Share…</button></div>
-<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div><p class="k" style="margin-top:12px">THE ALPHA VISION</p><div class="it"><b></b><span>Monitor market-wide narrative activity, identify clusters of related tokens, observe shifts in attention and track narratives through their lifecycle.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><div class="tabs" id="tabs"></div><div id="dlist"></div><p class="k" style="margin-top:12px">PRODUCT PREVIEW — ILLUSTRATIVE DATA, NOT LIVE</p></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><p class="k" style="margin-top:12px">PRODUCT VISION — NOT YET RELEASED</p></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details><details><summary>Does alpha guarantee profitable trades?</summary><p>No. alpha provides market information and research tools. It does not guarantee trading outcomes.</p></details><details><summary>Not financial advice (NFA)</summary><p>Nothing on alpha is financial advice. Memecoins are volatile and can go to zero.</p></details><details><summary>Do your own research (DYOR)</summary><p>Verify every token, contract and claim yourself before acting.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores only the public X handle you submit, an optional updates preference, a generated referral code and referral counts. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><a href="#" class="blk" data-open="w-legal">Privacy &amp; terms</a><a href="#" class="blk" id="xl">X / Twitter</a><button class="blk appo" id="thm">◐ Light</button></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
+<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div><p class="k" style="margin-top:12px">THE ALPHA VISION</p><div class="it"><b></b><span>Monitor market-wide narrative activity, identify clusters of related tokens, observe shifts in attention and track narratives through their lifecycle.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><div class="tabs" id="tabs"></div><div id="dlist"></div><p class="k" style="margin-top:12px">PRODUCT PREVIEW — ILLUSTRATIVE DATA, NOT LIVE</p></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><p class="k" style="margin-top:12px">PRODUCT VISION — NOT YET RELEASED</p></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details><details><summary>Does alpha guarantee profitable trades?</summary><p>No. alpha provides market information and research tools. It does not guarantee trading outcomes.</p></details><details><summary>Not financial advice (NFA)</summary><p>Nothing on alpha is financial advice. Memecoins are volatile and can go to zero.</p></details><details><summary>Do your own research (DYOR)</summary><p>Verify every token, contract and claim yourself before acting.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores only the public X handle you submit, an optional updates preference, a generated referral code and referral counts. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><a href="#" class="blk" data-open="w-legal">Privacy &amp; terms</a><a href="#" class="blk" id="xl">X / Twitter</a><button class="blk appo" id="thm">◐ Light</button></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
 const $=s=>document.querySelector(s),nv=$('#nv');
 addEventListener('scroll',()=>nv.classList.toggle('s',scrollY>10),{passive:true});
 $('#mb').onclick=()=>$('#mm').classList.toggle('o');document.querySelectorAll('#mm a').forEach(a=>a.onclick=()=>$('#mm').classList.remove('o'));
@@ -866,12 +870,16 @@ $('#t3f').onsubmit=async e=>{
   if(a.is_honeypot===true||a.is_honeypot==='true')F2.push(['HONEYPOT',3,'Flagged as a honeypot']);
   const buyers=Number(tx.buyers)||0,sellers=Number(tx.sellers)||0,buys=Number(tx.buys)||0,sells=Number(tx.sells)||0;
   F2.push(['ACTIVITY',buyers<30||sells>buys*2?2:1,'24h: '+buys+' buys / '+sells+' sells · '+buyers+' buyers / '+sellers+' sellers']);
+  // Match the reference scanner's social checks, while accepting both GeckoTerminal shapes.
   const socials=Array.isArray(a.socials)?a.socials:[];
+  const socialTypes=socials.map(item=>String(item?.type||item?.platform||'').toLowerCase());
   const websites=Array.isArray(a.websites)?a.websites:[];
-  const listed=[...new Set([
-   ...socials.map(item=>item?.type==='twitter'?'X':item?.type==='telegram'?'Telegram':item?.type).filter(Boolean),
-   ...websites.map(()=> 'website')
-  ])];
+  const listed=[
+   (a.twitter_handle||socialTypes.some(type=>type==='twitter'||type==='x'))&&'X',
+   websites.length&&'website',
+   (a.telegram_handle||socialTypes.includes('telegram'))&&'Telegram',
+   (a.discord_url||socialTypes.includes('discord'))&&'Discord'
+  ].filter(Boolean);
   F2.push(['PROFILE',listed.length?1:2,(listed.length?'Listed: '+listed.join(', '):'No socials or website listed')+(a.gt_verified?' · GT verified':' · unverified metadata')]);
   if(a.gt_score!=null)F2.push(['GT SCORE',a.gt_score>=60?1:a.gt_score>=40?2:3,Math.round(a.gt_score)+'/100 (GeckoTerminal)']);
   const score=Math.max(0,100-F2.reduce((total,row)=>total+(row[1]===2?10:row[1]===3?22:0),0));
@@ -894,7 +902,7 @@ const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTM
 $('#t4q').oninput=rk;rk();
 // coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
 const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
-let chart=null,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
+let chart=null,chartResizeObserver=null,chartLoadVersion=0,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
 const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
 const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
 const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
@@ -903,29 +911,103 @@ const lgd=(c,v)=>{
  const f=x=>mode==='mcap'?fk(x):pf(x),ch=c.open?((c.close-c.open)/c.open*100):0;
  $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · GECKOTERMINAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
 };
-const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}chart=LightweightCharts.createChart($('#chc'),{autoSize:true,rightPriceScale:{borderVisible:false},timeScale:{timeVisible:true,borderVisible:false},...copts()});series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});chart.subscribeCrosshairMove(p=>{const c=p.seriesData&&p.seriesData.get(series);if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}else if(CAN.length){const l=CAN[CAN.length-1];lgd(l,l.v)}});return true};
+const resizeChart=()=>{
+ const el=$('#chc');
+ if(!chart||!el)return;
+ const width=el.clientWidth,height=el.clientHeight;
+ if(width>0&&height>0)chart.resize(width,height);
+};
+const mkC=()=>{
+ const el=$('#chc');
+ if(chart){resizeChart();return true}
+ if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}
+ chart=LightweightCharts.createChart(el,{
+  width:Math.max(1,el.clientWidth||520),
+  height:Math.max(280,el.clientHeight||320),
+  rightPriceScale:{borderVisible:false},
+  timeScale:{timeVisible:true,borderVisible:false},
+  ...copts()
+ });
+ series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});
+ vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});
+ chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});
+ chart.subscribeCrosshairMove(p=>{
+  const c=p.seriesData&&p.seriesData.get(series);
+  if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}
+  else if(CAN.length){const last=CAN[CAN.length-1];lgd(last,last.v)}
+ });
+ if(typeof ResizeObserver!=='undefined'){
+  chartResizeObserver=new ResizeObserver(resizeChart);
+  chartResizeObserver.observe(el);
+ }else{
+  addEventListener('resize',resizeChart,{passive:true});
+ }
+ requestAnimationFrame(resizeChart);
+ return true
+};
 const loadStats=async()=>{
- const mint=curM;
+ const mint=curM,hintedPool=curP;
  try{
-   const meta=await getTokenMeta(mint);
-   if(mint!==curM)return;
-   if(meta.pairAddress&&BASE58.test(meta.pairAddress))curP=meta.pairAddress;
-   const px=Number(meta.priceUsd)||0,mc=Number(meta.marketCap||meta.fdv)||0;
-   SUP=px&&mc?mc/px:0;
-   $('#cvst').innerHTML=[
-     ['PRICE',px?pf(px):'—'],
-     ['LIQUIDITY',meta.liquidityUsd?fm(meta.liquidityUsd):'—'],
-     ['MCAP',mc?'$'+fk(mc):'—'],
-     ['24H VOL',meta.volume24h?fm(meta.volume24h):'—'],
-     ['DEX',meta.dexId||'—'],
-     ['AGE',meta.pairCreatedAt?ago(Date.now()-meta.pairCreatedAt).replace(' ago',''):'NEW']
-   ].map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
-   if(meta.url)$('#cvl').href=meta.url;
-   $('#pumpstatus').textContent='FREE DATA · NO PAID FEED';
-   if(curM===mint&&curP&&tab===0)loadChart(true);
-   if(curM===mint&&curP&&tab===1)loadTrades();
+  const [poolResult,metaResult]=await Promise.allSettled([
+   gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000),
+   getTokenMeta(mint)
+  ]);
+  if(mint!==curM)return;
+  const meta=metaResult.status==='fulfilled'?metaResult.value:null;
+  const rows=poolResult.status==='fulfilled'&&Array.isArray(poolResult.value?.data)?poolResult.value.data:[];
+  const best=rows.filter(item=>item?.attributes).sort((x,y)=>
+   (Number(y.attributes.reserve_in_usd)||0)-(Number(x.attributes.reserve_in_usd)||0)
+  ).find(item=>BASE58.test(String(item.attributes.address||'')))||null;
+  const a=best?.attributes||null;
+  curP=a?.address||(BASE58.test(hintedPool||'')?hintedPool:'')||
+   (BASE58.test(meta?.pairAddress||'')?meta.pairAddress:'');
+  let price=0,fdv=0,liquidity=0,volume24=0,change1h=null,ageLabel='NEW';
+  if(a){
+   const pc=a.price_change_percentage||{};
+   price=Number(a.base_token_price_usd)||Number(meta?.priceUsd)||0;
+   fdv=Number(a.fdv_usd||a.market_cap_usd)||Number(meta?.marketCap||meta?.fdv)||0;
+   liquidity=Number(a.reserve_in_usd)||Number(meta?.liquidityUsd)||0;
+   volume24=Number(a.volume_usd?.h24)||Number(meta?.volume24h)||0;
+   change1h=pc.h1==null?null:Number(pc.h1);
+   if(!Number.isFinite(change1h))change1h=null;
+   const created=Date.parse(a.pool_created_at||'');
+   ageLabel=Number.isFinite(created)?ago(Math.max(0,Date.now()-created)).replace(' ago',''):'n/a';
+   const poolName=String(a.name||'');
+   QS=(poolName.split(' / ')[1]||'SOL').trim().split(/\s+/)[0]||'SOL';
+   DEX=best?.relationships?.dex?.data?.id||meta?.dexId||'dex';
+  }else if(meta){
+   price=Number(meta.priceUsd)||0;fdv=Number(meta.marketCap||meta.fdv)||0;
+   liquidity=Number(meta.liquidityUsd)||0;volume24=Number(meta.volume24h)||0;
+   const pairCreated=Number(meta.pairCreatedAt);
+   ageLabel=pairCreated?ago(Math.max(0,Date.now()-pairCreated)).replace(' ago',''):'NEW';
+   QS='SOL';DEX=meta.dexId||'dex';
+  }else{
+   QS='SOL';DEX='geckoterminal';
+  }
+  SUP=price&&fdv?fdv/price:0;
+  $('#cvst').innerHTML=[
+   ['PRICE',price?pf(price):'—'],
+   ['LIQUIDITY',liquidity?fm(liquidity):'—'],
+   ['MCAP',fdv?'$'+fk(fdv):'—'],
+   ['24H VOL',volume24?fm(volume24):'—'],
+   ['1H',change1h==null?'—':F(rd(change1h)),change1h==null?'':C(change1h)],
+   ['AGE',ageLabel]
+  ].map(x=>'<div><small>'+x[0]+'</small><b class="'+(x[2]||'')+'">'+x[1]+'</b></div>').join('');
+  $('#cvl').href=curP
+   ?'https://www.geckoterminal.com/solana/pools/'+encodeURIComponent(curP)
+   :'https://www.geckoterminal.com/solana/tokens/'+encodeURIComponent(mint);
+  $('#cvl').textContent=curP?'GECKOTERMINAL ↗':'TOKEN ↗';
+  if(curP){
+   if(tab===0)loadChart(true);
+   else if(tab===1)loadTrades();
+  }else{
+   $('#chn').textContent='NO GECKOTERMINAL POOL INDEXED FOR THIS TOKEN YET';
+  }
  }catch(e){
-   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['LIQUIDITY','—'],['MCAP','—'],['24H VOL','—'],['DEX','—'],['AGE','NEW']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+  if(mint!==curM)return;
+  $('#cvst').innerHTML=[['PRICE','—'],['LIQUIDITY','—'],['MCAP','—'],['24H VOL','—'],['1H','—'],['AGE','—']]
+   .map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+  $('#chn').textContent='COIN DATA UNAVAILABLE · '+(e.message||'Please retry');
  }
 };
 const loadInfo=async()=>{
@@ -945,37 +1027,52 @@ const loadInfo=async()=>{
    });
    (a.websites||[]).forEach(x=>{const url=typeof x==='string'?x:x.url;if(/^https:\/\//.test(url||''))L.push('<a target="_blank" rel="noopener" href="'+esc(url)+'">WEB</a>')});
    $('#cvso').innerHTML=L.join('');
-   if(a.pairAddress&&BASE58.test(a.pairAddress))curP=a.pairAddress;
+   // The GeckoTerminal pool resolver in loadStats owns curP for OHLCV charting.
  }catch(e){
    $('#cvt').textContent=cur;$('#cvca').textContent=mint;
  }
 };
 const loadChart=async fit=>{
- const ov=$('#chl');if(fit)ov.hidden=false;
+ const ov=$('#chl'),requestId=++chartLoadVersion;
+ if(fit)ov.hidden=false;
  try{
-   if(!mkC())return;
-   const pool=curP;
-   if(!BASE58.test(pool)){
-     CAN=[];series.setData([]);vol.setData([]);
-     $('#chn').textContent='WAITING FOR A FREE INDEXED SOLANA POOL';
-     return;
-   }
-   const[,u,ag]=TFS[tf];
-   const j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,60000);
-   const k=mode==='mcap'&&SUP?SUP:1;
-   const L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
-   if(!L.length)throw new Error('No historical candles are available for this pool yet.');
-   CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));
-   const last=CAN[CAN.length-1].close;
-   PR=k>1?2:Math.min(12,Math.max(2,3-Math.floor(Math.log10(last))));
-   series.applyOptions({priceFormat:{type:'custom',formatter:x=>k>1?fk(x):x.toFixed(PR),minMove:k>1?.01:Math.pow(10,-PR)}});
-   series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
-   vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
-   if(fit)chart.timeScale().fitContent();
-   lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
-   $('#chn').textContent='FREE PUBLIC DATA · GECKOTERMINAL OHLCV · '+new Date().toLocaleTimeString();
- }catch(e){$('#chn').textContent=e.message}
- finally{ov.hidden=true}
+  if(!mkC())return;
+  const pool=curP,mint=curM;
+  if(!BASE58.test(pool)){
+   CAN=[];series.setData([]);vol.setData([]);
+   $('#chn').textContent='FINDING A FREE GECKOTERMINAL POOL…';
+   return;
+  }
+  const[,unit,aggregate]=TFS[tf];
+  const path='/networks/solana/pools/'+pool+'/ohlcv/'+unit+'?aggregate='+aggregate+'&limit=300&currency='+ccy;
+  const j=await gt(path,60000);
+  if(pool!==curP||mint!==curM||tab!==0)return;
+  const raw=j?.data?.attributes?.ohlcv_list;
+  if(!Array.isArray(raw)||!raw.length)throw new Error('No historical candles are available for this pool yet.');
+  const multiplier=mode==='mcap'&&SUP?SUP:1;
+  CAN=raw.slice().reverse().map(row=>({
+   time:Number(row[0]),open:Number(row[1])*multiplier,high:Number(row[2])*multiplier,
+   low:Number(row[3])*multiplier,close:Number(row[4])*multiplier,v:Number(row[5])||0
+  })).filter(c=>Number.isFinite(c.time)&&[c.open,c.high,c.low,c.close].every(Number.isFinite));
+  if(!CAN.length)throw new Error('GeckoTerminal returned invalid candle data for this pool.');
+  const last=CAN[CAN.length-1].close;
+  PR=multiplier>1?2:Math.min(12,Math.max(2,3-Math.floor(Math.log10(Math.max(last,1e-12)))));
+  series.applyOptions({priceFormat:{
+   type:'custom',formatter:x=>multiplier>1?fk(x):x.toFixed(PR),
+   minMove:multiplier>1?.01:Math.pow(10,-PR)
+  }});
+  resizeChart();
+  series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+  vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
+  requestAnimationFrame(resizeChart);
+  if(fit)chart.timeScale().fitContent();
+  lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
+  $('#chn').textContent='FREE PUBLIC DATA · GECKOTERMINAL OHLCV · '+new Date().toLocaleTimeString();
+ }catch(e){
+  if(requestId===chartLoadVersion)$('#chn').textContent=e.message||'Chart data unavailable.';
+ }finally{
+  if(requestId===chartLoadVersion)ov.hidden=true;
+ }
 };
 const loadTrades=async()=>{
  const el=$('#bmc'),pool=curP;
@@ -1004,7 +1101,7 @@ TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadCha
 [['%',2],['log',1],['auto',0]].forEach((c,i)=>mkB($('#chb'),'sc',c[0],i===2,()=>{chart&&chart.priceScale('right').applyOptions({mode:c[1]});$('#chb').querySelectorAll('[data-g=sc]').forEach((b,j)=>b.classList.toggle('on',i===j))}));
 $('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
 setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
-const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c)connectPumpPortal()};
+const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c){connectPumpPortal();requestAnimationFrame(resizeChart)}};
 const openCoin=(tk,p,m)=>{
  cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;SUP=0;CAN=[];solUsd=0;
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
