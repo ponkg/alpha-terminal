@@ -577,6 +577,7 @@ const narrativeState=p=>p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':
 const renderT1=()=>{
  const openedName=$('#t1list').querySelector('.narrative-group[open] .narrative-name')?.textContent||'';
  const groups=narrativeGroups();
+ const reopenName=groups.some(g=>g.name===openedName)?openedName:(groups[0]?.name||'');
  const matched=groups.reduce((sum,g)=>sum+g.tokens.length,0);
  const html=groups.map((group,index)=>{
   const tokenRows=group.tokens.map(token=>{
@@ -591,7 +592,7 @@ const renderT1=()=>{
     '<div class="narrative-change">'+change+'</div>'+
    '</div>';
   }).join('');
-  return '<details class="narrative-group" '+(group.name===openedName||(!openedName&&index===0)?'open':'')+'>'+
+  return '<details class="narrative-group" '+(group.name===reopenName?'open':'')+'>'+
    '<summary><span class="narrative-name">'+esc(group.name)+'</span>'+
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
    '<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b></summary>'+
