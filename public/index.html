@@ -217,7 +217,7 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .tabs .sp{margin-left:10px}.tabs #chk{margin-left:auto;font-size:11px;color:var(--mut);align-self:center}[hidden]{display:none!important}
 .trd{display:grid;grid-template-columns:70px 44px 1fr 1fr 1fr;gap:8px;padding:6px 0;border-bottom:1px solid color-mix(in srgb,var(--fg) 12%,transparent);font-size:12px}.trd.h{font-size:10px;letter-spacing:.1em;color:var(--mut)}.trd span:nth-child(n+3){text-align:right}.trd a{color:inherit}
 .blk.logo{gap:0!important}.la{color:inherit}.hl h1 .ty{display:block;min-height:1.05em;color:var(--ac)}.hl h1 .ty::after{content:"";display:inline-block;width:.5ch;height:.85em;margin-left:3px;background:currentColor;vertical-align:-.05em;animation:bl 1s steps(1) infinite}
-</style></head><body>
+\n/* Terminal narrative accordion */\n.narrative-group{border-bottom:1px solid var(--bd);padding:0!important}.narrative-group summary{display:flex;align-items:center;gap:12px;padding:14px 4px;font-size:13px;letter-spacing:.04em}.narrative-group summary .mut{margin-left:auto;font-size:10px;font-weight:500}.narrative-coins{padding:0 0 10px 12px}.narrative-coins .pump-row{cursor:pointer}\n</style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
@@ -466,36 +466,57 @@ const connectPumpPortal=async()=>{
   };
   socket.onerror=()=>{try{socket.close()}catch(e){}};
 };
-const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
+// Terminal narrative explorer: group real PumpPortal launches/migrations by metadata.
+// Landing-page narrative preview remains illustrative and untouched.
+const NARRATIVES=[
+ {name:'AI Agents',keys:/\b(ai|agent|agents|bot|gpt|llm|autonomous|claude|openai)\b/i},
+ {name:'Animal Memes',keys:/\b(cat|dog|doge|puppy|kitten|frog|pepe|woof|meow|toad|animal)\b/i},
+ {name:'Internet Culture',keys:/\b(meme|viral|brainrot| lore|ratio|npc| wojak|internet|trend)\b/i},
+ {name:'AI Infrastructure',keys:/\b(gpu|compute|inference|cloud|node|infra|chip|depin|data center)\b/i},
+ {name:'Politics',keys:/\b(politic|president|election|vote|trump|biden|senator|government)\b/i},
+ {name:'Celebrity',keys:/\b(celebrity|famous|influencer|rapper|singer|actor|stan|star)\b/i}
+];
+const narrativeFor=e=>{
+ const text=[e.name,e.symbol,e.description,e.uri].filter(Boolean).join(' ');
+ return (NARRATIVES.find(n=>n.keys.test(text))||{name:'Other / Unclassified'}).name;
+};
+const allNarrativeEvents=()=>[...PUMP.launches,...PUMP.migrations]
+ .filter(e=>e&&e.mint)
+ .reduce((out,e)=>{const key=e.mint;if(!out.seen.has(key)){out.seen.add(key);out.items.push(e)}return out},{seen:new Set(),items:[]}).items
+ .sort((a,b)=>eventMcap(b)-eventMcap(a)||eventTime(b)-eventTime(a));
 const renderT1=()=>{
-  const events=eventRows();
-  const rows=events.map(e=>{
-    const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),name=String(e.name||'');
-    const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
-    const state=tk1===0?'NEW':'MIGRATED';
-    return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open live token chart">'+
-      '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
-      '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(name||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
-      '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
-      '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
-      '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
-    '</div>';
+ const events=allNarrativeEvents();
+ const grouped=new Map();
+ events.forEach(e=>{const name=narrativeFor(e);if(!grouped.has(name))grouped.set(name,[]);grouped.get(name).push(e)});
+ const names=[...NARRATIVES.map(n=>n.name).filter(n=>grouped.has(n)),'Other / Unclassified'].filter(n=>grouped.has(n));
+ const html=names.map(name=>{
+  const items=grouped.get(name)||[];
+  const rows=items.map(e=>{
+   const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),tokenName=String(e.name||'');
+   const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
+   const state=PUMP.migrations.some(x=>x.mint===mint)?'MIGRATED':'NEW';
+   return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open token chart">'+
+    '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
+    '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(tokenName||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
+    '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
+    '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
+    '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
+   '</div>';
   }).join('');
-  $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
-  events.slice(0,10).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
-  $('#t1n').textContent='PUMPPORTAL FREE · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS');
+  return '<details class="narrative-group"><summary><span>'+esc(name)+'</span><span class="mut">'+items.length+' COINS</span></summary><div class="narrative-coins">'+rows+'</div></details>';
+ }).join('');
+ $('#t1list').innerHTML=html||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal launch and migration events. Narrative groups will populate as token metadata arrives.</p>';
+ events.slice(0,80).forEach(e=>pumpLogo(e.mint));
+ $('#t1n').textContent='NARRATIVE DISCOVERY · PUMPPORTAL FREE · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' TOKENS';
 };
 const loadT1=()=>{connectPumpPortal();renderT1()};
-mkTabs($('#t1tabs'),['New launches','Migrations'],k=>{tk1=k;renderT1()});
+$('#t1tabs').innerHTML='<span class="feed-chip">TRENDING NARRATIVES</span><span class="mut" style="font-size:11px">EXPAND A META TO SEE ITS COINS</span>';
 $('#t1list').innerHTML=ldr('CONNECTING TO PUMPPORTAL')+'<div class="sk"></div><div class="sk"></div>';
 new MutationObserver(()=>{
-  if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
-  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
+ if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
+ else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
 }).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
-setInterval(()=>{
-  if(document.hidden)return;
-  if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}
-},15000);
+setInterval(()=>{if(document.hidden)return;if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}},15000);
 // 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
 const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
 let t2tab=0;
