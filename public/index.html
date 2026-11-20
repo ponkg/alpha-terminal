@@ -526,11 +526,11 @@ const connectPumpPortal=async()=>{
 };
 // GeckoTerminal narrative explorer. The landing-page sample remains unchanged.
 const NARRATIVE_WINDOWS=[
- {label:'5 min',field:'m5',duration:'5m'},
- {label:'15 min',field:'m15',duration:'1h'},
- {label:'30 min',field:'m30',duration:'1h'},
- {label:'1 hour',field:'h1',duration:'1h'},
- {label:'24 hours',field:'h24',duration:'24h'}
+ {label:'5 min',field:'m5',interval:'5m'},
+ {label:'15 min',field:'m15',interval:'15m'},
+ {label:'30 min',field:'m30',interval:'30m'},
+ {label:'1 hour',field:'h1',interval:'1h'},
+ {label:'24 hours',field:'h24',interval:'24h'}
 ];
 const NARRATIVE_RULES=[
  {name:'AI Agents',re:/\b(ai|agent|agents|bot|bots|gpt|llm|autonomous|claude|openai|eliza)\b/i},
@@ -548,21 +548,30 @@ const tokenCategory=token=>{
  const rule=NARRATIVE_RULES.find(x=>x.re.test(text));
  return rule?rule.name:'';
 };
-const readGeckoPools=payload=>{
- const included=new Map((payload.included||[]).filter(x=>x.type==='token').map(x=>[x.id,x.attributes||{}]));
- return (payload.data||[]).map(pool=>{
-  const a=pool.attributes||{},rel=pool.relationships?.base_token?.data?.id||'';
-  const t=included.get(rel)||{};
-  const mint=String(t.address||rel.replace(/^solana_/,''));
-  const poolAddress=String(a.address||'');
-  if(!BASE58.test(mint)||!poolAddress)return null;
+const tokenPct=stats=>{
+ const value=Number(stats?.priceChange);
+ return Number.isFinite(value)?value*100:null;
+};
+const readJupiterTokens=payload=>{
+ const source=Array.isArray(payload?.tokens)?payload.tokens:Array.isArray(payload)?payload:Array.isArray(payload?.data)?payload.data:[];
+ return source.map(token=>{
+  const mint=String(token?.id||'');
+  if(!BASE58.test(mint))return null;
+  const stats5=token.stats5m||{},stats1=token.stats1h||{},stats24=token.stats24h||{};
+  const volume24=Number(stats24.buyVolume||0)+Number(stats24.sellVolume||0);
   return {
-   mint,poolAddress,symbol:String(t.symbol||''),name:String(t.name||''),
-   poolName:String(a.name||''),imageUrl:String(t.image_url||''),
-   liquidity:Number(a.reserve_in_usd)||0,
-   volume24:Number(a.volume_usd?.h24)||0,
-   changes:a.price_change_percentage||{},
-   volumes:a.volume_usd||{}
+   mint,poolAddress:'',symbol:String(token.symbol||''),name:String(token.name||''),
+   imageUrl:String(token.icon||token.logoURI||token.image||''),
+   liquidity:Number(token.liquidity)||0,volume24:volume24||Number(token.volume24h)||0,
+   marketCap:Number(token.mcap||token.marketCap||0),priceUsd:Number(token.usdPrice)||0,
+   organicScore:Number(token.organicScore)||0,isVerified:token.isVerified===true,
+   changes:{
+    m5:tokenPct(stats5),
+    m15:token.priceChange15m==null?null:Number(token.priceChange15m),
+    m30:token.priceChange30m==null?null:Number(token.priceChange30m),
+    h1:tokenPct(stats1),
+    h24:tokenPct(stats24)
+   }
   };
  }).filter(Boolean);
 };
@@ -585,14 +594,14 @@ const narrativeGroups=()=>{
  return [...groups.entries()].map(([name,tokens])=>{
   tokens.sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
   const volume=tokens.reduce((sum,t)=>sum+t.volume24,0);
-  const weights=tokens.map(t=>Math.max(t.volume24,t.liquidity,1));
-  const weightTotal=weights.reduce((sum,n)=>sum+n,0);
-  const change=tokens.reduce((sum,t,i)=>sum+(t.change==null?0:t.change*weights[i]),0)/
-   Math.max(1,tokens.reduce((sum,t,i)=>sum+(t.change==null?0:weights[i]),0));
-  return {name,tokens,volume,change:Number.isFinite(change)?change:0};
+  const valid=tokens.filter(t=>t.change!=null&&Number.isFinite(t.change));
+  const weight=t=>Math.max(t.volume24,t.liquidity,1);
+  const totalWeight=valid.reduce((sum,t)=>sum+weight(t),0);
+  const change=totalWeight?valid.reduce((sum,t)=>sum+t.change*weight(t),0)/totalWeight:null;
+  return {name,tokens,volume,change};
  }).sort((a,b)=>b.volume-a.volume);
 };
-const narrativeState=p=>p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
+const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
  const openedName=$('#t1list').querySelector('.narrative-group[open] .narrative-name')?.textContent||'';
  const groups=narrativeGroups();
@@ -624,35 +633,43 @@ const renderT1=()=>{
  });
  [...new Map(narrativePools.map(t=>[t.mint,t])).values()].filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
- $('#t1n').textContent='LIVE · GECKOTERMINAL · '+time+' · '+narrativePools.length+' POOLS · '+matched+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS';
+ $('#t1n').textContent='LIVE · JUPITER TOKENS V2 · '+time+' · '+narrativePools.length+' TOKENS · '+matched+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS';
 };
+let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
- if(narrativeLoadPromise)return narrativeLoadPromise;
- const duration=NARRATIVE_WINDOWS[narrativeWindow].duration;
- const path='/networks/solana/trending_pools?include=base_token&duration='+duration+'&page=1';
- narrativeLoadPromise=(async()=>{
-  $('#t1n').textContent='CONNECTING TO GECKOTERMINAL…';
-  onProgress?.(12,'LOADING DATA','Requesting current Solana trending pools');
+ const interval=NARRATIVE_WINDOWS[narrativeWindow].interval;
+ if(narrativeLoadPromises.has(interval))return narrativeLoadPromises.get(interval);
+ const requestId=++narrativeRequestSequence;
+ const request=(async()=>{
+  $('#t1n').textContent='CONNECTING TO JUPITER…';
+  onProgress?.(12,'LOADING DATA','Requesting Jupiter trending tokens · '+interval);
   try{
-   const payload=await gt(path,force?0:55000);
-   onProgress?.(48,'LOADING DATA','Parsing live pool, volume, liquidity and price-change data');
-   narrativePools=readGeckoPools(payload);
-   narrativeUpdated=Date.now();
-   renderT1();
-   return {ok:true,cached:false,pools:narrativePools.length};
-  }catch(error){
-   if(narrativePools.length){
-    renderT1();
-    $('#t1n').textContent='CACHED · GECKOTERMINAL · '+(error.message||'Refresh unavailable');
-    return {ok:true,cached:true,pools:narrativePools.length,error:error.message};
-   }else{
-    $('#t1list').innerHTML='<p class="narrative-empty">'+esc(error.message||'GeckoTerminal market data is temporarily unavailable.')+'</p>';
-    $('#t1n').textContent='GECKOTERMINAL · WAITING FOR MARKET DATA';
-    return {ok:false,cached:false,pools:0,error:error.message||'Market data unavailable'};
+   const response=await fetch('/api/jupiter/trending?interval='+encodeURIComponent(interval),{
+    headers:{Accept:'application/json'},cache:'no-store'
+   });
+   const payload=await response.json().catch(()=>({}));
+   if(!response.ok)throw new Error(payload.error||'Jupiter market data returned HTTP '+response.status);
+   const tokens=readJupiterTokens(payload);
+   if(!tokens.length)throw new Error('Jupiter returned no usable Solana tokens.');
+   onProgress?.(54,'LOADING DATA','Received '+tokens.length+' live tokens · parsing market stats');
+   if(requestId===narrativeRequestSequence&&interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
+    narrativePools=tokens;narrativeUpdated=payload.fetchedAt?Date.parse(payload.fetchedAt):Date.now();renderT1();
    }
+   return {ok:true,cached:!!payload.stale,tokens,pools:tokens.length,error:payload.stale?'Showing cached Jupiter data':''};
+  }catch(error){
+   if(requestId===narrativeRequestSequence&&interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
+    if(narrativePools.length){
+     renderT1();$('#t1n').textContent='CACHED · JUPITER · '+(error.message||'Refresh unavailable');
+    }else{
+     $('#t1list').innerHTML='<p class="narrative-empty">'+esc(error.message||'Jupiter market data is temporarily unavailable.')+'</p>';
+     $('#t1n').textContent='JUPITER · WAITING FOR MARKET DATA';
+    }
+   }
+   return {ok:narrativePools.length>0,cached:true,tokens:narrativePools,pools:narrativePools.length,error:error.message||'Market data unavailable'};
   }
- })().finally(()=>{narrativeLoadPromise=null});
- return narrativeLoadPromise;
+ })().finally(()=>{if(narrativeLoadPromises.get(interval)===request)narrativeLoadPromises.delete(interval)});
+ narrativeLoadPromises.set(interval,request);
+ return request;
 };
 const waitForPumpSnapshot=(timeout=2500)=>{
  if(PUMP.snapshotReady)return Promise.resolve(true);
@@ -674,39 +691,34 @@ const preloadImage=src=>new Promise(resolve=>{
  if(image.complete)finish(image.naturalWidth>0);
 });
 const preloadTerminalData=async report=>{
- report(6,'LOADING DATA','Connecting to GeckoTerminal live market data');
- const market=await loadT1(true,(percent,label,detail)=>report(percent,label,detail));
- if(!market.ok){
-  report(76,'LIVE DATA UNAVAILABLE','No sample data will be substituted; the live feed can retry in the tracker');
- }else{
-  const unique=[...new Map(narrativePools.map(token=>[token.mint,token])).values()]
-   .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity).slice(0,12);
-  let finished=0,logoSuccess=0;
-  const total=unique.length;
-  report(52,'LOADING DATA','Preloading metadata and coin logos · 0/'+total);
-  for(let start=0;start<total;start+=4){
-   const batch=unique.slice(start,start+4);
-   await Promise.all(batch.map(async token=>{
-    try{
-     if(!token.imageUrl){
-      const meta=await getTokenMeta(token.mint);
-      if(meta.imageUrl)token.imageUrl=meta.imageUrl;
-      if(meta.symbol)token.symbol=meta.symbol;
-      if(meta.name)token.name=meta.name;
-     }
-     if(token.imageUrl&&await preloadImage(token.imageUrl))logoSuccess++;
-    }catch(error){}
-    finished++;
-    report(52+(finished/Math.max(1,total))*29,'LOADING DATA','Preloading metadata and coin logos · '+finished+'/'+total);
-   }));
-  }
-  renderT1();
- }
- report(84,'LOADING DATA','Connecting to PumpPortal free launch and migration streams');
+ report(6,'LOADING DATA','Connecting to Jupiter Tokens V2 live trending feed');
  const snapshot=waitForPumpSnapshot(3000);
- await connectPumpPortal();
+ const pumpConnection=connectPumpPortal();
+ const market=await loadT1(true,(percent,label,detail)=>report(percent,label,detail));
+ let logoSuccess=0;
+ if(market.ok){
+  const tokens=[...new Map(market.tokens.map(token=>[token.mint,token])).values()]
+   .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity).slice(0,8);
+  const imageTokens=tokens.filter(token=>token.imageUrl);
+  let finished=0;
+  report(58,'LOADING DATA','Preloading coin icons · 0/'+imageTokens.length);
+  const imageTasks=imageTokens.map(async token=>{
+   if(await preloadImage(token.imageUrl))logoSuccess++;
+   finished++;
+   report(58+(finished/Math.max(1,imageTokens.length))*26,'LOADING DATA','Preloading coin icons · '+finished+'/'+imageTokens.length);
+  });
+  await Promise.race([
+   Promise.allSettled(imageTasks),
+   new Promise(resolve=>setTimeout(resolve,2200))
+  ]);
+  renderT1();
+ }else{
+  report(62,'LIVE DATA UNAVAILABLE','No sample tokens loaded · retrying Jupiter when the tracker opens');
+ }
+ report(88,'LOADING DATA','Waiting for PumpPortal free launch and migration snapshot');
+ await pumpConnection;
  const pumpReady=await snapshot;
- report(96,'LOADING DATA',pumpReady?'PumpPortal snapshot received':'Market data loaded · PumpPortal snapshot pending');
+ report(97,'LOADING DATA',pumpReady?'Live Jupiter data and PumpPortal snapshot ready':'Jupiter loaded · PumpPortal snapshot pending');
  return {market:market.ok,pumpPortal:pumpReady,pools:market.pools||0,logos:logoSuccess};
 };
 const renderNarrativeTabs=()=>{
@@ -719,7 +731,7 @@ const renderNarrativeTabs=()=>{
    if(narrativeWindow===index)return;
    narrativeWindow=index;
    [...tabs.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('on',i===index));
-   renderT1();
+   $('#t1list').innerHTML=ldr('LOADING JUPITER '+windowOption.interval.toUpperCase())+'<div class="sk"></div><div class="sk"></div>';
    loadT1();
   });
   tabs.appendChild(button);
