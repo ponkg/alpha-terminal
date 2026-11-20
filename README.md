@@ -35,17 +35,15 @@ The public site has no registration form. Visitors can only request early access
 
 The public waitlist is separate from Supabase Auth accounts. Waitlist submissions are saved in `public.waitlist` and do not create a login. Supabase's default email sender is best-effort and limited to 2 emails per hour; configure custom SMTP before sending more auth emails. See https://supabase.com/docs/guides/auth/passwords.
 
-## PumpPortal coin tracker
+## Free market-data architecture
 
-The coin tracker uses the PumpPortal Data API for live token launches, migrations, and per-token trade events. The server keeps one upstream WebSocket connection and exposes an admin-ticket-protected WebSocket to the frontend. Token logos and market metadata are resolved by mint address through DexScreener, with a PumpPortal metadata-URI fallback for fresh launches.
+The terminal uses PumpPortal only for its free new-token and migration streams. It does not subscribe to per-token or per-account trade streams and does not need a PumpPortal API key or linked wallet.
 
-- New-token and migration subscriptions are free.
-- Per-token trade subscriptions require a PumpPortal API key and linked wallet funded with at least 0.02 SOL.
-- PumpPortal meters trade messages at 0.01 SOL per 10,000 events. Add `PUMPPORTAL_API_KEY` to Render Environment only when you want live per-token trades; keep it server-side.
-- PumpPortal does not provide historical candles. GeckoTerminal is retained only for historical OHLCV backfill and holder data.
-- Without `PUMPPORTAL_API_KEY`, the launches and migrations tabs still work, but selected-token live trade candles/trade tape remain unavailable.
-
-Get the key from the PumpPortal Data API setup page and add it as `PUMPPORTAL_API_KEY` in the Render service Environment. Do not commit it to GitHub or expose it in browser configuration.
+- PumpPortal `subscribeNewToken` and `subscribeMigration`: free.
+- Per-token and per-account PumpPortal trade streams: intentionally not used.
+- Token names, logos, prices and pool discovery: public DexScreener endpoints; no API key is configured.
+- Candles, recent pool trades and holder info: GeckoTerminal public API; no API key is configured. Its public API has a low global rate limit, so the backend caches responses for 60 seconds and spaces upstream requests to avoid overuse.
+- Newly launched tokens may not have an indexed pool yet. In that case, the logo/name can still load from the token metadata URI, while charts and trade tape appear once a market is indexed.
 
 ## Run locally
 Requires Node.js 20+.
