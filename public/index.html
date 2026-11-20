@@ -370,6 +370,762 @@ const pumpLogo=async mint=>{
         img.onerror=()=>{img.hidden=true};
       });
     }
+    document.querySelectorAll('.pump-row[data-m="'+mint+'"]').forEach(row=>{
+      const title=row.querySelector('.pump-token b'),subtitle=row.querySelector('.pump-token small');
+      if(title&&meta.symbol)title.textContent='
+};
+const connectPumpPortal=async()=>{
+  if(PUMP.ticketing||PUMP.socket&&[WebSocket.CONNECTING,WebSocket.OPEN].includes(PUMP.socket.readyState))return;
+  if(!window.WebSocket||!authClient)return;
+  PUMP.ticketing=true;
+  let socket;
+  try{
+    const {data}=await authClient.auth.getSession();
+    if(!data.session?.access_token)throw new Error('Admin session required to open PumpPortal stream.');
+    const response=await fetch('/api/pump-ticket',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token}});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||'Could not authorize PumpPortal stream.');
+    const scheme=location.protocol==='https:'?'wss:':'ws:';
+    socket=new WebSocket(scheme+'//'+location.host+'/ws/pumpportal?ticket='+encodeURIComponent(result.ticket));
+    PUMP.socket=socket;
+  }catch(error){
+    $('#t1n').textContent=error.message||'Could not connect to PumpPortal.';
+    $('#chn').textContent=error.message||'Admin session required.';
+    return;
+  }finally{PUMP.ticketing=false}
+  socket.onopen=()=>{
+    PUMP.retryDelay=1200;
+    if(activeMint)socket.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+    $('#t1n').textContent='PUMPPORTAL · CONNECTED · WAITING FOR LAUNCH EVENTS';
+  };
+  socket.onmessage=message=>{
+    let packet;try{packet=JSON.parse(message.data)}catch(e){return}
+    if(packet.type==='status'){
+      PUMP.connected=!!packet.connected;PUMP.tradeConfigured=!!packet.tradeConfigured;
+      if(packet.message)$('#chn').textContent=packet.message;
+      $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+(PUMP.tradeConfigured?' · LIVE TRADES ENABLED':' · LAUNCHES + MIGRATIONS FREE');
+      return;
+    }
+    if(packet.type==='snapshot'){
+      PUMP.launches=(packet.newTokens||[]).slice(0,120);
+      PUMP.migrations=(packet.migrations||[]).slice(0,80);
+      t1ts=Date.now();renderT1();rf();return;
+    }
+    if(packet.type==='newToken'&&packet.data){
+      const item=packet.data;
+      PUMP.launches=[item,...PUMP.launches.filter(x=>x.mint!==item.mint)].slice(0,120);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='migration'&&packet.data){
+      const item=packet.data;
+      PUMP.migrations=[item,...PUMP.migrations.filter(x=>x.signature!==item.signature)].slice(0,80);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='trade'&&packet.data){
+      applyPumpTrade(packet.data);return;
+    }
+    if(packet.type==='error')$('#chn').textContent=packet.error||'PumpPortal stream error';
+  };
+  socket.onclose=()=>{
+    PUMP.connected=false;
+    if(PUMP.socket===socket)PUMP.socket=null;
+    if(!document.hidden){
+      clearTimeout(PUMP.retry);
+      PUMP.retry=setTimeout(connectPumpPortal,PUMP.retryDelay);
+      PUMP.retryDelay=Math.min(PUMP.retryDelay*1.8,20000);
+    }
+  };
+  socket.onerror=()=>{try{socket.close()}catch(e){}};
+};
+const pumpSubscribe=mint=>{
+  activeMint=mint||'';
+  const ws=PUMP.socket;
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({action:'unsubscribe'}));
+  if(BASE58.test(activeMint))ws.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+};
+const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
+const renderT1=()=>{
+  const events=eventRows();
+  const rows=events.map(e=>{
+    const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),name=String(e.name||'');
+    const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
+    const state=tk1===0?'NEW':'MIGRATED';
+    return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open live token chart">'+
+      '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
+      '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(name||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
+      '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
+      '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
+      '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
+    '</div>';
+  }).join('');
+  $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
+  events.slice(0,10).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
+  $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS')+' · '+(PUMP.tradeConfigured?'TOKEN TRADES ENABLED':'TRADE STREAM NEEDS API KEY');
+};
+const loadT1=()=>{connectPumpPortal();renderT1()};
+mkTabs($('#t1tabs'),['New launches','Migrations'],k=>{tk1=k;renderT1()});
+$('#t1list').innerHTML=ldr('CONNECTING TO PUMPPORTAL')+'<div class="sk"></div><div class="sk"></div>';
+new MutationObserver(()=>{
+  if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
+  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
+}).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
+setInterval(()=>{
+  if(document.hidden)return;
+  if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}
+},15000);
+// 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
+const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
+let t2tab=0;
+const rf=()=>{
+  const q=$('#t2q').value.trim().toLowerCase();
+  let html;
+  if(t2tab===0){
+    const items=[
+      ...PUMP.launches.slice(0,30).map(e=>({e,kind:'NEW LAUNCH'})),
+      ...PUMP.migrations.slice(0,30).map(e=>({e,kind:'MIGRATION'}))
+    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('$'+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
+    html=items.map(x=>'<div class="px pump-feed-row" data-c="$'+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b>$'+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
+  } else {
+    html=PS.filter(p=>!q||(p[0]+' '+p[2]).toLowerCase().includes(q)).map(p=>'<div class="px"><b>'+p[0]+'</b><span class="mut">'+p[1]+' ago</span><div>'+esc(p[2])+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
+  }
+  $('#t2list').innerHTML=html;
+  $('#t2n').textContent=t2tab===0?'LIVE · PUMPPORTAL NEW TOKEN + MIGRATION EVENTS':'SAMPLE POSTS — NOT LIVE';
+};
+$('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
+
+// 3 scanner: GeckoTerminal token info + pool data (free). Signals, not a guarantee.
+const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
+$('#t3f').onsubmit=async e=>{e.preventDefault();const q=$('#t3q').value.trim(),R=$('#t3r'),id=++scanN;if(!q)return;
+if(/^https?:\/\//i.test(q)||/\s/.test(q)){R.innerHTML='<p class="mut" style="margin-top:12px">Paste a Solana token address or a $ticker. X posts and websites need a backend and are not scanned yet.</p>';return}
+R.innerHTML=ldr('SCANNING VIA GECKOTERMINAL');
+try{let m=q;if(!MINT.test(q)){const s=q.replace(/^\$/,''),P=parse(await gt('/search/pools?query='+encodeURIComponent(s)+'&network=solana&include=base_token&page=1',60000)).filter(p=>p.mint&&p.sym.toLowerCase()===s.toLowerCase()).sort((a,b)=>b.liq-a.liq);if(!P.length)throw new Error('No Solana pool found for "'+s+'". Try the contract address.');m=P[0].mint}
+const[ij,pj]=await Promise.all([gt('/networks/solana/tokens/'+m+'/info',120000).catch(()=>null),gt('/networks/solana/tokens/'+m+'/pools?page=1',60000)]);if(id!==scanN)return;
+const pl=((pj.data||[])[0]||{}).attributes;if(!pl)throw new Error('No pools found for this token.');const a=ij?ij.data.attributes:{},h=a.holders,d=h&&h.distribution_percentage,tx=((pl.transactions||{}).h24)||{},liq=+pl.reserve_in_usd||0,fdv=+pl.fdv_usd||0,age=Date.now()-Date.parse(pl.pool_created_at),sym=a.symbol||pl.name.split(' / ')[0],F2=[];
+F2.push(['LIQUIDITY',liq<5e3?3:liq<25e3?2:1,fm(liq)+' in the main pool'+(fdv?' · '+(liq/fdv*100).toFixed(1)+'% of FDV':'')]);
+F2.push(['POOL AGE',age<36e5?2:1,'Main pool created '+ago(age)]);
+F2.push(['HOLDERS',!d?2:+d.top_10>60?3:+d.top_10>35?2:1,d?Number(h.count).toLocaleString()+' holders · top 10 hold '+(+d.top_10).toFixed(1)+'% (includes pools/exchanges)':'Holder data not available yet']);
+const au=v=>v==null?2:String(v).toLowerCase()==='no'?1:3;
+F2.push(['AUTHORITY',Math.max(au(a.mint_authority),au(a.freeze_authority)),'Mint: '+(a.mint_authority==null?'not reported':a.mint_authority)+' · Freeze: '+(a.freeze_authority==null?'not reported':a.freeze_authority)]);
+if(a.is_honeypot===true||a.is_honeypot==='true')F2.push(['HONEYPOT',3,'Flagged as a honeypot']);
+const bu=+tx.buyers||0,se=+tx.sellers||0,b2=+tx.buys||0,s2=+tx.sells||0;
+F2.push(['ACTIVITY',bu<30||s2>b2*2?2:1,'24h: '+b2+' buys / '+s2+' sells · '+bu+' buyers / '+se+' sellers']);
+const so=[a.twitter_handle&&'X',(a.websites||[]).length&&'website',a.telegram_handle&&'Telegram',a.discord_url&&'Discord'].filter(Boolean);
+F2.push(['PROFILE',so.length?1:2,(so.length?'Listed: '+so.join(', '):'No socials or website listed')+(a.gt_verified?' · GT verified':' · unverified metadata')]);
+if(a.gt_score!=null)F2.push(['GT SCORE',a.gt_score>=60?1:a.gt_score>=40?2:3,Math.round(a.gt_score)+'/100 (GeckoTerminal)']);
+const sc=Math.max(0,100-F2.reduce((t,f)=>t+(f[1]===2?10:f[1]===3?22:0),0)),v=sc>=80?['LOOKS CLEAN','g1']:sc>=60?['MIXED','g2']:sc>=40?['LARP RISK','g3']:['HIGH RISK','g3'];
+R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p><div class="vd"><b class="'+v[1]+'">'+v[0]+'</b><span class="mut">signal score '+sc+'/100</span></div><p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(m)+'</p>'+F2.map(f=>'<div class="fd"><i>'+f[0]+'</i><span class="g'+f[1]+'">'+esc(f[2])+'</span></div>').join('')+'<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Not financial advice. DYOR.</p>'}catch(err){if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(err.message)+'</p>'}};
+// hotkey lookup
+const HK=[['Alt+1','Coin tracker'],['Alt+2','X feed'],['Alt+3','Coin scanner'],['Alt+4 or ?','Hotkey lookup'],['Alt+← ↓ ↑ →','Focus window (or Alt+H J K L)'],['Alt+Shift+← ↓ ↑ →','Move window (swap)'],['Alt+Ctrl+← ↓ ↑ →','Resize (move split edge)'],['Alt+Shift+Q','Close focused window (or Esc)'],['Alt+T','Toggle light / dark'],['Alt+Shift+E','Log out'],['Click a coin','Chart + bubble map inside the tracker (Esc = back)']];
+const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTML=HK.filter(h=>!q||(h[0]+' '+h[1]).toLowerCase().includes(q)).map(h=>`<div class="kr"><span class="kk">${h[0].split('+').map(x=>`<kbd>${esc(x)}</kbd>`).join('+')}</span><span>${esc(h[1])}</span></div>`).join('')||'<p class="mut" style="padding:10px 0">No match.</p>'};
+$('#t4q').oninput=rk;rk();
+// coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
+const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
+let chart=null,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
+const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
+const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
+const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
+const lgd=(c,v)=>{
+ if(!c){$('#chg').textContent='';return}
+ const f=x=>mode==='mcap'?fk(x):pf(x),ch=c.open?((c.close-c.open)/c.open*100):0;
+ $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · PUMPPORTAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
+};
+const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}chart=LightweightCharts.createChart($('#chc'),{autoSize:true,rightPriceScale:{borderVisible:false},timeScale:{timeVisible:true,borderVisible:false},...copts()});series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});chart.subscribeCrosshairMove(p=>{const c=p.seriesData&&p.seriesData.get(series);if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}else if(CAN.length){const l=CAN[CAN.length-1];lgd(l,l.v)}});return true};
+const loadStats=async()=>{
+ const mint=curM;
+ try{
+   const [meta,solMeta]=await Promise.all([getTokenMeta(mint),getTokenMeta(WSOL).catch(()=>null)]);
+   if(mint!==curM)return;
+   if(solMeta?.priceUsd)solUsd=Number(solMeta.priceUsd);
+   if(meta.pairAddress&&BASE58.test(meta.pairAddress))curP=meta.pairAddress;
+   const px=Number(meta.priceUsd)||0,mc=Number(meta.marketCap||meta.fdv)||0;
+   metaMarketCapSol=eventMcap(lastPumpTrade||{});
+   $('#cvst').innerHTML=[
+     ['PRICE',px?pf(px):'Awaiting trades'],
+     ['MCAP',mc?'$'+fk(mc):(metaMarketCapSol?fk(metaMarketCapSol)+' SOL':'—')],
+     ['LIQUIDITY',meta.liquidityUsd?fm(meta.liquidityUsd):'—'],
+     ['24H VOL',meta.volume24h?fm(meta.volume24h):'—'],
+     ['POOL',esc(meta.dexId||'PUMP.FUN')],
+     ['AGE',meta.pairCreatedAt?ago(Date.now()-meta.pairCreatedAt).replace(' ago',''):'NEW']
+   ].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+   if(meta.url)$('#cvl').href=meta.url;
+   $('#pumpstatus').textContent=PUMP.tradeConfigured?'PUMPPORTAL · LIVE':'PUMPPORTAL · KEY NEEDED';
+ }catch(e){
+   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['MCAP','—'],['LIQUIDITY','—'],['24H VOL','—'],['SOURCE','PUMPPORTAL'],['STATUS','WAITING']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+ }
+};
+const loadInfo=async()=>{
+ const mint=curM;
+ try{
+   const a=await getTokenMeta(mint);
+   if(mint!==curM)return;
+   $('#cvt').textContent=a.symbol?'$'+a.symbol:cur;
+   $('#cvnm').textContent=a.name||'';
+   $('#cvca').textContent=mint;
+   $('#cvi').hidden=true;
+   if(a.imageUrl){$('#cvi').src=a.imageUrl;$('#cvi').hidden=false}
+   const L=[];
+   (a.socials||[]).forEach(x=>{
+     if(x.type==='twitter'||x.platform==='twitter')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">X</a>');
+     if(x.type==='telegram'||x.platform==='telegram')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">TG</a>');
+   });
+   (a.websites||[]).forEach(x=>{const url=typeof x==='string'?x:x.url;if(/^https:\/\//.test(url||''))L.push('<a target="_blank" rel="noopener" href="'+esc(url)+'">WEB</a>')});
+   $('#cvso').innerHTML=L.join('');
+   if(a.pairAddress&&BASE58.test(a.pairAddress))curP=a.pairAddress;
+ }catch(e){
+   $('#cvt').textContent=cur;$('#cvca').textContent=mint;
+ }
+};
+const candleSeconds=()=>[60,300,900,3600,14400,86400][tf]||300;
+const chartValue=trade=>{
+ const mcSol=eventMcap(trade);
+ if(!mcSol)return 0;
+ const mcUsd=solUsd?mcSol*solUsd:0;
+ if(mode==='mcap')return ccy==='usd'?mcUsd:mcSol;
+ return ccy==='usd'?(mcUsd/1e9):(mcSol/1e9);
+};
+const updateChartFromTrade=trade=>{
+ if(trade.mint!==curM||!mkC())return;
+ const value=chartValue(trade);if(!(value>0))return;
+ const step=candleSeconds(),time=Math.floor(eventTime(trade)/1000/step)*step;
+ const amountSol=Number(trade.solAmount||trade.quoteAmount||0);
+ const volume=amountSol*(ccy==='usd'&&solUsd?solUsd:1);
+ const last=CAN[CAN.length-1];
+ let candle;
+ if(last&&last.time===time){
+   last.high=Math.max(last.high,value);last.low=Math.min(last.low,value);last.close=value;last.v=(last.v||0)+volume;candle=last;
+ }else{
+   candle={time,open:last?last.close:value,high:value,low:value,close:value,v:volume};CAN.push(candle);
+   if(CAN.length>500)CAN.shift();
+ }
+ const formatValue=mode==='mcap'?fk(value):pf(value);
+ PR=12;
+ series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+ series.update({time,open:candle.open,high:candle.high,low:candle.low,close:candle.close});
+ vol.update({time,value:candle.v||volume,color:candle.close>=candle.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'});
+ $('#chn').textContent='LIVE · PUMPPORTAL · '+new Date(eventTime(trade)).toLocaleTimeString();
+ $('#pumpstatus').textContent='PUMPPORTAL · LIVE';
+ lgd(candle,candle.v);
+ const mcSol=eventMcap(trade),mcUsd=solUsd?mcSol*solUsd:0;
+ const cells=[
+   ['PRICE',ccy==='usd'&&solUsd?pf(mcUsd/1e9):pf(mcSol/1e9)],
+   ['MCAP',ccy==='usd'&&solUsd?'$'+fk(mcUsd):fk(mcSol)+' SOL'],
+   ['TRADE',amountSol?amountSol.toFixed(3)+' SOL':'—'],
+   ['TRADER',shortCA(trade.traderPublicKey)],
+   ['TYPE',String(trade.txType||'TRADE').toUpperCase()],
+   ['POOL',trade.pool||'PUMP']
+ ];
+ $('#cvst').innerHTML=cells.map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
+};
+const applyPumpTrade=trade=>{
+ if(trade.mint!==curM)return;
+ lastPumpTrade=trade;
+ currentPumpTrades.unshift(trade);currentPumpTrades=currentPumpTrades.slice(0,100);
+ updateChartFromTrade(trade);
+ if(tab===1)loadTrades();
+};
+const loadChart=async fit=>{
+ const ov=$('#chl');if(fit)ov.hidden=false;
+ try{
+   if(!mkC())return;
+   await STP;
+   const pool=curP;
+   if(!BASE58.test(pool)){
+     CAN=[];series.setData([]);vol.setData([]);
+     $('#chn').textContent=PUMP.tradeConfigured?'WAITING FOR PUMPPORTAL TRADES · NO HISTORICAL CANDLES':'ADD PUMPPORTAL API KEY FOR LIVE TRADES';
+     return;
+   }
+   const[,u,ag]=TFS[tf],j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,25000);
+   const k=mode==='mcap'&&SUP?SUP:1,L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
+   if(!L.length)throw new Error('No historical candles; waiting for live PumpPortal trades.');
+   CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));
+   PR=12;
+   series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+   series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+   vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
+   if(fit)chart.timeScale().fitContent();
+   lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
+   $('#chn').textContent='HISTORICAL BACKFILL · GECKOTERMINAL · LIVE UPDATES PUMPPORTAL';
+   // Reapply trades that arrived while the historical request was loading.
+   currentPumpTrades.slice().reverse().forEach(t=>updateChartFromTrade(t));
+ }catch(e){$('#chn').textContent=e.message}
+ finally{ov.hidden=true}
+};
+const loadTrades=async()=>{
+ const el=$('#bmc');
+ const items=currentPumpTrades.slice(0,60);
+ el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>SOL</span><span>MCAP</span><span>MAKER</span></div>'+
+ items.map(t=>{
+   const buy=t.txType==='buy',maker=String(t.traderPublicKey||''),mc=eventMcap(t);
+   const time=new Date(eventTime(t)).toLocaleTimeString([],{hour12:false});
+   return '<div class="trd"><span class="mut">'+time+'</span><span class="'+(buy?'up':'dn')+'">'+(buy?'BUY':'SELL')+'</span><span class="'+(buy?'up':'dn')+'">'+Number(t.solAmount||t.quoteAmount||0).toFixed(3)+'</span><span>'+fk(mc)+' SOL</span><span><a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(maker)+'">'+esc(shortCA(maker))+'</a></span></div>';
+ }).join('')||'<p class="mut">Waiting for live trades. A PumpPortal API key is required for token trade subscriptions.</p>';
+ $('#chn').textContent=PUMP.tradeConfigured?'LIVE · PUMPPORTAL TOKEN TRADES':'TOKEN TRADE STREAM NOT CONFIGURED';
+};
+const BM=m=>'<a class="btn o" target="_blank" rel="noopener" href="https://app.bubblemaps.io/sol/token/'+encodeURIComponent(m)+'">Open Bubblemaps ↗</a>';
+const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
+const showTab=i=>{tab=i;[...$('#chtabs').children].forEach((c,j)=>c.classList.toggle('on',i===j));const c=i===0;$('#chtf').hidden=!c;$('#chb').hidden=!c;$('#chc').hidden=!c;$('#bmc').hidden=c;if(i===0)loadChart(true);else if(i===1){$('#bmc').innerHTML=ldr('LOADING TRADES')+'<div class="sk"></div>';loadTrades()}else showBubble()};
+['Chart','Trades','Holders'].forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>showTab(i);$('#chtabs').appendChild(x)});
+const onG=(g,i)=>$('#chtf').querySelectorAll('[data-g="'+g+'"]').forEach((b,j)=>b.classList.toggle('on',i===j));
+const mkB=(box,g,t,on,fn,sp,id)=>{const x=document.createElement('button');x.textContent=t;x.dataset.g=g;if(on)x.className='on';if(sp)x.classList.add('sp');if(id)x.id=id;x.onclick=fn;box.appendChild(x)};
+TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadChart(true)}));
+[['USD','usd'],['SOL','token']].forEach((c,i)=>mkB($('#chtf'),'cc',c[0],i===0,()=>{ccy=c[1];onG('cc',i);loadChart(true)},i===0,i?'bq':''));
+[['Price','price'],['MCap','mcap']].forEach((c,i)=>mkB($('#chtf'),'md',c[0],i===0,()=>{mode=c[1];onG('md',i);loadChart(true)},i===0));
+[['%',2],['log',1],['auto',0]].forEach((c,i)=>mkB($('#chb'),'sc',c[0],i===2,()=>{chart&&chart.priceScale('right').applyOptions({mode:c[1]});$('#chb').querySelectorAll('[data-g=sc]').forEach((b,j)=>b.classList.toggle('on',i===j))}));
+$('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
+setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
+const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c)connectPumpPortal()};
+const openCoin=(tk,p,m)=>{
+ cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;activeMint=m;SUP=1e9;CAN=[];currentPumpTrades=[];lastPumpTrade=null;metaMarketCapSol=0;solUsd=0;
+ $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
+ $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
+ setV(true);STP=loadStats();loadInfo();pumpSubscribe(m);showTab(tab);
+};
+const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
+$('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},30000);
+$('#t1list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+// theme
+const thm=$('#thm'),rootEl=document.documentElement;
+const setTheme=t=>{rootEl.dataset.theme=t;thm.textContent=t==='dark'?'◑ Dark':'◐ Light';try{localStorage.setItem('alpha_theme',t)}catch(e){}if(chart)chart.applyOptions(copts())};
+thm.onclick=()=>setTheme(rootEl.dataset.theme==='dark'?'light':'dark');
+let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light'}catch(e){}setTheme(t0);
+// user block + wallet
+const cfg=window.ALPHA_SUPABASE_CONFIG||{};
+const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+const U={name:'',addr:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
+const showU=()=>{ub.textContent=U.addr?`${U.name} · ${short(U.addr)}`:`${U.name} · connect wallet`};
+const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
+const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
+const boot=cb=>{if(A.RM||$('#boot')){if(!$('#boot'))cb();return}const o=document.createElement('div');o.id='boot';document.body.appendChild(o);const L=['ALPHA <GO> TERMINAL','> authenticating session ........ OK','> initialising workspace ......... OK','> loading sample data (not live) . OK','> ready'];let i=0,done=false;const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>o.remove(),380)};o.onclick=fin;const nx=()=>{if(done)return;if(i<L.length){const d=document.createElement('div');d.textContent=L[i++];o.appendChild(d);setTimeout(nx,170)}else setTimeout(fin,260)};nx()};
+const login=()=>{$('#ae').textContent='';boot(enter)};
+ub.onclick=async()=>{if(U.addr){try{await navigator.clipboard.writeText(U.addr);ub.textContent='address copied'}catch(e){}setTimeout(showU,1500);return}
+try{U.addr=await conn();showU()}catch(e){ub.textContent=/not found/.test(e.message)?'Phantom not found':'Connection rejected';setTimeout(showU,2500)}};
+// auth + app mode
+
+const hint=()=>{const h=$('#hint');h.hidden=false;h.style.opacity='.6';setTimeout(()=>{h.style.opacity='0';setTimeout(()=>h.hidden=true,1100)},6000)};
+const enter=()=>{b.classList.add('app');showU();Object.values(A.W).forEach(w=>w.hidden=true);A.sync();if(location.hash!=='#terminal')location.hash='terminal';hint()};
+const exit=()=>{const wasApp=b.classList.contains('app');b.classList.remove('app');if(wasApp&&authClient)authClient.auth.signOut({scope:'local'}).catch(()=>{});U.name='';U.addr='';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();try{history.replaceState(null,'',location.pathname+location.search)}catch(x){location.hash=''}};
+$('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured yet. Add the Supabase project URL and publishable key to Render.';return}
+ const button=$('#af').querySelector('button[type=submit]');button.disabled=true;button.textContent='Signing in…';
+ try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;await verifyAdmin(data.session);U.name=data.user?.email?.split('@')[0]||'admin';U.addr='';$('#ap').value='';login()}
+ catch(err){if(authClient)await authClient.auth.signOut({scope:'local'}).catch(()=>{});$('#ae').textContent=err.message||'Could not sign in. Please try again.'}
+ finally{button.disabled=false;button.textContent='Log in'}};
+
+const verifyAdmin=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/admin/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify administrator access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account is not authorized for administrator access.')};
+if(authClient){authClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&b.classList.contains('app'))exit()})}
+const TW=[...ids,'w-legal'].map(i=>A.W[i]),hero=$('#top');let root=null,foc=null,R={};
+const leaves=(n,o=[])=>{n.id?o.push(n):(leaves(n.a,o),leaves(n.b,o));return o};
+const lay=(n,r,o)=>{if(n.id){o[n.id]=r;return}if(n.d==='h'){const w=r.w*n.r;lay(n.a,{x:r.x,y:r.y,w,h:r.h},o);lay(n.b,{x:r.x+w,y:r.y,w:r.w-w,h:r.h},o)}else{const h=r.h*n.r;lay(n.a,{x:r.x,y:r.y,w:r.w,h},o);lay(n.b,{x:r.x,y:r.y+h,w:r.w,h:r.h-h},o)}};
+const find=id=>root&&leaves(root).find(l=>l.id===id);
+const par=(n,id)=>n.id?null:(n.a.id===id||n.b.id===id)?n:par(n.a,id)||par(n.b,id);
+const apply=()=>{R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)},R);TW.forEach(w=>{const r=R[w.id],on=!!r,was=w.classList.contains('tile');w.classList.toggle('tile',on);w.classList.toggle('foc',on&&w.id===foc);if(!on){if(was)['left','top','width','height'].forEach(p=>w.style.removeProperty(p));return}const g=6,S=(p,v)=>w.style.setProperty(p,v+'px','important');S('left',r.x+g);S('top',r.y+g);S('width',r.w-2*g);S('height',r.h-2*g)})};
+const add=id=>{if(!root){root={id};foc=id;apply();return}const f=find(foc)||leaves(root)[0],r=R[f.id]||{w:1,h:1},old={id:f.id};delete f.id;f.d=r.w>=r.h?'h':'v';f.r=.5;f.a=old;f.b={id};foc=id;apply()};
+const rm=id=>{const n=find(id);if(!n)return;if(root===n)root=null;else{const p=par(root,id),sb=p.a.id===id?p.b:p.a,c={...sb};Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,c)}apply()};
+const sync2=()=>{const app=b.classList.contains('app');TW.forEach(w=>{const inT=!!find(w.id);if((w.hidden||!app)&&inT)rm(w.id);else if(!w.hidden&&app&&!inT)add(w.id)});if(!root)foc=null;else if(!find(foc))foc=leaves(root)[0].id;apply()};
+const mo=new MutationObserver(sync2);TW.forEach(w=>{mo.observe(w,{attributes:true,attributeFilter:['hidden']});w.addEventListener('pointerdown',()=>{if(find(w.id)){foc=w.id;apply()}})});
+addEventListener('resize',apply);
+const nb=(id,d)=>{const a=R[id];if(!a)return null;let best=null,bs=1e9;for(const k in R){if(k===id)continue;const c=R[k];let g,o;
+if(d==='L'){g=a.x-(c.x+c.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='R'){g=c.x-(a.x+a.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='U'){g=a.y-(c.y+c.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}else{g=c.y-(a.y+a.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}
+if(g>-2&&o>0&&g<bs){bs=g;best=k}}return best};
+const rs=d=>{if(!root||!foc)return;const ax=d==='L'||d==='R'?'h':'v',path=[],f=n=>{if(n.id)return n.id===foc;path.push(n);if(f(n.a)||f(n.b))return true;path.pop();return false};f(root);const n=[...path].reverse().find(x=>x.d===ax);if(!n)return;n.r=Math.min(.85,Math.max(.15,n.r+(d==='R'||d==='D'?.05:-.05)));apply()};
+const closeW=id=>A.hide(A.W[id]);
+const tog=id=>{const w=A.W[id];if(w.hidden)A.open(id);else if(foc!==id){foc=id;apply()}else closeW(id)};
+const DM={ArrowLeft:'L',ArrowRight:'R',ArrowUp:'U',ArrowDown:'D',KeyH:'L',KeyL:'R',KeyK:'U',KeyJ:'D'};
+addEventListener('keydown',e=>{if(!b.classList.contains('app'))return;const mod=e.altKey||e.metaKey,typing=/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName);
+if(e.key==='Escape'){if(foc==='t1'&&!$('#t1v2').hidden){setV(false);return}if(foc)closeW(foc);return}
+if(mod&&e.shiftKey&&e.code==='KeyE'){e.preventDefault();exit();return}
+if(mod&&e.shiftKey&&e.code==='KeyQ'){e.preventDefault();if(foc)closeW(foc);return}
+if(mod&&e.code==='KeyT'){e.preventDefault();thm.click();return}
+const d=DM[e.code];
+if(mod&&d){e.preventDefault();if(e.ctrlKey)rs(d);else{const n=foc&&nb(foc,d);if(n){if(e.shiftKey){const la=find(foc),lb=find(n),t=la.id;la.id=lb.id;lb.id=t}else foc=n;apply()}}return}
+const m=e.code.match(/^(Digit|Numpad)([1-4])$/);if(m){if(!mod&&(typing||e.ctrlKey))return;e.preventDefault();tog('t'+m[2]);return}
+if(e.key==='?'&&!typing){e.preventDefault();tog('t4')}});
+addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){await verifyAdmin(data.session);U.name=data.session.user?.email?.split('@')[0]||'admin';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase admin session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+})();
+</script></body></html>
++meta.symbol;
+      if(subtitle&&meta.name)subtitle.textContent=meta.name;
+    });
+    document.querySelectorAll('.pump-feed-row[data-m="'+mint+'"]').forEach(row=>{
+      const title=row.querySelector('b'),details=row.querySelector('div');
+      if(title&&meta.symbol)title.textContent='
+};
+const connectPumpPortal=async()=>{
+  if(PUMP.ticketing||PUMP.socket&&[WebSocket.CONNECTING,WebSocket.OPEN].includes(PUMP.socket.readyState))return;
+  if(!window.WebSocket||!authClient)return;
+  PUMP.ticketing=true;
+  let socket;
+  try{
+    const {data}=await authClient.auth.getSession();
+    if(!data.session?.access_token)throw new Error('Admin session required to open PumpPortal stream.');
+    const response=await fetch('/api/pump-ticket',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token}});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok)throw new Error(result.error||'Could not authorize PumpPortal stream.');
+    const scheme=location.protocol==='https:'?'wss:':'ws:';
+    socket=new WebSocket(scheme+'//'+location.host+'/ws/pumpportal?ticket='+encodeURIComponent(result.ticket));
+    PUMP.socket=socket;
+  }catch(error){
+    $('#t1n').textContent=error.message||'Could not connect to PumpPortal.';
+    $('#chn').textContent=error.message||'Admin session required.';
+    return;
+  }finally{PUMP.ticketing=false}
+  socket.onopen=()=>{
+    PUMP.retryDelay=1200;
+    if(activeMint)socket.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+    $('#t1n').textContent='PUMPPORTAL · CONNECTED · WAITING FOR LAUNCH EVENTS';
+  };
+  socket.onmessage=message=>{
+    let packet;try{packet=JSON.parse(message.data)}catch(e){return}
+    if(packet.type==='status'){
+      PUMP.connected=!!packet.connected;PUMP.tradeConfigured=!!packet.tradeConfigured;
+      if(packet.message)$('#chn').textContent=packet.message;
+      $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'CONNECTED':'RECONNECTING')+(PUMP.tradeConfigured?' · LIVE TRADES ENABLED':' · LAUNCHES + MIGRATIONS FREE');
+      return;
+    }
+    if(packet.type==='snapshot'){
+      PUMP.launches=(packet.newTokens||[]).slice(0,120);
+      PUMP.migrations=(packet.migrations||[]).slice(0,80);
+      t1ts=Date.now();renderT1();rf();return;
+    }
+    if(packet.type==='newToken'&&packet.data){
+      const item=packet.data;
+      PUMP.launches=[item,...PUMP.launches.filter(x=>x.mint!==item.mint)].slice(0,120);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='migration'&&packet.data){
+      const item=packet.data;
+      PUMP.migrations=[item,...PUMP.migrations.filter(x=>x.signature!==item.signature)].slice(0,80);
+      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
+    }
+    if(packet.type==='trade'&&packet.data){
+      applyPumpTrade(packet.data);return;
+    }
+    if(packet.type==='error')$('#chn').textContent=packet.error||'PumpPortal stream error';
+  };
+  socket.onclose=()=>{
+    PUMP.connected=false;
+    if(PUMP.socket===socket)PUMP.socket=null;
+    if(!document.hidden){
+      clearTimeout(PUMP.retry);
+      PUMP.retry=setTimeout(connectPumpPortal,PUMP.retryDelay);
+      PUMP.retryDelay=Math.min(PUMP.retryDelay*1.8,20000);
+    }
+  };
+  socket.onerror=()=>{try{socket.close()}catch(e){}};
+};
+const pumpSubscribe=mint=>{
+  activeMint=mint||'';
+  const ws=PUMP.socket;
+  if(!ws||ws.readyState!==WebSocket.OPEN)return;
+  ws.send(JSON.stringify({action:'unsubscribe'}));
+  if(BASE58.test(activeMint))ws.send(JSON.stringify({action:'subscribe',mint:activeMint}));
+};
+const eventRows=()=>tk1===0?PUMP.launches:PUMP.migrations;
+const renderT1=()=>{
+  const events=eventRows();
+  const rows=events.map(e=>{
+    const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),name=String(e.name||'');
+    const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
+    const state=tk1===0?'NEW':'MIGRATED';
+    return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open live token chart">'+
+      '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
+      '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(name||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
+      '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
+      '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
+      '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
+    '</div>';
+  }).join('');
+  $('#t1list').innerHTML=rows||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal '+(tk1===0?'new launches':'migration events')+'…</p>';
+  events.slice(0,10).forEach(e=>{if(e.mint)pumpLogo(e.mint)});
+  $('#t1n').textContent='PUMPPORTAL · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' '+(tk1===0?'RECENT LAUNCHES':'RECENT MIGRATIONS')+' · '+(PUMP.tradeConfigured?'TOKEN TRADES ENABLED':'TRADE STREAM NEEDS API KEY');
+};
+const loadT1=()=>{connectPumpPortal();renderT1()};
+mkTabs($('#t1tabs'),['New launches','Migrations'],k=>{tk1=k;renderT1()});
+$('#t1list').innerHTML=ldr('CONNECTING TO PUMPPORTAL')+'<div class="sk"></div><div class="sk"></div>';
+new MutationObserver(()=>{
+  if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
+  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
+}).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
+setInterval(()=>{
+  if(document.hidden)return;
+  if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}
+},15000);
+// 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
+const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
+let t2tab=0;
+const rf=()=>{
+  const q=$('#t2q').value.trim().toLowerCase();
+  let html;
+  if(t2tab===0){
+    const items=[
+      ...PUMP.launches.slice(0,30).map(e=>({e,kind:'NEW LAUNCH'})),
+      ...PUMP.migrations.slice(0,30).map(e=>({e,kind:'MIGRATION'}))
+    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('$'+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
+    html=items.map(x=>'<div class="px pump-feed-row" data-c="$'+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b>$'+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
+  } else {
+    html=PS.filter(p=>!q||(p[0]+' '+p[2]).toLowerCase().includes(q)).map(p=>'<div class="px"><b>'+p[0]+'</b><span class="mut">'+p[1]+' ago</span><div>'+esc(p[2])+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
+  }
+  $('#t2list').innerHTML=html;
+  $('#t2n').textContent=t2tab===0?'LIVE · PUMPPORTAL NEW TOKEN + MIGRATION EVENTS':'SAMPLE POSTS — NOT LIVE';
+};
+$('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
+
+// 3 scanner: GeckoTerminal token info + pool data (free). Signals, not a guarantee.
+const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
+$('#t3f').onsubmit=async e=>{e.preventDefault();const q=$('#t3q').value.trim(),R=$('#t3r'),id=++scanN;if(!q)return;
+if(/^https?:\/\//i.test(q)||/\s/.test(q)){R.innerHTML='<p class="mut" style="margin-top:12px">Paste a Solana token address or a $ticker. X posts and websites need a backend and are not scanned yet.</p>';return}
+R.innerHTML=ldr('SCANNING VIA GECKOTERMINAL');
+try{let m=q;if(!MINT.test(q)){const s=q.replace(/^\$/,''),P=parse(await gt('/search/pools?query='+encodeURIComponent(s)+'&network=solana&include=base_token&page=1',60000)).filter(p=>p.mint&&p.sym.toLowerCase()===s.toLowerCase()).sort((a,b)=>b.liq-a.liq);if(!P.length)throw new Error('No Solana pool found for "'+s+'". Try the contract address.');m=P[0].mint}
+const[ij,pj]=await Promise.all([gt('/networks/solana/tokens/'+m+'/info',120000).catch(()=>null),gt('/networks/solana/tokens/'+m+'/pools?page=1',60000)]);if(id!==scanN)return;
+const pl=((pj.data||[])[0]||{}).attributes;if(!pl)throw new Error('No pools found for this token.');const a=ij?ij.data.attributes:{},h=a.holders,d=h&&h.distribution_percentage,tx=((pl.transactions||{}).h24)||{},liq=+pl.reserve_in_usd||0,fdv=+pl.fdv_usd||0,age=Date.now()-Date.parse(pl.pool_created_at),sym=a.symbol||pl.name.split(' / ')[0],F2=[];
+F2.push(['LIQUIDITY',liq<5e3?3:liq<25e3?2:1,fm(liq)+' in the main pool'+(fdv?' · '+(liq/fdv*100).toFixed(1)+'% of FDV':'')]);
+F2.push(['POOL AGE',age<36e5?2:1,'Main pool created '+ago(age)]);
+F2.push(['HOLDERS',!d?2:+d.top_10>60?3:+d.top_10>35?2:1,d?Number(h.count).toLocaleString()+' holders · top 10 hold '+(+d.top_10).toFixed(1)+'% (includes pools/exchanges)':'Holder data not available yet']);
+const au=v=>v==null?2:String(v).toLowerCase()==='no'?1:3;
+F2.push(['AUTHORITY',Math.max(au(a.mint_authority),au(a.freeze_authority)),'Mint: '+(a.mint_authority==null?'not reported':a.mint_authority)+' · Freeze: '+(a.freeze_authority==null?'not reported':a.freeze_authority)]);
+if(a.is_honeypot===true||a.is_honeypot==='true')F2.push(['HONEYPOT',3,'Flagged as a honeypot']);
+const bu=+tx.buyers||0,se=+tx.sellers||0,b2=+tx.buys||0,s2=+tx.sells||0;
+F2.push(['ACTIVITY',bu<30||s2>b2*2?2:1,'24h: '+b2+' buys / '+s2+' sells · '+bu+' buyers / '+se+' sellers']);
+const so=[a.twitter_handle&&'X',(a.websites||[]).length&&'website',a.telegram_handle&&'Telegram',a.discord_url&&'Discord'].filter(Boolean);
+F2.push(['PROFILE',so.length?1:2,(so.length?'Listed: '+so.join(', '):'No socials or website listed')+(a.gt_verified?' · GT verified':' · unverified metadata')]);
+if(a.gt_score!=null)F2.push(['GT SCORE',a.gt_score>=60?1:a.gt_score>=40?2:3,Math.round(a.gt_score)+'/100 (GeckoTerminal)']);
+const sc=Math.max(0,100-F2.reduce((t,f)=>t+(f[1]===2?10:f[1]===3?22:0),0)),v=sc>=80?['LOOKS CLEAN','g1']:sc>=60?['MIXED','g2']:sc>=40?['LARP RISK','g3']:['HIGH RISK','g3'];
+R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p><div class="vd"><b class="'+v[1]+'">'+v[0]+'</b><span class="mut">signal score '+sc+'/100</span></div><p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(m)+'</p>'+F2.map(f=>'<div class="fd"><i>'+f[0]+'</i><span class="g'+f[1]+'">'+esc(f[2])+'</span></div>').join('')+'<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Not financial advice. DYOR.</p>'}catch(err){if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(err.message)+'</p>'}};
+// hotkey lookup
+const HK=[['Alt+1','Coin tracker'],['Alt+2','X feed'],['Alt+3','Coin scanner'],['Alt+4 or ?','Hotkey lookup'],['Alt+← ↓ ↑ →','Focus window (or Alt+H J K L)'],['Alt+Shift+← ↓ ↑ →','Move window (swap)'],['Alt+Ctrl+← ↓ ↑ →','Resize (move split edge)'],['Alt+Shift+Q','Close focused window (or Esc)'],['Alt+T','Toggle light / dark'],['Alt+Shift+E','Log out'],['Click a coin','Chart + bubble map inside the tracker (Esc = back)']];
+const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTML=HK.filter(h=>!q||(h[0]+' '+h[1]).toLowerCase().includes(q)).map(h=>`<div class="kr"><span class="kk">${h[0].split('+').map(x=>`<kbd>${esc(x)}</kbd>`).join('+')}</span><span>${esc(h[1])}</span></div>`).join('')||'<p class="mut" style="padding:10px 0">No match.</p>'};
+$('#t4q').oninput=rk;rk();
+// coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
+const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
+let chart=null,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
+const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
+const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
+const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
+const lgd=(c,v)=>{
+ if(!c){$('#chg').textContent='';return}
+ const f=x=>mode==='mcap'?fk(x):pf(x),ch=c.open?((c.close-c.open)/c.open*100):0;
+ $('#chg').innerHTML='<b>'+esc(cur)+'/'+(ccy==='usd'?'USD':'SOL')+(mode==='mcap'?' MCap':'')+'</b> · '+TFS[tf][0]+' · PUMPPORTAL<br>O '+f(c.open)+' H '+f(c.high)+' L '+f(c.low)+' C '+f(c.close)+' <span class="'+C(ch)+'">('+(ch>=0?'+':'')+ch.toFixed(2)+'%)</span><br>Volume '+(v==null?'':fk(v));
+};
+const mkC=()=>{if(chart)return true;if(!window.LightweightCharts){$('#chn').textContent='CHART LIBRARY FAILED TO LOAD';return false}chart=LightweightCharts.createChart($('#chc'),{autoSize:true,rightPriceScale:{borderVisible:false},timeScale:{timeVisible:true,borderVisible:false},...copts()});series=chart.addCandlestickSeries({upColor:'#2ebd85',downColor:'#f6465d',wickUpColor:'#2ebd85',wickDownColor:'#f6465d',borderVisible:false});vol=chart.addHistogramSeries({priceScaleId:'',priceFormat:{type:'volume'}});chart.priceScale('').applyOptions({scaleMargins:{top:.82,bottom:0}});chart.subscribeCrosshairMove(p=>{const c=p.seriesData&&p.seriesData.get(series);if(c){const v=p.seriesData.get(vol);lgd(c,v&&v.value)}else if(CAN.length){const l=CAN[CAN.length-1];lgd(l,l.v)}});return true};
+const loadStats=async()=>{
+ const mint=curM;
+ try{
+   const [meta,solMeta]=await Promise.all([getTokenMeta(mint),getTokenMeta(WSOL).catch(()=>null)]);
+   if(mint!==curM)return;
+   if(solMeta?.priceUsd)solUsd=Number(solMeta.priceUsd);
+   if(meta.pairAddress&&BASE58.test(meta.pairAddress))curP=meta.pairAddress;
+   const px=Number(meta.priceUsd)||0,mc=Number(meta.marketCap||meta.fdv)||0;
+   metaMarketCapSol=eventMcap(lastPumpTrade||{});
+   $('#cvst').innerHTML=[
+     ['PRICE',px?pf(px):'Awaiting trades'],
+     ['MCAP',mc?'$'+fk(mc):(metaMarketCapSol?fk(metaMarketCapSol)+' SOL':'—')],
+     ['LIQUIDITY',meta.liquidityUsd?fm(meta.liquidityUsd):'—'],
+     ['24H VOL',meta.volume24h?fm(meta.volume24h):'—'],
+     ['POOL',esc(meta.dexId||'PUMP.FUN')],
+     ['AGE',meta.pairCreatedAt?ago(Date.now()-meta.pairCreatedAt).replace(' ago',''):'NEW']
+   ].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+   if(meta.url)$('#cvl').href=meta.url;
+   $('#pumpstatus').textContent=PUMP.tradeConfigured?'PUMPPORTAL · LIVE':'PUMPPORTAL · KEY NEEDED';
+ }catch(e){
+   if(mint===curM)$('#cvst').innerHTML=[['PRICE','—'],['MCAP','—'],['LIQUIDITY','—'],['24H VOL','—'],['SOURCE','PUMPPORTAL'],['STATUS','WAITING']].map(x=>'<div><small>'+x[0]+'</small><b>'+x[1]+'</b></div>').join('');
+ }
+};
+const loadInfo=async()=>{
+ const mint=curM;
+ try{
+   const a=await getTokenMeta(mint);
+   if(mint!==curM)return;
+   $('#cvt').textContent=a.symbol?'$'+a.symbol:cur;
+   $('#cvnm').textContent=a.name||'';
+   $('#cvca').textContent=mint;
+   $('#cvi').hidden=true;
+   if(a.imageUrl){$('#cvi').src=a.imageUrl;$('#cvi').hidden=false}
+   const L=[];
+   (a.socials||[]).forEach(x=>{
+     if(x.type==='twitter'||x.platform==='twitter')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">X</a>');
+     if(x.type==='telegram'||x.platform==='telegram')L.push('<a target="_blank" rel="noopener" href="'+esc(x.url)+'">TG</a>');
+   });
+   (a.websites||[]).forEach(x=>{const url=typeof x==='string'?x:x.url;if(/^https:\/\//.test(url||''))L.push('<a target="_blank" rel="noopener" href="'+esc(url)+'">WEB</a>')});
+   $('#cvso').innerHTML=L.join('');
+   if(a.pairAddress&&BASE58.test(a.pairAddress))curP=a.pairAddress;
+ }catch(e){
+   $('#cvt').textContent=cur;$('#cvca').textContent=mint;
+ }
+};
+const candleSeconds=()=>[60,300,900,3600,14400,86400][tf]||300;
+const chartValue=trade=>{
+ const mcSol=eventMcap(trade);
+ if(!mcSol)return 0;
+ const mcUsd=solUsd?mcSol*solUsd:0;
+ if(mode==='mcap')return ccy==='usd'?mcUsd:mcSol;
+ return ccy==='usd'?(mcUsd/1e9):(mcSol/1e9);
+};
+const updateChartFromTrade=trade=>{
+ if(trade.mint!==curM||!mkC())return;
+ const value=chartValue(trade);if(!(value>0))return;
+ const step=candleSeconds(),time=Math.floor(eventTime(trade)/1000/step)*step;
+ const amountSol=Number(trade.solAmount||trade.quoteAmount||0);
+ const volume=amountSol*(ccy==='usd'&&solUsd?solUsd:1);
+ const last=CAN[CAN.length-1];
+ let candle;
+ if(last&&last.time===time){
+   last.high=Math.max(last.high,value);last.low=Math.min(last.low,value);last.close=value;last.v=(last.v||0)+volume;candle=last;
+ }else{
+   candle={time,open:last?last.close:value,high:value,low:value,close:value,v:volume};CAN.push(candle);
+   if(CAN.length>500)CAN.shift();
+ }
+ const formatValue=mode==='mcap'?fk(value):pf(value);
+ PR=12;
+ series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+ series.update({time,open:candle.open,high:candle.high,low:candle.low,close:candle.close});
+ vol.update({time,value:candle.v||volume,color:candle.close>=candle.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'});
+ $('#chn').textContent='LIVE · PUMPPORTAL · '+new Date(eventTime(trade)).toLocaleTimeString();
+ $('#pumpstatus').textContent='PUMPPORTAL · LIVE';
+ lgd(candle,candle.v);
+ const mcSol=eventMcap(trade),mcUsd=solUsd?mcSol*solUsd:0;
+ const cells=[
+   ['PRICE',ccy==='usd'&&solUsd?pf(mcUsd/1e9):pf(mcSol/1e9)],
+   ['MCAP',ccy==='usd'&&solUsd?'$'+fk(mcUsd):fk(mcSol)+' SOL'],
+   ['TRADE',amountSol?amountSol.toFixed(3)+' SOL':'—'],
+   ['TRADER',shortCA(trade.traderPublicKey)],
+   ['TYPE',String(trade.txType||'TRADE').toUpperCase()],
+   ['POOL',trade.pool||'PUMP']
+ ];
+ $('#cvst').innerHTML=cells.map(x=>'<div><small>'+x[0]+'</small><b>'+esc(String(x[1]))+'</b></div>').join('');
+};
+const applyPumpTrade=trade=>{
+ if(trade.mint!==curM)return;
+ lastPumpTrade=trade;
+ currentPumpTrades.unshift(trade);currentPumpTrades=currentPumpTrades.slice(0,100);
+ updateChartFromTrade(trade);
+ if(tab===1)loadTrades();
+};
+const loadChart=async fit=>{
+ const ov=$('#chl');if(fit)ov.hidden=false;
+ try{
+   if(!mkC())return;
+   await STP;
+   const pool=curP;
+   if(!BASE58.test(pool)){
+     CAN=[];series.setData([]);vol.setData([]);
+     $('#chn').textContent=PUMP.tradeConfigured?'WAITING FOR PUMPPORTAL TRADES · NO HISTORICAL CANDLES':'ADD PUMPPORTAL API KEY FOR LIVE TRADES';
+     return;
+   }
+   const[,u,ag]=TFS[tf],j=await gt('/networks/solana/pools/'+pool+'/ohlcv/'+u+'?aggregate='+ag+'&limit=300&currency='+ccy,25000);
+   const k=mode==='mcap'&&SUP?SUP:1,L=(j.data.attributes.ohlcv_list||[]).slice().reverse();
+   if(!L.length)throw new Error('No historical candles; waiting for live PumpPortal trades.');
+   CAN=L.map(r=>({time:r[0],open:r[1]*k,high:r[2]*k,low:r[3]*k,close:r[4]*k,v:r[5]}));
+   PR=12;
+   series.applyOptions({priceFormat:{type:'custom',formatter:x=>mode==='mcap'?fk(x):pf(x),minMove:1e-12}});
+   series.setData(CAN.map(c=>({time:c.time,open:c.open,high:c.high,low:c.low,close:c.close})));
+   vol.setData(CAN.map(c=>({time:c.time,value:c.v,color:c.close>=c.open?'rgba(46,189,133,.4)':'rgba(246,70,93,.4)'})));
+   if(fit)chart.timeScale().fitContent();
+   lgd(CAN[CAN.length-1],CAN[CAN.length-1].v);
+   $('#chn').textContent='HISTORICAL BACKFILL · GECKOTERMINAL · LIVE UPDATES PUMPPORTAL';
+   // Reapply trades that arrived while the historical request was loading.
+   currentPumpTrades.slice().reverse().forEach(t=>updateChartFromTrade(t));
+ }catch(e){$('#chn').textContent=e.message}
+ finally{ov.hidden=true}
+};
+const loadTrades=async()=>{
+ const el=$('#bmc');
+ const items=currentPumpTrades.slice(0,60);
+ el.innerHTML='<div class="trd h"><span>TIME</span><span>TYPE</span><span>SOL</span><span>MCAP</span><span>MAKER</span></div>'+
+ items.map(t=>{
+   const buy=t.txType==='buy',maker=String(t.traderPublicKey||''),mc=eventMcap(t);
+   const time=new Date(eventTime(t)).toLocaleTimeString([],{hour12:false});
+   return '<div class="trd"><span class="mut">'+time+'</span><span class="'+(buy?'up':'dn')+'">'+(buy?'BUY':'SELL')+'</span><span class="'+(buy?'up':'dn')+'">'+Number(t.solAmount||t.quoteAmount||0).toFixed(3)+'</span><span>'+fk(mc)+' SOL</span><span><a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(maker)+'">'+esc(shortCA(maker))+'</a></span></div>';
+ }).join('')||'<p class="mut">Waiting for live trades. A PumpPortal API key is required for token trade subscriptions.</p>';
+ $('#chn').textContent=PUMP.tradeConfigured?'LIVE · PUMPPORTAL TOKEN TRADES':'TOKEN TRADE STREAM NOT CONFIGURED';
+};
+const BM=m=>'<a class="btn o" target="_blank" rel="noopener" href="https://app.bubblemaps.io/sol/token/'+encodeURIComponent(m)+'">Open Bubblemaps ↗</a>';
+const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
+const showTab=i=>{tab=i;[...$('#chtabs').children].forEach((c,j)=>c.classList.toggle('on',i===j));const c=i===0;$('#chtf').hidden=!c;$('#chb').hidden=!c;$('#chc').hidden=!c;$('#bmc').hidden=c;if(i===0)loadChart(true);else if(i===1){$('#bmc').innerHTML=ldr('LOADING TRADES')+'<div class="sk"></div>';loadTrades()}else showBubble()};
+['Chart','Trades','Holders'].forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>showTab(i);$('#chtabs').appendChild(x)});
+const onG=(g,i)=>$('#chtf').querySelectorAll('[data-g="'+g+'"]').forEach((b,j)=>b.classList.toggle('on',i===j));
+const mkB=(box,g,t,on,fn,sp,id)=>{const x=document.createElement('button');x.textContent=t;x.dataset.g=g;if(on)x.className='on';if(sp)x.classList.add('sp');if(id)x.id=id;x.onclick=fn;box.appendChild(x)};
+TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadChart(true)}));
+[['USD','usd'],['SOL','token']].forEach((c,i)=>mkB($('#chtf'),'cc',c[0],i===0,()=>{ccy=c[1];onG('cc',i);loadChart(true)},i===0,i?'bq':''));
+[['Price','price'],['MCap','mcap']].forEach((c,i)=>mkB($('#chtf'),'md',c[0],i===0,()=>{mode=c[1];onG('md',i);loadChart(true)},i===0));
+[['%',2],['log',1],['auto',0]].forEach((c,i)=>mkB($('#chb'),'sc',c[0],i===2,()=>{chart&&chart.priceScale('right').applyOptions({mode:c[1]});$('#chb').querySelectorAll('[data-g=sc]').forEach((b,j)=>b.classList.toggle('on',i===j))}));
+$('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
+setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
+const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c)connectPumpPortal()};
+const openCoin=(tk,p,m)=>{
+ cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;activeMint=m;SUP=1e9;CAN=[];currentPumpTrades=[];lastPumpTrade=null;metaMarketCapSol=0;solUsd=0;
+ $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
+ $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
+ setV(true);STP=loadStats();loadInfo();pumpSubscribe(m);showTab(tab);
+};
+const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
+$('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},30000);
+$('#t1list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+// theme
+const thm=$('#thm'),rootEl=document.documentElement;
+const setTheme=t=>{rootEl.dataset.theme=t;thm.textContent=t==='dark'?'◑ Dark':'◐ Light';try{localStorage.setItem('alpha_theme',t)}catch(e){}if(chart)chart.applyOptions(copts())};
+thm.onclick=()=>setTheme(rootEl.dataset.theme==='dark'?'light':'dark');
+let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light'}catch(e){}setTheme(t0);
+// user block + wallet
+const cfg=window.ALPHA_SUPABASE_CONFIG||{};
+const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
+const U={name:'',addr:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
+const showU=()=>{ub.textContent=U.addr?`${U.name} · ${short(U.addr)}`:`${U.name} · connect wallet`};
+const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
+const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
+const boot=cb=>{if(A.RM||$('#boot')){if(!$('#boot'))cb();return}const o=document.createElement('div');o.id='boot';document.body.appendChild(o);const L=['ALPHA <GO> TERMINAL','> authenticating session ........ OK','> initialising workspace ......... OK','> loading sample data (not live) . OK','> ready'];let i=0,done=false;const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>o.remove(),380)};o.onclick=fin;const nx=()=>{if(done)return;if(i<L.length){const d=document.createElement('div');d.textContent=L[i++];o.appendChild(d);setTimeout(nx,170)}else setTimeout(fin,260)};nx()};
+const login=()=>{$('#ae').textContent='';boot(enter)};
+ub.onclick=async()=>{if(U.addr){try{await navigator.clipboard.writeText(U.addr);ub.textContent='address copied'}catch(e){}setTimeout(showU,1500);return}
+try{U.addr=await conn();showU()}catch(e){ub.textContent=/not found/.test(e.message)?'Phantom not found':'Connection rejected';setTimeout(showU,2500)}};
+// auth + app mode
+
+const hint=()=>{const h=$('#hint');h.hidden=false;h.style.opacity='.6';setTimeout(()=>{h.style.opacity='0';setTimeout(()=>h.hidden=true,1100)},6000)};
+const enter=()=>{b.classList.add('app');showU();Object.values(A.W).forEach(w=>w.hidden=true);A.sync();if(location.hash!=='#terminal')location.hash='terminal';hint()};
+const exit=()=>{const wasApp=b.classList.contains('app');b.classList.remove('app');if(wasApp&&authClient)authClient.auth.signOut({scope:'local'}).catch(()=>{});U.name='';U.addr='';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();try{history.replaceState(null,'',location.pathname+location.search)}catch(x){location.hash=''}};
+$('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured yet. Add the Supabase project URL and publishable key to Render.';return}
+ const button=$('#af').querySelector('button[type=submit]');button.disabled=true;button.textContent='Signing in…';
+ try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;await verifyAdmin(data.session);U.name=data.user?.email?.split('@')[0]||'admin';U.addr='';$('#ap').value='';login()}
+ catch(err){if(authClient)await authClient.auth.signOut({scope:'local'}).catch(()=>{});$('#ae').textContent=err.message||'Could not sign in. Please try again.'}
+ finally{button.disabled=false;button.textContent='Log in'}};
+
+const verifyAdmin=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/admin/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify administrator access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account is not authorized for administrator access.')};
+if(authClient){authClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&b.classList.contains('app'))exit()})}
+const TW=[...ids,'w-legal'].map(i=>A.W[i]),hero=$('#top');let root=null,foc=null,R={};
+const leaves=(n,o=[])=>{n.id?o.push(n):(leaves(n.a,o),leaves(n.b,o));return o};
+const lay=(n,r,o)=>{if(n.id){o[n.id]=r;return}if(n.d==='h'){const w=r.w*n.r;lay(n.a,{x:r.x,y:r.y,w,h:r.h},o);lay(n.b,{x:r.x+w,y:r.y,w:r.w-w,h:r.h},o)}else{const h=r.h*n.r;lay(n.a,{x:r.x,y:r.y,w:r.w,h},o);lay(n.b,{x:r.x,y:r.y+h,w:r.w,h:r.h-h},o)}};
+const find=id=>root&&leaves(root).find(l=>l.id===id);
+const par=(n,id)=>n.id?null:(n.a.id===id||n.b.id===id)?n:par(n.a,id)||par(n.b,id);
+const apply=()=>{R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)},R);TW.forEach(w=>{const r=R[w.id],on=!!r,was=w.classList.contains('tile');w.classList.toggle('tile',on);w.classList.toggle('foc',on&&w.id===foc);if(!on){if(was)['left','top','width','height'].forEach(p=>w.style.removeProperty(p));return}const g=6,S=(p,v)=>w.style.setProperty(p,v+'px','important');S('left',r.x+g);S('top',r.y+g);S('width',r.w-2*g);S('height',r.h-2*g)})};
+const add=id=>{if(!root){root={id};foc=id;apply();return}const f=find(foc)||leaves(root)[0],r=R[f.id]||{w:1,h:1},old={id:f.id};delete f.id;f.d=r.w>=r.h?'h':'v';f.r=.5;f.a=old;f.b={id};foc=id;apply()};
+const rm=id=>{const n=find(id);if(!n)return;if(root===n)root=null;else{const p=par(root,id),sb=p.a.id===id?p.b:p.a,c={...sb};Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,c)}apply()};
+const sync2=()=>{const app=b.classList.contains('app');TW.forEach(w=>{const inT=!!find(w.id);if((w.hidden||!app)&&inT)rm(w.id);else if(!w.hidden&&app&&!inT)add(w.id)});if(!root)foc=null;else if(!find(foc))foc=leaves(root)[0].id;apply()};
+const mo=new MutationObserver(sync2);TW.forEach(w=>{mo.observe(w,{attributes:true,attributeFilter:['hidden']});w.addEventListener('pointerdown',()=>{if(find(w.id)){foc=w.id;apply()}})});
+addEventListener('resize',apply);
+const nb=(id,d)=>{const a=R[id];if(!a)return null;let best=null,bs=1e9;for(const k in R){if(k===id)continue;const c=R[k];let g,o;
+if(d==='L'){g=a.x-(c.x+c.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='R'){g=c.x-(a.x+a.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='U'){g=a.y-(c.y+c.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}else{g=c.y-(a.y+a.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}
+if(g>-2&&o>0&&g<bs){bs=g;best=k}}return best};
+const rs=d=>{if(!root||!foc)return;const ax=d==='L'||d==='R'?'h':'v',path=[],f=n=>{if(n.id)return n.id===foc;path.push(n);if(f(n.a)||f(n.b))return true;path.pop();return false};f(root);const n=[...path].reverse().find(x=>x.d===ax);if(!n)return;n.r=Math.min(.85,Math.max(.15,n.r+(d==='R'||d==='D'?.05:-.05)));apply()};
+const closeW=id=>A.hide(A.W[id]);
+const tog=id=>{const w=A.W[id];if(w.hidden)A.open(id);else if(foc!==id){foc=id;apply()}else closeW(id)};
+const DM={ArrowLeft:'L',ArrowRight:'R',ArrowUp:'U',ArrowDown:'D',KeyH:'L',KeyL:'R',KeyK:'U',KeyJ:'D'};
+addEventListener('keydown',e=>{if(!b.classList.contains('app'))return;const mod=e.altKey||e.metaKey,typing=/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName);
+if(e.key==='Escape'){if(foc==='t1'&&!$('#t1v2').hidden){setV(false);return}if(foc)closeW(foc);return}
+if(mod&&e.shiftKey&&e.code==='KeyE'){e.preventDefault();exit();return}
+if(mod&&e.shiftKey&&e.code==='KeyQ'){e.preventDefault();if(foc)closeW(foc);return}
+if(mod&&e.code==='KeyT'){e.preventDefault();thm.click();return}
+const d=DM[e.code];
+if(mod&&d){e.preventDefault();if(e.ctrlKey)rs(d);else{const n=foc&&nb(foc,d);if(n){if(e.shiftKey){const la=find(foc),lb=find(n),t=la.id;la.id=lb.id;lb.id=t}else foc=n;apply()}}return}
+const m=e.code.match(/^(Digit|Numpad)([1-4])$/);if(m){if(!mod&&(typing||e.ctrlKey))return;e.preventDefault();tog('t'+m[2]);return}
+if(e.key==='?'&&!typing){e.preventDefault();tog('t4')}});
+addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){await verifyAdmin(data.session);U.name=data.session.user?.email?.split('@')[0]||'admin';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase admin session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+})();
+</script></body></html>
++meta.symbol;
+      if(details&&meta.name)details.textContent=meta.name+' · '+details.textContent.split(' · ').slice(1).join(' · ');
+    });
   }catch(e){}
 };
 const connectPumpPortal=async()=>{
