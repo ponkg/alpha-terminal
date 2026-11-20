@@ -111,7 +111,7 @@ app.get("/api/token-meta", tokenMetaLimiter, async (req, res) => {
     let embeddedMeta = {};
     // For fresh launches that have not been indexed by DexScreener yet,
     // use the metadata URI included in PumpPortal's create event.
-    if (!p) {
+    if (!p || !p.info?.imageUrl) {
       const launch = recentPumpLaunches.find(x => String(x.mint || "").toLowerCase() === mint.toLowerCase());
       let uri = String(launch?.uri || "");
       if (uri.startsWith("ipfs://")) uri = "https://ipfs.io/ipfs/" + uri.slice(7).replace(/^ipfs\//, "");
