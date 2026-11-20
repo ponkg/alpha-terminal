@@ -251,11 +251,24 @@ const waitMs = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 app.get("/api/gecko", geckoLimiter, async (req, res) => {
   const apiPath = String(req.query.path || "");
-  if (!apiPath.startsWith("/networks/solana/") && !apiPath.startsWith("/tokens/")) {
-    return res.status(400).json({ error: "Unsupported market-data path." });
-  }
-  if (apiPath.includes("..") || apiPath.length > 500) {
+  if (!apiPath.startsWith("/") || apiPath.startsWith("//") || apiPath.includes("..") || apiPath.length > 500) {
     return res.status(400).json({ error: "Invalid market-data path." });
+  }
+
+  // The scanner resolves tickers through GeckoTerminal's pool search.
+  // Permit only Solana search results; all other network searches stay blocked.
+  let parsedPath;
+  try {
+    parsedPath = new URL(apiPath, "https://api.geckoterminal.com");
+  } catch {
+    return res.status(400).json({ error: "Invalid market-data path." });
+  }
+  const isSolanaSearch = parsedPath.pathname === "/search/pools" &&
+    parsedPath.searchParams.get("network") === "solana";
+  const isSolanaNetworkPath = parsedPath.pathname.startsWith("/networks/solana/");
+  const isTokenInfoPath = parsedPath.pathname.startsWith("/tokens/");
+  if (!isSolanaSearch && !isSolanaNetworkPath && !isTokenInfoPath) {
+    return res.status(400).json({ error: "Unsupported market-data path." });
   }
 
   const cached = geckoCache.get(apiPath);
