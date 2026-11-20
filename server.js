@@ -66,7 +66,7 @@ const pumpTickets = new Map();
 app.post("/api/pump-ticket", async (req, res) => {
   if (!ADMIN_EMAIL || !supabaseAdmin) return res.status(503).json({ error: "Administrator access is not configured." });
   const authorization = req.get("authorization") || "";
-  const match = authorization.match(/^Bearer\\s+(.+)$/i);
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
   if (!match) return res.status(401).json({ error: "Admin session required." });
   try {
     const { data, error } = await supabaseAdmin.auth.getUser(match[1]);
@@ -407,7 +407,7 @@ httpServer.on("upgrade", (request, socket, head) => {
   const expiresAt = pumpTickets.get(ticket);
   pumpTickets.delete(ticket);
   if (!expiresAt || expiresAt < Date.now()) {
-    socket.write("HTTP/1.1 401 Unauthorized\\r\\nConnection: close\\r\\n\\r\\n");
+    socket.write("HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n");
     socket.destroy();
     return;
   }
