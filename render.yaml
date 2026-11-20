@@ -10,8 +10,8 @@ services:
       - key: NODE_ENV
         value: production
       - key: SUPABASE_URL
-        sync: false
+        value: https://wdkpugylobqjacymifed.supabase.co
       - key: SUPABASE_PUBLISHABLE_KEY
-        sync: false
+        value: sb_publishable_BwY1B0uCcrjxd3SfEuVBLQ_jR9RCVsy
       - key: SUPABASE_SECRET_KEY
         sync: false
