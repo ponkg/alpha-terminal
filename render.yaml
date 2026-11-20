@@ -2,15 +2,16 @@ services:
   - type: web
     name: alpha-solana-terminal
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: npm install
     startCommand: npm start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DB_PATH
-        value: /var/data/alpha.sqlite
-    disk:
-      name: alpha-data
-      mountPath: /var/data
-      sizeGB: 1
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
