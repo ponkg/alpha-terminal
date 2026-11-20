@@ -500,10 +500,15 @@ app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
 
 // Warm one 5m price-history stream every minute. This powers genuine 15m/30m
 // changes without asking the browser to fan out extra API calls.
+let jupiterWarmupLogged = false;
 const warmJupiterHistory = async () => {
   try {
     const entry = await getJupiterTrending("5m");
     recordJupiterPriceSnapshot(entry.data, entry.time);
+    if (!jupiterWarmupLogged) {
+      console.log("Jupiter Tokens V2 connected · " + entry.data.length + " trending tokens available");
+      jupiterWarmupLogged = true;
+    }
   } catch (error) {
     console.warn("Jupiter price-history warmup skipped:", error.message);
   }
