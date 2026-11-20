@@ -35,6 +35,18 @@ The public site has no registration form. Visitors can only request early access
 
 The public waitlist is separate from Supabase Auth accounts. Waitlist submissions are saved in `public.waitlist` and do not create a login. Supabase's default email sender is best-effort and limited to 2 emails per hour; configure custom SMTP before sending more auth emails. See https://supabase.com/docs/guides/auth/passwords.
 
+## PumpPortal coin tracker
+
+The coin tracker uses the PumpPortal Data API for live token launches, migrations, and per-token trade events. The server keeps one upstream WebSocket connection and exposes an admin-ticket-protected WebSocket to the frontend. Token logos and market metadata are resolved by mint address through DexScreener, with a PumpPortal metadata-URI fallback for fresh launches.
+
+- New-token and migration subscriptions are free.
+- Per-token trade subscriptions require a PumpPortal API key and linked wallet funded with at least 0.02 SOL.
+- PumpPortal meters trade messages at 0.01 SOL per 10,000 events. Add `PUMPPORTAL_API_KEY` to Render Environment only when you want live per-token trades; keep it server-side.
+- PumpPortal does not provide historical candles. GeckoTerminal is retained only for historical OHLCV backfill and holder data.
+- Without `PUMPPORTAL_API_KEY`, the launches and migrations tabs still work, but selected-token live trade candles/trade tape remain unavailable.
+
+Get the key from the PumpPortal Data API setup page and add it as `PUMPPORTAL_API_KEY` in the Render service Environment. Do not commit it to GitHub or expose it in browser configuration.
+
 ## Run locally
 Requires Node.js 20+.
 
