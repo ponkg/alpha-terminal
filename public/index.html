@@ -774,27 +774,114 @@ const rf=()=>{
 };
 $('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
 
-// 3 scanner: GeckoTerminal token info + pool data (free). Signals, not a guarantee.
+// 3 scanner: GeckoTerminal token info + pool data (free).
 const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
-$('#t3f').onsubmit=async e=>{e.preventDefault();const q=$('#t3q').value.trim(),R=$('#t3r'),id=++scanN;if(!q)return;
-if(/^https?:\/\//i.test(q)||/\s/.test(q)){R.innerHTML='<p class="mut" style="margin-top:12px">Paste a Solana token address or a $ticker. X posts and websites need a backend and are not scanned yet.</p>';return}
-R.innerHTML=ldr('SCANNING VIA GECKOTERMINAL');
-try{let m=q;if(!MINT.test(q)){const s=q.replace(/^\$/,''),P=parse(await gt('/search/pools?query='+encodeURIComponent(s)+'&network=solana&include=base_token&page=1',60000)).filter(p=>p.mint&&p.sym.toLowerCase()===s.toLowerCase()).sort((a,b)=>b.liq-a.liq);if(!P.length)throw new Error('No Solana pool found for "'+s+'". Try the contract address.');m=P[0].mint}
-const[ij,pj]=await Promise.all([gt('/networks/solana/tokens/'+m+'/info',120000).catch(()=>null),gt('/networks/solana/tokens/'+m+'/pools?page=1',60000)]);if(id!==scanN)return;
-const pl=((pj.data||[])[0]||{}).attributes;if(!pl)throw new Error('No pools found for this token.');const a=ij?ij.data.attributes:{},h=a.holders,d=h&&h.distribution_percentage,tx=((pl.transactions||{}).h24)||{},liq=+pl.reserve_in_usd||0,fdv=+pl.fdv_usd||0,age=Date.now()-Date.parse(pl.pool_created_at),sym=a.symbol||pl.name.split(' / ')[0],F2=[];
-F2.push(['LIQUIDITY',liq<5e3?3:liq<25e3?2:1,fm(liq)+' in the main pool'+(fdv?' · '+(liq/fdv*100).toFixed(1)+'% of FDV':'')]);
-F2.push(['POOL AGE',age<36e5?2:1,'Main pool created '+ago(age)]);
-F2.push(['HOLDERS',!d?2:+d.top_10>60?3:+d.top_10>35?2:1,d?Number(h.count).toLocaleString()+' holders · top 10 hold '+(+d.top_10).toFixed(1)+'% (includes pools/exchanges)':'Holder data not available yet']);
-const au=v=>v==null?2:String(v).toLowerCase()==='no'?1:3;
-F2.push(['AUTHORITY',Math.max(au(a.mint_authority),au(a.freeze_authority)),'Mint: '+(a.mint_authority==null?'not reported':a.mint_authority)+' · Freeze: '+(a.freeze_authority==null?'not reported':a.freeze_authority)]);
-if(a.is_honeypot===true||a.is_honeypot==='true')F2.push(['HONEYPOT',3,'Flagged as a honeypot']);
-const bu=+tx.buyers||0,se=+tx.sellers||0,b2=+tx.buys||0,s2=+tx.sells||0;
-F2.push(['ACTIVITY',bu<30||s2>b2*2?2:1,'24h: '+b2+' buys / '+s2+' sells · '+bu+' buyers / '+se+' sellers']);
-const so=[a.twitter_handle&&'X',(a.websites||[]).length&&'website',a.telegram_handle&&'Telegram',a.discord_url&&'Discord'].filter(Boolean);
-F2.push(['PROFILE',so.length?1:2,(so.length?'Listed: '+so.join(', '):'No socials or website listed')+(a.gt_verified?' · GT verified':' · unverified metadata')]);
-if(a.gt_score!=null)F2.push(['GT SCORE',a.gt_score>=60?1:a.gt_score>=40?2:3,Math.round(a.gt_score)+'/100 (GeckoTerminal)']);
-const sc=Math.max(0,100-F2.reduce((t,f)=>t+(f[1]===2?10:f[1]===3?22:0),0)),v=sc>=80?['LOOKS CLEAN','g1']:sc>=60?['MIXED','g2']:sc>=40?['LARP RISK','g3']:['HIGH RISK','g3'];
-R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p><div class="vd"><b class="'+v[1]+'">'+v[0]+'</b><span class="mut">signal score '+sc+'/100</span></div><p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(m)+'</p>'+F2.map(f=>'<div class="fd"><i>'+f[0]+'</i><span class="g'+f[1]+'">'+esc(f[2])+'</span></div>').join('')+'<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Not financial advice. DYOR.</p>'}catch(err){if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(err.message)+'</p>'}};
+const parseGeckoSearchPools=payload=>{
+ const included=new Map((payload?.included||[])
+  .filter(item=>item?.type==='token')
+  .map(item=>[item.id,item.attributes||{}]));
+ return (Array.isArray(payload?.data)?payload.data:[]).map(item=>{
+  const attrs=item?.attributes||{};
+  const baseId=item?.relationships?.base_token?.data?.id||'';
+  const base=included.get(baseId)||{};
+  const mint=String(base.address||baseId.replace(/^solana_/,''));
+  return {
+   mint,
+   sym:String(base.symbol||''),
+   name:String(base.name||''),
+   liq:Number(attrs.reserve_in_usd)||0,
+   poolAddress:String(attrs.address||''),
+   poolName:String(attrs.name||''),
+   createdAt:attrs.pool_created_at||null,
+   attributes:attrs
+  };
+ }).filter(pool=>MINT.test(pool.mint)&&pool.poolAddress);
+};
+const scanError=(target,message)=>{
+ const result=$('#t3r');
+ result.innerHTML='<p class="mut" style="margin-top:12px">'+esc(message)+'</p>';
+ if(target)target.focus();
+};
+$('#t3f').onsubmit=async e=>{
+ e.preventDefault();
+ const input=$('#t3q'),button=$('#t3f').querySelector('button[type=submit]'),R=$('#t3r');
+ const q=input.value.trim(),id=++scanN;
+ if(!q){scanError(null,'Enter a Solana token address or ticker.');return}
+ if(/^https?:\/\//i.test(q)||/\s/.test(q)){
+  scanError(input,'Paste a Solana token address or a $ticker. X posts and websites are not scanned.');
+  return;
+ }
+ button.disabled=true;button.textContent='Scanning…';
+ R.innerHTML=ldr('SEARCHING GECKOTERMINAL');
+ try{
+  let mint=q,symbol='',tokenName='',searchPool='';
+  if(!MINT.test(q)){
+   const ticker=q.replace(/^\$/,'').toLowerCase();
+   if(!/^[a-z0-9._-]{1,20}$/i.test(ticker))throw new Error('Enter a valid ticker or Solana token address.');
+   const search=await gt('/search/pools?query='+encodeURIComponent(ticker)+'&network=solana&include=base_token&page=1',60000);
+   const candidates=parseGeckoSearchPools(search);
+   const matches=candidates.filter(pool=>pool.sym.toLowerCase()===ticker||pool.name.toLowerCase()===ticker);
+   const ranked=(matches.length?matches:candidates.filter(pool=>
+    pool.sym.toLowerCase().startsWith(ticker)||pool.name.toLowerCase().startsWith(ticker)
+   )).sort((x,y)=>y.liq-x.liq);
+   if(!ranked.length)throw new Error('No indexed Solana pool found for "'+q+'". Try the token contract address.');
+   mint=ranked[0].mint;symbol=ranked[0].sym;tokenName=ranked[0].name;searchPool=ranked[0].poolAddress;
+  }
+  if(id!==scanN)return;
+  R.innerHTML=ldr('LOADING TOKEN INFO AND POOLS');
+  const [infoResult,poolResult]=await Promise.all([
+   gt('/networks/solana/tokens/'+mint+'/info',120000).catch(error=>({__error:error.message})),
+   gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000)
+  ]);
+  if(id!==scanN)return;
+  const pools=Array.isArray(poolResult?.data)?poolResult.data:[];
+  const sortedPools=pools.filter(item=>item?.attributes).sort((x,y)=>
+   (Number(y.attributes.reserve_in_usd)||0)-(Number(x.attributes.reserve_in_usd)||0)
+  );
+  const pl=(sortedPools.find(item=>item.attributes.address===searchPool)||sortedPools[0])?.attributes;
+  if(!pl)throw new Error('GeckoTerminal has no indexed pool for this token yet. Try again later or use its pool address.');
+  const a=infoResult?.data?.attributes||{};
+  const holders=a.holders||null,distribution=holders?.distribution_percentage||null;
+  const tx=pl.transactions?.h24||{};
+  const liquidity=Number(pl.reserve_in_usd)||0;
+  const fdv=Number(pl.fdv_usd||pl.market_cap_usd)||0;
+  const createdAt=Date.parse(pl.pool_created_at||'');
+  const age=Number.isFinite(createdAt)?Math.max(0,Date.now()-createdAt):null;
+  const poolName=String(pl.name||'');
+  const sym=String(a.symbol||symbol||poolName.split(' / ')[0]||'TOKEN');
+  const F2=[];
+  F2.push(['LIQUIDITY',liquidity<5000?3:liquidity<25000?2:1,fm(liquidity)+' in the main pool'+(fdv?' · '+(liquidity/fdv*100).toFixed(1)+'% of FDV':'')]);
+  F2.push(['POOL AGE',age==null?2:age<36e5?2:1,age==null?'Pool age not reported':'Main pool created '+ago(age)]);
+  F2.push(['HOLDERS',!distribution?2:Number(distribution.top_10)>60?3:Number(distribution.top_10)>35?2:1,
+   distribution?Number(holders.count||0).toLocaleString()+' holders · top 10 hold '+Number(distribution.top_10).toFixed(1)+'% (includes pools/exchanges)':'Holder distribution not available from this provider']);
+  const authority=v=>v==null?2:String(v).toLowerCase()==='no'?1:3;
+  F2.push(['AUTHORITY',Math.max(authority(a.mint_authority),authority(a.freeze_authority)),
+   'Mint: '+(a.mint_authority==null?'not reported':a.mint_authority)+' · Freeze: '+(a.freeze_authority==null?'not reported':a.freeze_authority)]);
+  if(a.is_honeypot===true||a.is_honeypot==='true')F2.push(['HONEYPOT',3,'Flagged as a honeypot']);
+  const buyers=Number(tx.buyers)||0,sellers=Number(tx.sellers)||0,buys=Number(tx.buys)||0,sells=Number(tx.sells)||0;
+  F2.push(['ACTIVITY',buyers<30||sells>buys*2?2:1,'24h: '+buys+' buys / '+sells+' sells · '+buyers+' buyers / '+sellers+' sellers']);
+  const socials=Array.isArray(a.socials)?a.socials:[];
+  const websites=Array.isArray(a.websites)?a.websites:[];
+  const listed=[...new Set([
+   ...socials.map(item=>item?.type==='twitter'?'X':item?.type==='telegram'?'Telegram':item?.type).filter(Boolean),
+   ...websites.map(()=> 'website')
+  ])];
+  F2.push(['PROFILE',listed.length?1:2,(listed.length?'Listed: '+listed.join(', '):'No socials or website listed')+(a.gt_verified?' · GT verified':' · unverified metadata')]);
+  if(a.gt_score!=null)F2.push(['GT SCORE',a.gt_score>=60?1:a.gt_score>=40?2:3,Math.round(a.gt_score)+'/100 (GeckoTerminal)']);
+  const score=Math.max(0,100-F2.reduce((total,row)=>total+(row[1]===2?10:row[1]===3?22:0),0));
+  const verdict=score>=80?['LOOKS CLEAN','g1']:score>=60?['MIXED','g2']:score>=40?['LARP RISK','g3']:['HIGH RISK','g3'];
+  const mintLabel=tokenName||a.name||sym;
+  R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p>'+
+   '<div class="vd"><b class="'+verdict[1]+'">'+verdict[0]+'</b><span class="mut">signal score '+score+'/100</span></div>'+
+   '<p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(mintLabel)+' · '+esc(mint)+'</p>'+
+   F2.map(row=>'<div class="fd"><i>'+row[0]+'</i><span class="g'+row[1]+'">'+esc(row[2])+'</span></div>').join('')+
+   '<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Missing provider fields are marked unavailable, not assumed safe. Not financial advice. DYOR.</p>';
+ }catch(error){
+  if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(error.message||'Scanner request failed. Please try again.')+'</p>';
+ }finally{
+  if(id===scanN){button.disabled=false;button.textContent='Scan'}
+ }
+};
 // hotkey lookup
 const HK=[['Alt+1','Coin tracker'],['Alt+2','X feed'],['Alt+3','Coin scanner'],['Alt+4 or ?','Hotkey lookup'],['Alt+← ↓ ↑ →','Focus window (or Alt+H J K L)'],['Alt+Shift+← ↓ ↑ →','Move window (swap)'],['Alt+Ctrl+← ↓ ↑ →','Resize (move split edge)'],['Alt+Shift+Q','Close focused window (or Esc)'],['Alt+T','Toggle light / dark'],['Alt+Shift+E','Log out'],['Click a coin','Chart + bubble map inside the tracker (Esc = back)']];
 const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTML=HK.filter(h=>!q||(h[0]+' '+h[1]).toLowerCase().includes(q)).map(h=>`<div class="kr"><span class="kk">${h[0].split('+').map(x=>`<kbd>${esc(x)}</kbd>`).join('+')}</span><span>${esc(h[1])}</span></div>`).join('')||'<p class="mut" style="padding:10px 0">No match.</p>'};
