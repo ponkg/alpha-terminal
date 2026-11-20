@@ -619,10 +619,11 @@ const renderT1=()=>{
     '<div class="narrative-change">'+change+'</div>'+
    '</div>';
   }).join('');
+  const groupChange=group.change==null?'<span class="narrative-change mut">—</span>':'<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b>';
   return '<details class="narrative-group" '+(group.name===reopenName?'open':'')+'>'+
    '<summary><span class="narrative-name">'+esc(group.name)+'</span>'+
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
-   '<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b></summary>'+
+   groupChange+'</summary>'+
    '<div class="narrative-stats">'+group.tokens.length+' tokens <span>·</span> 24h vol '+usd(group.volume)+'</div>'+
    '<div class="narrative-coins">'+tokenRows+'</div></details>';
  }).join('');
