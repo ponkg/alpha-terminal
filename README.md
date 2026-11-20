@@ -13,6 +13,8 @@ The existing Supabase project is named **alpha** and is in the Tokyo region (`ap
 
 The schema definition is kept in [supabase/schema.sql](supabase/schema.sql).
 
+Waitlist submissions are stored in **Supabase → Database → Table Editor → `public.waitlist`**. They are not stored on Render. The service uses the backend-only `SUPABASE_SECRET_KEY` to write to this table while public browser access is blocked by RLS.
+
 The app needs:
 - Project URL: `SUPABASE_URL`
 - Publishable key: `SUPABASE_PUBLISHABLE_KEY` (safe to expose in the browser)
