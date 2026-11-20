@@ -217,7 +217,46 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .tabs .sp{margin-left:10px}.tabs #chk{margin-left:auto;font-size:11px;color:var(--mut);align-self:center}[hidden]{display:none!important}
 .trd{display:grid;grid-template-columns:70px 44px 1fr 1fr 1fr;gap:8px;padding:6px 0;border-bottom:1px solid color-mix(in srgb,var(--fg) 12%,transparent);font-size:12px}.trd.h{font-size:10px;letter-spacing:.1em;color:var(--mut)}.trd span:nth-child(n+3){text-align:right}.trd a{color:inherit}
 .blk.logo{gap:0!important}.la{color:inherit}.hl h1 .ty{display:block;min-height:1.05em;color:var(--ac)}.hl h1 .ty::after{content:"";display:inline-block;width:.5ch;height:.85em;margin-left:3px;background:currentColor;vertical-align:-.05em;animation:bl 1s steps(1) infinite}
-\n/* Terminal narrative accordion */\n.narrative-group{border-bottom:1px solid var(--bd);padding:0!important}.narrative-group summary{display:flex;align-items:center;gap:12px;padding:14px 4px;font-size:13px;letter-spacing:.04em}.narrative-group summary .mut{margin-left:auto;font-size:10px;font-weight:500}.narrative-coins{padding:0 0 10px 12px}.narrative-coins .pump-row{cursor:pointer}\n</style></head><body>
+\n/* Terminal narrative accordion */\n.narrative-group{border-bottom:1px solid var(--bd);padding:0!important}.narrative-group summary{display:flex;align-items:center;gap:12px;padding:14px 4px;font-size:13px;letter-spacing:.04em}.narrative-group summary .mut{margin-left:auto;font-size:10px;font-weight:500}.narrative-coins{padding:0 0 10px 12px}.narrative-coins .pump-row{cursor:pointer}\n
+/* Screenshot-matched GeckoTerminal narrative dashboard */
+#t1v1{min-height:100%;display:flex;flex-direction:column}
+#t1tabs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+#t1tabs button{font-size:11px;padding:6px 11px;min-height:28px}
+#t1tabs .narrative-j7{margin-left:auto;font-size:11px;padding:6px 11px;min-height:28px;display:inline-flex;align-items:center;justify-content:center;border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);white-space:nowrap}
+#t1tabs .narrative-j7:hover{background:var(--ac);color:#fff}
+.narrative-group{padding:0!important;border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+.narrative-group summary{display:flex;align-items:center;gap:14px;padding:11px 0;font-size:12px;list-style:none}
+.narrative-group summary::-webkit-details-marker{display:none}
+.narrative-group summary::after{content:"+";color:var(--ac);margin-left:0}
+.narrative-group[open] summary::after{content:"−"}
+.narrative-name{color:var(--ac);font-weight:700;flex:1}
+.narrative-state{font-size:10px;color:var(--mut);font-weight:500}
+.narrative-group summary>.narrative-change{font-size:12px;min-width:54px;text-align:right}
+.narrative-stats{font-size:11px;color:var(--mut);padding:0 0 7px;border-bottom:1px solid color-mix(in srgb,var(--fg) 12%,transparent)}
+.narrative-coins{padding:0!important;display:flex;flex-direction:column}
+.narrative-token{grid-template-columns:28px minmax(0,1fr) minmax(80px,.35fr) 58px;gap:8px;padding:5px 0;min-height:25px;border-bottom:1px solid color-mix(in srgb,var(--fg) 12%,transparent)}
+.narrative-token .pump-logo{width:19px;height:19px;border:0;font-size:13px}
+.narrative-token .pump-logo img{object-fit:cover}
+.narrative-token .pump-token{display:flex;flex-direction:row;align-items:baseline;gap:7px;min-width:0}
+.narrative-token .pump-token b{font-size:11px;white-space:nowrap}
+.narrative-token .pump-token small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.narrative-logo-fallback{font-size:12px;color:var(--mut)}
+.narrative-token .pump-logo img:not([hidden])+.narrative-logo-fallback{display:none}
+.narrative-liq{font-size:10px;color:var(--mut);white-space:nowrap;text-align:left}
+.narrative-change{font-size:11px;text-align:right;white-space:nowrap}
+.narrative-empty{padding:16px 0;color:var(--mut);font-size:11px}
+#t1n{color:var(--ac);font-size:10px;letter-spacing:.1em;margin-top:10px}
+@media(max-width:650px){
+ #t1tabs{gap:4px}
+ #t1tabs button,#t1tabs .narrative-j7{padding:5px 7px;font-size:10px}
+ .narrative-group summary{gap:7px}
+ .narrative-state{font-size:9px}
+ .narrative-token{grid-template-columns:22px minmax(0,1fr) 70px 50px;gap:5px}
+ .narrative-token .pump-token{gap:4px}
+ .narrative-token .pump-token small{display:none}
+ .narrative-liq,.narrative-change{font-size:9px}
+}
+</style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
@@ -466,57 +505,162 @@ const connectPumpPortal=async()=>{
   };
   socket.onerror=()=>{try{socket.close()}catch(e){}};
 };
-// Terminal narrative explorer: group real PumpPortal launches/migrations by metadata.
-// Landing-page narrative preview remains illustrative and untouched.
-const NARRATIVES=[
- {name:'AI Agents',keys:/\b(ai|agent|agents|bot|gpt|llm|autonomous|claude|openai)\b/i},
- {name:'Animal Memes',keys:/\b(cat|dog|doge|puppy|kitten|frog|pepe|woof|meow|toad|animal)\b/i},
- {name:'Internet Culture',keys:/\b(meme|viral|brainrot| lore|ratio|npc| wojak|internet|trend)\b/i},
- {name:'AI Infrastructure',keys:/\b(gpu|compute|inference|cloud|node|infra|chip|depin|data center)\b/i},
- {name:'Politics',keys:/\b(politic|president|election|vote|trump|biden|senator|government)\b/i},
- {name:'Celebrity',keys:/\b(celebrity|famous|influencer|rapper|singer|actor|stan|star)\b/i}
+// GeckoTerminal narrative explorer. The landing-page sample remains unchanged.
+const NARRATIVE_WINDOWS=[
+ {label:'5 min',field:'m5',duration:'5m'},
+ {label:'15 min',field:'m15',duration:'1h'},
+ {label:'30 min',field:'m30',duration:'1h'},
+ {label:'1 hour',field:'h1',duration:'1h'},
+ {label:'24 hours',field:'h24',duration:'24h'}
 ];
-const narrativeFor=e=>{
- const text=[e.name,e.symbol,e.description,e.uri].filter(Boolean).join(' ');
- return (NARRATIVES.find(n=>n.keys.test(text))||{name:'Other / Unclassified'}).name;
+const NARRATIVE_RULES=[
+ {name:'AI Agents',re:/\b(ai|agent|agents|bot|bots|gpt|llm|autonomous|claude|openai|eliza)\b/i},
+ {name:'Animal Memes',re:/\b(cat|cats|dog|dogs|doge|shiba|inu|frog|pepe|woof|meow|miao|mihao|kitten|puppy|panda|bear|hamster|animal)\b/i},
+ {name:'Internet Culture',re:/\b(meme|memes|viral|brainrot|wojak|npc|sigma|rizz|skibidi|lore|ratio|troll|internet)\b/i},
+ {name:'AI Infrastructure',re:/\b(gpu|compute|inference|cloud|node|nodes|infra|depin|data|model|chip|storage|render|tensor)\b/i},
+ {name:'Political Figures',re:/\b(trump|maga|biden|politic|election|president|vote|voter|senator|government|white house|political)\b/i},
+ {name:'Celebrity',re:/\b(celebrity|celeb|rapper|singer|actor|actress|streamer|influencer|kardashian|star|fame|stan)\b/i}
+];
+let narrativeWindow=0,narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
+const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
+const pct=n=>(n>0?'+':'')+Number(n||0).toFixed(1)+'%';
+const tokenCategory=token=>{
+ const text=[token.symbol,token.name,token.poolName].filter(Boolean).join(' ');
+ const rule=NARRATIVE_RULES.find(x=>x.re.test(text));
+ return rule?rule.name:'';
 };
-const allNarrativeEvents=()=>[...PUMP.launches,...PUMP.migrations]
- .filter(e=>e&&e.mint)
- .reduce((out,e)=>{const key=e.mint;if(!out.seen.has(key)){out.seen.add(key);out.items.push(e)}return out},{seen:new Set(),items:[]}).items
- .sort((a,b)=>eventMcap(b)-eventMcap(a)||eventTime(b)-eventTime(a));
+const readGeckoPools=payload=>{
+ const included=new Map((payload.included||[]).filter(x=>x.type==='token').map(x=>[x.id,x.attributes||{}]));
+ return (payload.data||[]).map(pool=>{
+  const a=pool.attributes||{},rel=pool.relationships?.base_token?.data?.id||'';
+  const t=included.get(rel)||{};
+  const mint=String(t.address||rel.replace(/^solana_/,''));
+  const poolAddress=String(a.address||'');
+  if(!BASE58.test(mint)||!poolAddress)return null;
+  return {
+   mint,poolAddress,symbol:String(t.symbol||''),name:String(t.name||''),
+   poolName:String(a.name||''),imageUrl:String(t.image_url||''),
+   liquidity:Number(a.reserve_in_usd)||0,
+   volume24:Number(a.volume_usd?.h24)||0,
+   changes:a.price_change_percentage||{},
+   volumes:a.volume_usd||{}
+  };
+ }).filter(Boolean);
+};
+const narrativeGroups=()=>{
+ const bestByMint=new Map();
+ narrativePools.forEach(token=>{
+  const current=bestByMint.get(token.mint);
+  if(!current||token.liquidity>current.liquidity)bestByMint.set(token.mint,token);
+ });
+ const groups=new Map();
+ const field=NARRATIVE_WINDOWS[narrativeWindow].field;
+ [...bestByMint.values()].forEach(token=>{
+  const category=tokenCategory(token);
+  if(!category)return;
+  const change=Number(token.changes[field]);
+  token.change=Number.isFinite(change)?change:null;
+  if(!groups.has(category))groups.set(category,[]);
+  groups.get(category).push(token);
+ });
+ return [...groups.entries()].map(([name,tokens])=>{
+  tokens.sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
+  const volume=tokens.reduce((sum,t)=>sum+t.volume24,0);
+  const weights=tokens.map(t=>Math.max(t.volume24,t.liquidity,1));
+  const weightTotal=weights.reduce((sum,n)=>sum+n,0);
+  const change=tokens.reduce((sum,t,i)=>sum+(t.change==null?0:t.change*weights[i]),0)/
+   Math.max(1,tokens.reduce((sum,t,i)=>sum+(t.change==null?0:weights[i]),0));
+  return {name,tokens,volume,change:Number.isFinite(change)?change:0};
+ }).sort((a,b)=>b.volume-a.volume);
+};
+const narrativeState=p=>p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
- const events=allNarrativeEvents();
- const grouped=new Map();
- events.forEach(e=>{const name=narrativeFor(e);if(!grouped.has(name))grouped.set(name,[]);grouped.get(name).push(e)});
- const names=[...NARRATIVES.map(n=>n.name).filter(n=>grouped.has(n)),'Other / Unclassified'].filter(n=>grouped.has(n));
- const html=names.map(name=>{
-  const items=grouped.get(name)||[];
-  const rows=items.map(e=>{
-   const mint=String(e.mint||''),sym=String(e.symbol||'UNKNOWN'),tokenName=String(e.name||'');
-   const mcap=eventMcap(e),creator=String(e.traderPublicKey||e.creator||'');
-   const state=PUMP.migrations.some(x=>x.mint===mint)?'MIGRATED':'NEW';
-   return '<div class="pump-row" data-c="$'+esc(sym)+'" data-p="'+esc(e.canonicalPool||e.poolAddress||'')+'" data-m="'+esc(mint)+'" title="Open token chart">'+
-    '<div class="pump-logo"><img data-pump-logo="'+esc(mint)+'" alt="" hidden><span>◎</span></div>'+
-    '<div class="pump-token"><b>$'+esc(sym)+'</b><small>'+esc(tokenName||shortCA(mint))+'</small><code>'+esc(shortCA(mint))+'</code></div>'+
-    '<div class="pump-metrics"><b>'+(mcap?fk(mcap)+' SOL':'—')+'</b><small>MARKET CAP</small></div>'+
-    '<div class="pump-metrics"><b>'+esc(pumpAge(e))+'</b><small>'+state+'</small></div>'+
-    '<div class="pump-metrics creator"><b>'+(creator?'<a target="_blank" rel="noopener" href="https://solscan.io/account/'+encodeURIComponent(creator)+'">'+esc(shortCA(creator))+'</a>':'—')+'</b><small>CREATOR</small></div>'+
+ const groups=narrativeGroups();
+ const matched=groups.reduce((sum,g)=>sum+g.tokens.length,0);
+ const html=groups.map((group,index)=>{
+  const tokenRows=group.tokens.map(token=>{
+   const image=token.imageUrl.startsWith('https://')?token.imageUrl:'';
+   const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'>'+
+    '<span class="narrative-logo-fallback">◎</span>';
+   const change=token.change==null?'<span class="mut">—</span>':'<span class="'+(token.change>=0?'up':'dn')+'">'+pct(token.change)+'</span>';
+   return '<div class="pump-row narrative-token" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="Open token chart">'+
+    '<div class="pump-logo">'+imageTag+'</div>'+
+    '<div class="pump-token"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
+    '<div class="narrative-liq">liq '+usd(token.liquidity)+'</div>'+
+    '<div class="narrative-change">'+change+'</div>'+
    '</div>';
   }).join('');
-  return '<details class="narrative-group"><summary><span>'+esc(name)+'</span><span class="mut">'+items.length+' COINS</span></summary><div class="narrative-coins">'+rows+'</div></details>';
+  return '<details class="narrative-group" '+(index===0?'open':'')+'>'+
+   '<summary><span class="narrative-name">'+esc(group.name)+'</span>'+
+   '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
+   '<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b></summary>'+
+   '<div class="narrative-stats">'+group.tokens.length+' tokens <span>·</span> 24h vol '+usd(group.volume)+'</div>'+
+   '<div class="narrative-coins">'+tokenRows+'</div></details>';
  }).join('');
- $('#t1list').innerHTML=html||'<p class="mut" style="padding:18px 0">Waiting for PumpPortal launch and migration events. Narrative groups will populate as token metadata arrives.</p>';
- events.slice(0,80).forEach(e=>pumpLogo(e.mint));
- $('#t1n').textContent='NARRATIVE DISCOVERY · PUMPPORTAL FREE · '+(PUMP.connected?'LIVE':'CONNECTING')+' · '+events.length+' TOKENS';
+ $('#t1list').innerHTML=html||'<p class="narrative-empty">No clear narrative matches in the current trending pools. The feed is live; labels are inferred from token names and symbols.</p>';
+ $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>{
+  img.addEventListener('error',()=>{img.hidden=true},{once:true});
+ });
+ [...new Map(narrativePools.map(t=>[t.mint,t])).values()].filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
+ const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
+ $('#t1n').textContent='LIVE · GECKOTERMINAL · '+time+' · '+narrativePools.length+' POOLS · '+matched+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS';
 };
-const loadT1=()=>{connectPumpPortal();renderT1()};
-$('#t1tabs').innerHTML='<span class="feed-chip">TRENDING NARRATIVES</span><span class="mut" style="font-size:11px">EXPAND A META TO SEE ITS COINS</span>';
-$('#t1list').innerHTML=ldr('CONNECTING TO PUMPPORTAL')+'<div class="sk"></div><div class="sk"></div>';
+const loadT1=async(force=false)=>{
+ if(narrativeLoadPromise)return narrativeLoadPromise;
+ const duration=NARRATIVE_WINDOWS[narrativeWindow].duration;
+ const path='/networks/solana/trending_pools?include=base_token&duration='+duration+'&page=1';
+ narrativeLoadPromise=(async()=>{
+  $('#t1n').textContent='CONNECTING TO GECKOTERMINAL…';
+  try{
+   const payload=await gt(path,force?0:55000);
+   narrativePools=readGeckoPools(payload);
+   narrativeUpdated=Date.now();
+   renderT1();
+  }catch(error){
+   if(narrativePools.length){
+    renderT1();
+    $('#t1n').textContent='CACHED · GECKOTERMINAL · '+(error.message||'Refresh unavailable');
+   }else{
+    $('#t1list').innerHTML='<p class="narrative-empty">'+esc(error.message||'GeckoTerminal market data is temporarily unavailable.')+'</p>';
+    $('#t1n').textContent='GECKOTERMINAL · WAITING FOR MARKET DATA';
+   }
+  }
+ })().finally(()=>{narrativeLoadPromise=null});
+ return narrativeLoadPromise;
+};
+const renderNarrativeTabs=()=>{
+ const tabs=$('#t1tabs');tabs.innerHTML='';
+ NARRATIVE_WINDOWS.forEach((windowOption,index)=>{
+  const button=document.createElement('button');
+  button.type='button';button.textContent=windowOption.label;
+  if(index===narrativeWindow)button.classList.add('on');
+  button.addEventListener('click',()=>{
+   if(narrativeWindow===index)return;
+   narrativeWindow=index;
+   [...tabs.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('on',i===index));
+   renderT1();
+   loadT1();
+  });
+  tabs.appendChild(button);
+ });
+ const link=document.createElement('a');
+ link.className='narrative-j7';link.href='https://j7tracker.gg/';link.target='_blank';link.rel='noopener noreferrer';
+ link.textContent='J7 Tracker ↗';tabs.appendChild(link);
+};
+renderNarrativeTabs();
+$('#t1list').innerHTML=ldr('CONNECTING TO GECKOTERMINAL')+'<div class="sk"></div><div class="sk"></div>';
 new MutationObserver(()=>{
- if(!A.W.t1.hidden){connectPumpPortal();renderT1()}
+ if(!A.W.t1.hidden){loadT1()}
  else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
 }).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
-setInterval(()=>{if(document.hidden)return;if(!A.W.t1.hidden||!A.W.t2.hidden){connectPumpPortal();renderT1()}},15000);
+setInterval(()=>{
+ if(document.hidden)return;
+ if(!A.W.t1.hidden&&$('#t1v2').hidden)renderT1();
+ if(!A.W.t2.hidden){connectPumpPortal();rf()}
+},15000);
+setInterval(()=>{
+ if(!document.hidden&&!A.W.t1.hidden&&$('#t1v2').hidden)loadT1(true);
+},60000);
 // 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
 const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
 let t2tab=0;
