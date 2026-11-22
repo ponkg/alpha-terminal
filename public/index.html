@@ -412,14 +412,48 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .hl{top:67%;transform:translateY(-50%);z-index:3}
 .hl .ctas{margin:0;justify-content:center}
 .hl .blk{pointer-events:auto}
+
+/* Uploaded Moving clouds (CSS).html — original animated cloud background */
+@property --t { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+@keyframes sky-clock { to { --t: 360deg; } }
+@keyframes sky-grain {
+  0%{transform:translate(0,0)}12%{transform:translate(-7%,5%)}
+  25%{transform:translate(4%,-9%)}37%{transform:translate(-12%,-3%)}
+  50%{transform:translate(9%,8%)}62%{transform:translate(-4%,11%)}
+  75%{transform:translate(11%,-6%)}87%{transform:translate(-9%,2%)}
+  100%{transform:translate(0,0)}
+}
+.sky{position:absolute;inset:0;overflow:hidden;background:#e5eef5;animation:sky-clock 10s linear infinite;z-index:0;pointer-events:none}
+.cloud{
+ position:absolute;left:calc(var(--x)*100%);top:calc(var(--y)*100%);
+ width:calc(var(--sx)*600%);height:calc(var(--sy)*600%);
+ --ang:calc(var(--t)*var(--k) + var(--ph));
+ transform:translate(-50%,-50%) translate(calc(sin(var(--ang))*var(--ax)*100vw),calc(cos(var(--ang) + .6rad)*var(--ay)*100vh)) scale(calc(1 + .06*sin(var(--t) + var(--ph)*2)));
+ background:radial-gradient(ellipse closest-side,
+ rgb(var(--rgb)/var(--a)) 0%,rgb(var(--rgb)/calc(var(--a)*.88)) 16.7%,
+ rgb(var(--rgb)/calc(var(--a)*.61)) 33.3%,rgb(var(--rgb)/calc(var(--a)*.32)) 50%,
+ rgb(var(--rgb)/calc(var(--a)*.135)) 66.7%,rgb(var(--rgb)/calc(var(--a)*.044)) 83.3%,rgb(var(--rgb)/0) 100%);
+}
+.sky-grid{position:absolute;inset:0;background-image:linear-gradient(rgb(0 0 0/.013) 1px,transparent 1px),linear-gradient(90deg,rgb(0 0 0/.013) 1px,transparent 1px);background-size:3.3333vw 3.3333vw}
+.sky-grain{position:absolute;inset:-20%;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:sky-grain .67s steps(1) infinite;pointer-events:none}
+.hero{background:#e5eef5!important}
+@media(prefers-reduced-motion:reduce){.sky{animation:none}.cloud,.sky-grain{animation:none}}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
 <header class="hero" id="top">
-<video class="hero-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
-  <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
-</video>
+<div class="sky" aria-hidden="true">
+  <div class="cloud" style="--x:.18; --y:.17; --sx:.115; --sy:.20; --rgb:72 122 186; --a:.97; --ax:.045; --ay:.06; --k:1; --ph:0rad"></div>
+  <div class="cloud" style="--x:.82; --y:.74; --sx:.110; --sy:.19; --rgb:160 197 230; --a:.80; --ax:.05; --ay:.05; --k:1; --ph:1.7rad"></div>
+  <div class="cloud" style="--x:.76; --y:.10; --sx:.150; --sy:.20; --rgb:188 211 234; --a:.65; --ax:.06; --ay:.05; --k:2; --ph:.8rad"></div>
+  <div class="cloud" style="--x:.06; --y:.58; --sx:.110; --sy:.20; --rgb:214 228 240; --a:.45; --ax:.04; --ay:.06; --k:1; --ph:2.6rad"></div>
+  <div class="cloud" style="--x:.58; --y:.95; --sx:.150; --sy:.14; --rgb:205 224 240; --a:.22; --ax:.07; --ay:.04; --k:2; --ph:4rad"></div>
+  <div class="cloud" style="--x:.48; --y:.42; --sx:.100; --sy:.17; --rgb:125 168 212; --a:.28; --ax:.22; --ay:.10; --k:1; --ph:3.3rad"></div>
+  <div class="sky-grid"></div>
+  <div class="sky-grain"></div>
+</div>
 <div class="glow"></div>
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 <div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
