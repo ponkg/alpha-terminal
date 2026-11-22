@@ -356,32 +356,11 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 :root[data-theme=dark] .cl{filter:blur(72px) saturate(1.12)!important;opacity:.94!important}
 :root[data-theme=dark] .hero::after{opacity:.27!important;mix-blend-mode:multiply!important}
 
-
-/* hero: big animated name in the middle (Aria-style spacing), timing from alpha-film-rebuilt_1.mp4 */
-.hl{--fs:clamp(44px,8.5vw,150px);top:max(76px,min(calc(52% - var(--fs)*.5),calc(100% - var(--fs) - 300px)));transform:none}
-.hl h1{max-width:none;margin:0;font-size:var(--fs);line-height:1;letter-spacing:0;font-weight:700}
-.hl h1 .ty{display:block;min-height:1em;line-height:1;color:var(--ac);transition:color .12s}
-.hl h1 .ty::after,.hl h1 .ty::before{content:none}
-.hl h1 .ty.a{color:#fff}
-.hl h1 .slg{display:block;font-size:clamp(17px,1.9vw,25px);font-weight:500;letter-spacing:-.02em;line-height:1.25;margin-top:clamp(18px,3.2vw,44px)}
-.hl .sl2{margin:10px auto 0;font-size:14px}
-.hl .ctas{margin:clamp(22px,3vw,40px) 0 0}.hl .tr{margin-top:clamp(16px,2vw,26px)}
-.ty .c2{display:inline-block;width:.028em;min-width:2px;height:.8em;margin:0 .02em;background:#000;vertical-align:-.03em}
-.ty.a .c2{background:#fff}.ty.co .c2{visibility:hidden}
-.dkp{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .3s ease-out;background:radial-gradient(ellipse 78% 74% at 50% 50%,rgba(30,70,124,.86) 0%,rgba(48,100,160,.62) 48%,rgba(80,140,200,0) 100%)}
-.hero.dk .dkp{opacity:1;transition-duration:.45s}
-.hl .slg,.hl p{transition:color .3s}
-.hero.dk .hl .slg,.hero.dk .hl p{color:#fff}
-/* how it works: plays through the time windows on its own until you pick one */
-.apb{height:2px;background:color-mix(in srgb,var(--fg) 14%,transparent);margin:-4px 0 10px}
-.apb i{display:block;height:100%;width:0;background:var(--ac);animation:apb 6s linear forwards}
-@keyframes apb{to{width:100%}}
-.win:hover .apb i{animation-play-state:paused}#w-how.man .apb{display:none}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
-<header class="hero" id="top"><div class="cl" aria-hidden="true"><b style="--x:2%;--y:-8%;--w:52vw;--h:42vw"><i style="--c:#1b4f82;--o:.9;--a:m1;--d:24s;--dl:0s"></i></b><b style="--x:60%;--y:2%;--w:44vw;--h:30vw"><i style="--c:#3f8fd0;--o:.55;--a:m2;--d:30s;--dl:0s"></i></b><b style="--x:30%;--y:60%;--w:60vw;--h:32vw"><i style="--c:#bcd9f0;--o:.9;--a:m3;--d:34s;--dl:0s"></i></b><b style="--x:-8%;--y:58%;--w:46vw;--h:26vw"><i style="--c:#fff;--o:.95;--a:m4;--d:28s;--dl:0s"></i></b><b style="--x:62%;--y:36%;--w:34vw;--h:22vw"><i style="--c:#fff;--o:.7;--a:m5;--d:36s;--dl:0s"></i></b><b style="--x:40%;--y:-10%;--w:30vw;--h:24vw"><i style="--c:#123c66;--o:.6;--a:m2;--d:27s;--dl:-8s"></i></b><b style="--x:-5%;--y:28%;--w:34vw;--h:26vw"><i style="--c:#80b6e0;--o:.7;--a:m5;--d:31s;--dl:-12s"></i></b><b style="--x:45%;--y:22%;--w:38vw;--h:20vw"><i style="--c:#fff;--o:.6;--a:m1;--d:38s;--dl:-15s"></i></b><b style="--x:72%;--y:52%;--w:36vw;--h:28vw"><i style="--c:#3f8fd0;--o:.5;--a:m3;--d:29s;--dl:-5s"></i></b><b style="--x:18%;--y:10%;--w:32vw;--h:20vw"><i style="--c:#e6f1fa;--o:.8;--a:m4;--d:33s;--dl:-20s"></i></b></div><div class="dkp" aria-hidden="true"></div><div class="glow"></div><div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div><div class="hl"><h1 aria-label="See the meta before it moves."><span class="ty" id="ty" aria-hidden="true"><span class="bk">[</span><span id="tt">meta</span><i class="c2"></i><span class="bk">]</span></span><span class="slg" aria-hidden="true">See the meta before it moves.</span></h1><p class="sl2">Narrative tracker for solana trenchers.</p><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div><p class="tr">Private beta. Built for Solana traders, researchers and narrative hunters.</p></div><div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
+<header class="hero" id="top"><div class="cl" aria-hidden="true"><b style="--x:2%;--y:-8%;--w:52vw;--h:42vw"><i style="--c:#1b4f82;--o:.9;--a:m1;--d:24s;--dl:0s"></i></b><b style="--x:60%;--y:2%;--w:44vw;--h:30vw"><i style="--c:#3f8fd0;--o:.55;--a:m2;--d:30s;--dl:0s"></i></b><b style="--x:30%;--y:60%;--w:60vw;--h:32vw"><i style="--c:#bcd9f0;--o:.9;--a:m3;--d:34s;--dl:0s"></i></b><b style="--x:-8%;--y:58%;--w:46vw;--h:26vw"><i style="--c:#fff;--o:.95;--a:m4;--d:28s;--dl:0s"></i></b><b style="--x:62%;--y:36%;--w:34vw;--h:22vw"><i style="--c:#fff;--o:.7;--a:m5;--d:36s;--dl:0s"></i></b><b style="--x:40%;--y:-10%;--w:30vw;--h:24vw"><i style="--c:#123c66;--o:.6;--a:m2;--d:27s;--dl:-8s"></i></b><b style="--x:-5%;--y:28%;--w:34vw;--h:26vw"><i style="--c:#80b6e0;--o:.7;--a:m5;--d:31s;--dl:-12s"></i></b><b style="--x:45%;--y:22%;--w:38vw;--h:20vw"><i style="--c:#fff;--o:.6;--a:m1;--d:38s;--dl:-15s"></i></b><b style="--x:72%;--y:52%;--w:36vw;--h:28vw"><i style="--c:#3f8fd0;--o:.5;--a:m3;--d:29s;--dl:-5s"></i></b><b style="--x:18%;--y:10%;--w:32vw;--h:20vw"><i style="--c:#e6f1fa;--o:.8;--a:m4;--d:33s;--dl:-20s"></i></b></div><div class="glow"></div><div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div><div class="hl"><h1 aria-label="See the meta before it moves.">See the<span class="ty" id="ty" aria-hidden="true">[meta]</span>before it moves.</h1><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and shows where the next wave of opportunity is forming.</p><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div><p class="tr">Private beta. Built for Solana traders, researchers and narrative hunters.</p></div><div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING GECKOTERMINAL…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">PUMPPORTAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc"><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 X FEED</span><span>TRACKED ACCOUNTS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="tabs" id="t2tabs"></div><div class="in"><input id="t2q" placeholder="filter by account or $ticker" autocomplete="off" spellcheck="false" aria-label="Filter feed"></div><div id="t2list"></div><p class="k" id="t2n" style="margin-top:10px">SAMPLE POSTS — NOT LIVE</p></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
@@ -443,23 +422,9 @@ addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();if(e.cli
 document.addEventListener('pointerleave',()=>{mx=-9999;go()});
 })();
 
-(()=>{const el=$('#ty'),tt=$('#tt'),hero=$('#top');if(!el||!tt||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-const sl=ms=>new Promise(r=>setTimeout(r,ms)),car=on=>el.classList.toggle('co',!on),set=(w,d)=>{tt.textContent=w;el.classList.toggle('a',!!d);hero.classList.toggle('dk',!!d)};
-const type=async(w,from,ms,dk)=>{for(let i=from;i<=w.length;i++){set(w.slice(0,i),dk&&i<=2);if(i<w.length)await sl(ms)}};
-const del=async ms=>{for(let i=tt.textContent.length-1;i>=0;i--){set(tt.textContent.slice(0,i),false);await sl(ms)}};
-(async()=>{for(let t=0;t<150&&$('#boot')&&!$('#boot').classList.contains('out');t++)await sl(100);
-let first=true;
-for(;;){set('a',true);
- if(first){car(false);await sl(300);first=false}else{car(true);await sl(450);car(false);await sl(550)}
- car(true);await sl(150);                 /* [a] -> [al] at 0.45s */
- set('al',true);await sl(200);set('alp',false);await sl(200);set('alph',false);await sl(100);set('alpha',false);   /* al 0.45, alp 0.65 (cloud lifts), alph 0.85, alpha 0.95 */
- await sl(500);                           /* hold [alpha] to 1.45s */
- await del(40);await sl(50);              /* 1.45-1.70s */
- await type('narrative',1,75);await sl(450);car(false);await sl(100);car(true);   /* narrative 1.70-2.30, hold to 2.85s */
- await del(33);await sl(50);              /* 2.85-3.20s */
- await type('meta',1,100);await sl(500);car(false);await sl(100);car(true);       /* meta 3.20-3.50, hold to 4.10s */
- await del(50)                            /* 4.10-4.30s, then [a] */
-}})()})();
+(()=>{const el=$('#ty'),W=['[meta]','[narrative]','[alpha]'];if(!el||matchMedia('(prefers-reduced-motion:reduce)').matches)return;let w=0,i=0,del=false;
+const tick=()=>{const t=W[w];if(!del){i++;el.textContent=t.slice(0,i);if(i===t.length){del=true;return setTimeout(tick,1500)}return setTimeout(tick,95)}i--;el.textContent=t.slice(0,i);if(!i){del=false;w=(w+1)%W.length;return setTimeout(tick,380)}setTimeout(tick,50)};
+el.textContent='';setTimeout(tick,500)})();
 (()=>{const hero=$('#top'),x=$('.xh'),a=$('.xa'),bb=$('.xb'),r=$('.xr');addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const R=hero.getBoundingClientRect(),px=e.clientX-R.left,py=e.clientY-R.top;if(py<0||py>R.height||document.body.classList.contains('app')||e.target.closest('.win,nav,.bbar')){x.style.opacity=0;return}x.style.opacity=1;a.style.transform='translateY('+py+'px)';bb.style.transform='translateX('+px+'px)';r.style.transform='translate('+(px>R.width-90?px-84:px+10)+'px,'+(py>R.height-44?py-22:py+8)+'px)';r.textContent=Math.round(px)+', '+Math.round(py)},{passive:true});document.addEventListener('pointerleave',()=>x.style.opacity=0)})();
 
 (()=>{const hero=$('#top'),W={};let z=20,moved=false;document.querySelectorAll('.win').forEach(w=>W[w.id]=w);
@@ -496,7 +461,7 @@ T.forEach((t,i)=>{const b=document.createElement('button');b.textContent=t;b.onc
 (()=>{const A=window.AW,b=document.body,ids=['t1','t2','t3','t4'];
 const hs=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const fm=n=>n>=1e6?'</script>+(n/1e6).toFixed(1)+'M':n>=1e3?'</script>+(n/1e3).toFixed(n<1e5?1:0)+'K':'</script>+Math.round(n||0),F=p=>(p>0?'+':'')+p+'%',C=p=>p>=0?'up':'dn';
+const fm=n=>n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n<1e5?1:0)+'K':'$'+Math.round(n||0),F=p=>(p>0?'+':'')+p+'%',C=p=>p>=0?'up':'dn';
 const mkTabs=(el,labels,fn)=>{labels.forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>{fn(i);[...el.children].forEach((c,j)=>c.classList.toggle('on',i===j))};el.appendChild(x)});el.children[0].click()};
 const ldr=t=>'<div class="ld"><i></i><i></i><i></i><span>'+t+'</span></div>';
 // GeckoTerminal remains as historical OHLCV backfill and token-holder data.
@@ -566,13 +531,13 @@ const pumpLogo=async mint=>{
     document.querySelectorAll('.pump-row[data-m="'+mint+'"]').forEach(row=>{
       const title=row.querySelector('.pump-token b');
       const subtitle=row.querySelector('.pump-token small');
-      if(title&&meta.symbol)title.textContent='</script>+meta.symbol;
+      if(title&&meta.symbol)title.textContent='$'+meta.symbol;
       if(subtitle&&meta.name)subtitle.textContent=meta.name;
     });
     document.querySelectorAll('.pump-feed-row[data-m="'+mint+'"]').forEach(row=>{
       const title=row.querySelector('b');
       const details=row.querySelector('div');
-      if(title&&meta.symbol)title.textContent='</script>+meta.symbol;
+      if(title&&meta.symbol)title.textContent='$'+meta.symbol;
       if(details&&meta.name){
         const parts=details.textContent.split(' · ');
         parts[0]=meta.name;
@@ -657,7 +622,7 @@ const NARRATIVE_RULES=[
  {name:'Celebrity',re:/\b(celebrity|celeb|rapper|singer|actor|actress|streamer|influencer|kardashian|star|fame|stan)\b/i}
 ];
 let narrativeWindow=0,narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
-const usd=n=>{n=Number(n)||0;return n>=1e9?'</script>+(n/1e9).toFixed(1)+'B':n>=1e6?'</script>+(n/1e6).toFixed(1)+'M':n>=1e3?'</script>+(n/1e3).toFixed(n>=1e5?0:1)+'K':'</script>+Math.round(n)};
+const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
 const pct=n=>(n>0?'+':'')+Number(n||0).toFixed(1)+'%';
 const tokenCategory=token=>{
  const text=[token.symbol,token.name,token.poolName].filter(Boolean).join(' ');
@@ -731,9 +696,9 @@ const renderT1=()=>{
    const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'>'+
     '<span class="narrative-logo-fallback">◎</span>';
    const change=token.change==null?'<span class="mut">—</span>':'<span class="'+(token.change>=0?'up':'dn')+'">'+pct(token.change)+'</span>';
-   return '<div class="pump-row narrative-token" data-c="</script>+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="Open token chart">'+
+   return '<div class="pump-row narrative-token" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="Open token chart">'+
     '<div class="pump-logo">'+imageTag+'</div>'+
-    '<div class="pump-token"><b></script>+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
+    '<div class="pump-token"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
     '<div class="narrative-liq">liq '+usd(token.liquidity)+'</div>'+
     '<div class="narrative-change">'+change+'</div>'+
    '</div>';
@@ -882,8 +847,8 @@ const rf=()=>{
     const items=[
       ...PUMP.launches.slice(0,30).map(e=>({e,kind:'NEW LAUNCH'})),
       ...PUMP.migrations.slice(0,30).map(e=>({e,kind:'MIGRATION'}))
-    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('</script>+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
-    html=items.map(x=>'<div class="px pump-feed-row" data-c="</script>+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b></script>+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
+    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('$'+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
+    html=items.map(x=>'<div class="px pump-feed-row" data-c="$'+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b>$'+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
   } else {
     html=PS.filter(p=>!q||(p[0]+' '+p[2]).toLowerCase().includes(q)).map(p=>'<div class="px"><b>'+p[0]+'</b><span class="mut">'+p[1]+' ago</span><div>'+esc(p[2])+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
   }
@@ -1001,7 +966,7 @@ $('#t3f').onsubmit=async e=>{
   const mintLabel=tokenName||a.name||sym;
   R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p>'+
    '<div class="vd"><b class="'+verdict[1]+'">'+verdict[0]+'</b><span class="mut">signal score '+score+'/100</span></div>'+
-   '<p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all"></script>+esc(sym)+' · '+esc(mintLabel)+' · '+esc(mint)+'</p>'+
+   '<p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(mintLabel)+' · '+esc(mint)+'</p>'+
    F2.map(row=>'<div class="fd"><i>'+row[0]+'</i><span class="g'+row[1]+'">'+esc(row[2])+'</span></div>').join('')+
    '<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Missing provider fields are marked unavailable, not assumed safe. Not financial advice. DYOR.</p>';
  }catch(error){
@@ -1018,7 +983,7 @@ $('#t4q').oninput=rk;rk();
 const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
 let chart=null,chartResizeObserver=null,chartLoadVersion=0,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
 const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
-const pf=x=>!isFinite(x)?'n/a':x>=1?'</script>+x.toFixed(2):'</script>+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
+const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
 const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
 const lgd=(c,v)=>{
  if(!c){$('#chg').textContent='';return}
@@ -1102,7 +1067,7 @@ const loadStats=async()=>{
   $('#cvst').innerHTML=[
    ['PRICE',price?pf(price):'—'],
    ['LIQUIDITY',liquidity?fm(liquidity):'—'],
-   ['MCAP',fdv?'</script>+fk(fdv):'—'],
+   ['MCAP',fdv?'$'+fk(fdv):'—'],
    ['24H VOL',volume24?fm(volume24):'—'],
    ['1H',change1h==null?'—':F(rd(change1h)),change1h==null?'':C(change1h)],
    ['AGE',ageLabel]
@@ -1129,7 +1094,7 @@ const loadInfo=async()=>{
  try{
    const a=await getTokenMeta(mint);
    if(mint!==curM)return;
-   $('#cvt').textContent=a.symbol?'</script>+a.symbol:cur;
+   $('#cvt').textContent=a.symbol?'$'+a.symbol:cur;
    $('#cvnm').textContent=a.name||'';
    $('#cvca').textContent=mint;
    $('#cvi').hidden=true;
