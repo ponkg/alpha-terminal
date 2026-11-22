@@ -475,7 +475,6 @@ document.addEventListener('pointerleave',()=>{g.style.opacity=0});
 })();
 
 
-})();
 (()=>{const hero=$('#top'),x=$('.xh'),a=$('.xa'),bb=$('.xb'),r=$('.xr');addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const R=hero.getBoundingClientRect(),px=e.clientX-R.left,py=e.clientY-R.top;if(py<0||py>R.height||document.body.classList.contains('app')||e.target.closest('.win,nav,.bbar')){x.style.opacity=0;return}x.style.opacity=1;a.style.transform='translateY('+py+'px)';bb.style.transform='translateX('+px+'px)';r.style.transform='translate('+(px>R.width-90?px-84:px+10)+'px,'+(py>R.height-44?py-22:py+8)+'px)';r.textContent=Math.round(px)+', '+Math.round(py)},{passive:true});document.addEventListener('pointerleave',()=>x.style.opacity=0)})();
 
 (()=>{const hero=$('#top'),W={};let z=20,moved=false;document.querySelectorAll('.win').forEach(w=>W[w.id]=w);
