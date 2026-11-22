@@ -436,14 +436,22 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 }
 .sky-grid{position:absolute;inset:0;background-image:linear-gradient(rgb(0 0 0/.013) 1px,transparent 1px),linear-gradient(90deg,rgb(0 0 0/.013) 1px,transparent 1px);background-size:3.3333vw 3.3333vw}
 .sky-grain{position:absolute;inset:-20%;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:sky-grain .67s steps(1) infinite;pointer-events:none}
-.hero{background:#e5eef5!important}
+
 @media(prefers-reduced-motion:reduce){.sky{animation:none}.cloud,.sky-grain{animation:none}}
 
+
+/* Show the uploaded cloud background only in the terminal/app view. Landing hero remains on its original film. */
+.sky{display:none!important}
+body.app .sky{display:block!important}
+body.app .hero-film{display:none!important}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
 
 <header class="hero" id="top">
+<video class="hero-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+  <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
+</video>
 <div class="sky" aria-hidden="true">
   <div class="cloud" style="--x:.18; --y:.17; --sx:.115; --sy:.20; --rgb:72 122 186; --a:.97; --ax:.045; --ay:.06; --k:1; --ph:0rad"></div>
   <div class="cloud" style="--x:.82; --y:.74; --sx:.110; --sy:.19; --rgb:160 197 230; --a:.80; --ax:.05; --ay:.05; --k:1; --ph:1.7rad"></div>
