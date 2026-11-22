@@ -470,18 +470,18 @@ document.addEventListener('pointerleave',()=>{mx=-9999;go()});
 
 (()=>{const el=$('#ty'),tt=$('#tt'),hero=$('#top');if(!el||!tt||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
 const car=on=>el.classList.toggle('co',!on),set=(w,d)=>{tt.textContent=w;el.classList.toggle('a',!!d);hero.classList.toggle('dk',!!d)};
-/* timeline (ms) measured from alpha-film-rebuilt_1.mp4, 5 s loop, scheduled against absolute time so it cannot drift */
+/* timeline (ms), 7.5 s loop; slower typing and longer holds, scheduled against absolute time */
 const E=[],at=(t,f)=>E.push([t,f]),typ=(w,t0,ms)=>{for(let i=1;i<=w.length;i++)at(t0+(i-1)*ms,()=>set(w.slice(0,i),false))},dl=(w,t0,ms)=>{for(let i=w.length-1;i>=0;i--)at(t0+(w.length-1-i)*ms,()=>set(w.slice(0,i),false))};
-at(0,()=>{set('a',true);car(false)});at(300,()=>car(true));
-at(450,()=>set('al',true));at(650,()=>set('alp',false));at(850,()=>set('alph',false));at(950,()=>set('alpha',false));
-dl('alpha',1450,40);                       /* delete 1.45-1.61s */
-typ('narrative',1700,75);                  /* type 1.70-2.30s */
-at(2750,()=>car(false));at(2850,()=>car(true));dl('narrative',2850,33);   /* hold, caret blink, delete 2.85-3.11s */
-typ('meta',3200,100);                      /* type 3.20-3.50s */
-at(4000,()=>car(false));at(4100,()=>car(true));at(4100,()=>set('met',false));at(4150,()=>set('me',false));at(4200,()=>set('m',false));        /* hold to 4.10s, delete down to the m */
-at(4250,()=>{set('a',true);car(true)});at(4750,()=>car(false));          /* the m is replaced by a (no empty state); [a] on the dark cloud 4.25-5.30s */
-const run=t0=>{E.forEach(([t,f])=>setTimeout(f,Math.max(0,t0+t-performance.now())));setTimeout(()=>run(t0+5000),Math.max(0,t0+5000-performance.now()-30))};
-(async()=>{for(let t=0;t<150&&$('#boot')&&!$('#boot').classList.contains('out');t++)await new Promise(r=>setTimeout(r,100));run(performance.now())})()})();
+at(0,()=>{set('a',true);car(false)});at(450,()=>car(true));
+at(675,()=>set('al',true));at(975,()=>set('alp',false));at(1275,()=>set('alph',false));at(1425,()=>set('alpha',false));
+dl('alpha',2175,60);                      /* slower delete */
+typ('narrative',2550,115);                /* slower 1.0 s type */
+at(4125,()=>car(false));at(4275,()=>car(true));dl('narrative',4275,50); /* longer hold, slower delete */
+typ('meta',4800,150);                     /* slower type */
+at(6000,()=>car(false));at(6150,()=>car(true));at(6150,()=>set('met',false));at(6225,()=>set('me',false));at(6300,()=>set('m',false));
+at(6375,()=>{set('a',true);car(true)});at(7125,()=>car(false)); /* [a] replaces m, dark cloud phase */
+const run=t0=>{E.forEach(([t,f])=>setTimeout(f,Math.max(0,t0+t-performance.now())));setTimeout(()=>run(t0+7500),Math.max(0,t0+7500-performance.now()-30))};
+(async()=>{for(let t=0;t<150&&$('#boot')&&!$('#boot').classList.contains('out');t++)await new Promise(r=>setTimeout(r,100));run(performance.now())})();
 (()=>{const hero=$('#top'),x=$('.xh'),a=$('.xa'),bb=$('.xb'),r=$('.xr');addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const R=hero.getBoundingClientRect(),px=e.clientX-R.left,py=e.clientY-R.top;if(py<0||py>R.height||document.body.classList.contains('app')||e.target.closest('.win,nav,.bbar')){x.style.opacity=0;return}x.style.opacity=1;a.style.transform='translateY('+py+'px)';bb.style.transform='translateX('+px+'px)';r.style.transform='translate('+(px>R.width-90?px-84:px+10)+'px,'+(py>R.height-44?py-22:py+8)+'px)';r.textContent=Math.round(px)+', '+Math.round(py)},{passive:true});document.addEventListener('pointerleave',()=>x.style.opacity=0)})();
 
 (()=>{const hero=$('#top'),W={};let z=20,moved=false;document.querySelectorAll('.win').forEach(w=>W[w.id]=w);
