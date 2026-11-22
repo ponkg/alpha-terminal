@@ -512,6 +512,78 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
   letter-spacing:.06em!important;
 }
 
+
+/* Final hero reliability and teaser fidelity fixes */
+.alpha-film-bg,.alpha-film-frame,.hero::before,.hero::after,.cl,.glow,.xh,.tg,.gl{
+  pointer-events:none!important;
+}
+.alpha-film-frame{display:block!important;opacity:1!important;z-index:0!important}
+.cl{opacity:.22!important}
+.hero{isolation:isolate!important}
+.hl{
+  position:absolute!important;left:0!important;right:0!important;top:50%!important;
+  width:100%!important;max-width:none!important;transform:translateY(-50%)!important;
+  z-index:5!important;display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;text-align:center!important;
+  padding:0 20px!important;pointer-events:none!important;
+}
+.hl .alpha-name{
+  position:static!important;display:flex!important;width:100%!important;
+  min-height:1.2em!important;align-items:center!important;justify-content:center!important;
+  margin:0 auto 34px!important;overflow:visible!important;
+}
+.hl .alpha-name .ty{
+  display:inline-block!important;width:11ch!important;min-height:1.1em!important;
+  text-align:center!important;white-space:nowrap!important;
+  color:#f7fbff;font:500 clamp(76px,8vw,150px)/1.1 var(--mono,ui-monospace,monospace)!important;
+  letter-spacing:-.065em!important;
+}
+.hl .alpha-name .ty::after{
+  content:"";display:inline-block;width:.055em;height:.76em;margin-left:.065em;
+  background:#153b5e;vertical-align:-.04em;animation:alpha-caret-blink .9s steps(1,end) infinite;
+}
+@keyframes alpha-caret-blink{50%{opacity:0}}
+.hl .alpha-slogan,.hl .alpha-caption{
+  position:static!important;left:auto!important;right:auto!important;top:auto!important;
+  width:auto!important;max-width:none!important;transform:none!important;
+}
+.hl .alpha-slogan{
+  margin:0 auto 8px!important;color:#101820!important;
+  font:500 clamp(17px,1.85vw,22px)/1.35 Inter,system-ui,sans-serif!important;
+  letter-spacing:-.045em!important;
+}
+.hl .alpha-caption{
+  margin:0 auto!important;color:rgba(33,55,72,.67)!important;
+  font:400 clamp(11px,1.08vw,13px)/1.5 Inter,system-ui,sans-serif!important;
+  letter-spacing:-.015em!important;
+}
+.hl .ctas{
+  position:static!important;left:auto!important;right:auto!important;top:auto!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  margin:36px auto 0!important;padding:0!important;pointer-events:auto!important;
+}
+.hl .ctas a,.hl .ctas .blk{pointer-events:auto!important;border-radius:0!important}
+.hl .ctas .blk.cta{
+  height:40px!important;min-width:0!important;padding:0 14px!important;
+  border-radius:0!important;border:1px solid var(--fg)!important;
+  background:var(--fg)!important;color:var(--bg)!important;
+  font:600 12px var(--mono)!important;letter-spacing:.06em!important;
+}
+.win,.win *,.nbar,.nbar *,.bbar,.bbar *{pointer-events:auto}
+@media(max-width:860px){
+ .hl .alpha-name{margin-bottom:28px!important}
+ .hl .alpha-name .ty{font-size:clamp(64px,10.5vw,100px)!important}
+ .hl .ctas{margin-top:28px!important}
+}
+@media(max-width:520px){
+ .hl{padding:0 14px!important}
+ .hl .alpha-name{margin-bottom:24px!important}
+ .hl .alpha-name .ty{font-size:clamp(54px,12vw,74px)!important}
+ .hl .alpha-slogan{font-size:16px!important}
+ .hl .alpha-caption{font-size:11px!important}
+ .hl .ctas{margin-top:24px!important}
+}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -599,31 +671,18 @@ const states=[
  [4500,'a','#f7fbff']
 ];
 const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
-const paint=(word,color)=>{
- el.innerHTML='['+word+']<i class="alpha-caret" aria-hidden="true"></i>';
- el.style.color=color;
-};
-const bg=$('#alphaTeaserBg');
-const start=()=>{
- if(reduced){paint('a','#f7fbff');return}
- let origin=null,last=-1;
- const frame=now=>{
-  if(origin===null)origin=now;
-  const t=(now-origin)%5000;
-  let next=0;
-  for(let i=1;i<states.length;i++){if(t>=states[i][0])next=i;else break}
-  if(next!==last){const state=states[next];paint(state[1],state[2]);last=next}
-  requestAnimationFrame(frame);
- };
+const paint=(word,color)=>{el.textContent='['+word+']';el.style.color=color;};
+if(reduced){paint('alpha','#367fc4');return}
+let origin=null,last=-1;
+const frame=now=>{
+ if(origin===null)origin=now;
+ const t=(now-origin)%5000;
+ let next=0;
+ for(let i=1;i<states.length;i++){if(t>=states[i][0])next=i;else break}
+ if(next!==last){const state=states[next];paint(state[1],state[2]);last=next}
  requestAnimationFrame(frame);
 };
-if(bg){
- bg.addEventListener('load',start,{once:true});
- bg.addEventListener('error',start,{once:true});
- bg.src=bg.dataset.src;
- if(bg.complete&&bg.naturalWidth)start();
-}else start();
-})();
+requestAnimationFrame(frame);
 })();
 (()=>{const hero=$('#top'),x=$('.xh'),a=$('.xa'),bb=$('.xb'),r=$('.xr');addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const R=hero.getBoundingClientRect(),px=e.clientX-R.left,py=e.clientY-R.top;if(py<0||py>R.height||document.body.classList.contains('app')||e.target.closest('.win,nav,.bbar')){x.style.opacity=0;return}x.style.opacity=1;a.style.transform='translateY('+py+'px)';bb.style.transform='translateX('+px+'px)';r.style.transform='translate('+(px>R.width-90?px-84:px+10)+'px,'+(py>R.height-44?py-22:py+8)+'px)';r.textContent=Math.round(px)+', '+Math.round(py)},{passive:true});document.addEventListener('pointerleave',()=>x.style.opacity=0)})();
 
