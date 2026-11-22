@@ -568,6 +568,13 @@ body.app .win:not(.tool){display:none!important}
  .feature-card,.step-mark,.nav-cta,.hero-primary{transition:none!important}
 }
 
+
+/* Keep the editorial marketing typography separate from the terminal's monospace UI. */
+body:not(.app) .hl,body:not(.app) .hl *,#nv,#nv *,body:not(.app) .site-sections,body:not(.app) .site-sections *,body:not(.app) .bbar,body:not(.app) .bbar *{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important}
+body:not(.app) .hero-preview,body:not(.app) .hero-preview *{font-family:var(--mono,ui-monospace,SFMono-Regular,Menlo,monospace)!important}
+body:not(.app) .hl h1{max-width:13ch}
+@media(max-width:860px){body:not(.app) .hl h1{max-width:13ch}}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#top" class="brandmark" aria-label="Alpha Terminal"><span class="brand-glyph">α</span><span>alpha</span></a><div class="nav-links"><a href="#product">Product</a><a href="#workflow">How it works</a><a href="#faq">FAQ</a></div><div class="nav-right"><a href="#" class="nav-admin" data-open="auth">Admin</a><a href="#" class="nav-cta" data-open="reg">Request access <span>↗</span></a><button id="mb" class="nav-menu" aria-label="Open menu">☰</button></div></div><div id="mm"><a href="#product">Product</a><a href="#workflow">How it works</a><a href="#faq">FAQ</a><a href="#" data-open="auth">Admin login</a><a href="#" data-open="reg" class="mobile-cta">Request early access ↗</a></div></nav>
