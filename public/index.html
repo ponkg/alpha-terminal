@@ -482,6 +482,7 @@ at(6000,()=>car(false));at(6150,()=>car(true));at(6150,()=>set('met',false));at(
 at(6375,()=>{set('a',true);car(true)});at(7125,()=>car(false)); /* [a] replaces m, dark cloud phase */
 const run=t0=>{E.forEach(([t,f])=>setTimeout(f,Math.max(0,t0+t-performance.now())));setTimeout(()=>run(t0+7500),Math.max(0,t0+7500-performance.now()-30))};
 (async()=>{for(let t=0;t<150&&$('#boot')&&!$('#boot').classList.contains('out');t++)await new Promise(r=>setTimeout(r,100));run(performance.now())})();
+})();
 (()=>{const hero=$('#top'),x=$('.xh'),a=$('.xa'),bb=$('.xb'),r=$('.xr');addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const R=hero.getBoundingClientRect(),px=e.clientX-R.left,py=e.clientY-R.top;if(py<0||py>R.height||document.body.classList.contains('app')||e.target.closest('.win,nav,.bbar')){x.style.opacity=0;return}x.style.opacity=1;a.style.transform='translateY('+py+'px)';bb.style.transform='translateX('+px+'px)';r.style.transform='translate('+(px>R.width-90?px-84:px+10)+'px,'+(py>R.height-44?py-22:py+8)+'px)';r.textContent=Math.round(px)+', '+Math.round(py)},{passive:true});document.addEventListener('pointerleave',()=>x.style.opacity=0)})();
 
 (()=>{const hero=$('#top'),W={};let z=20,moved=false;document.querySelectorAll('.win').forEach(w=>W[w.id]=w);
