@@ -1488,7 +1488,7 @@ renderNewsTabs();
 rf();
 
 // 3 scanner: GeckoTerminal token info + pool data (free).
-const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
+const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0,lastScannedToken=null;
 const parseGeckoSearchPools=payload=>{
  const included=new Map((payload?.included||[])
   .filter(item=>item?.type==='token')
@@ -1518,7 +1518,7 @@ const scanError=(target,message)=>{
 $('#t3f').onsubmit=async e=>{
  e.preventDefault();
  const form=$('#t3f'),input=$('#t3q'),button=form.querySelector('button[type=submit]')||form.querySelector('button'),R=$('#t3r');
- const q=input.value.trim(),id=++scanN;
+ const q=input.value.trim(),id=++scanN;lastScannedToken=null;
  if(!q){scanError(null,'Enter a Solana token address or ticker.');return}
  if(/^https?:\/\//i.test(q)||/\s/.test(q)){
   scanError(input,'Paste a Solana token address or a $ticker. X posts and websites are not scanned.');
@@ -1568,6 +1568,7 @@ $('#t3f').onsubmit=async e=>{
   const age=Number.isFinite(createdAt)?Math.max(0,Date.now()-createdAt):null;
   const poolName=String(pl.name||'');
   const sym=String(a.symbol||symbol||poolName.split(' / ')[0]||'TOKEN');
+  lastScannedToken={mint,symbol:sym,pool:String(pl.address||searchPool||'')};
   const F2=[];
   F2.push(['LIQUIDITY',liquidity<5000?3:liquidity<25000?2:1,fm(liquidity)+' in the main pool'+(fdv?' · '+(liquidity/fdv*100).toFixed(1)+'% of FDV':'')]);
   F2.push(['POOL AGE',age==null?2:age<36e5?2:1,age==null?'Pool age not reported':'Main pool created '+ago(age)]);
