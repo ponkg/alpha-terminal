@@ -358,6 +358,7 @@ app.get("/api/gecko", geckoLimiter, async (req, res) => {
    market cap, and GeckoTerminal's latest trade tape supplies a true rolling 60s volume. */
 let newPairsSnapshot = { data: [], updatedAt: null, loading: false, error: "" };
 let newPairsRefresh = null;
+let newPairsCursor = 0;
 const NEW_PAIRS_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const NEW_PAIRS_MIN_MCAP = 3500;
 const NEW_PAIRS_MIN_VOLUME_1M = 7000;
@@ -436,10 +437,14 @@ const refreshNewPairs = async () => {
       return pair ? { ...item, marketCap: Number(pair.marketCap) || 0,
         pairUrl: String(pair.url || ""), imageUrl: item.imageUrl || String(pair.info?.imageUrl || "") } : null;
     }).filter(item => item && item.marketCap >= NEW_PAIRS_MIN_MCAP)
-      .sort((a, b) => b.createdAt - a.createdAt).slice(0, 6);
+      .sort((a, b) => b.createdAt - a.createdAt);
+    const readyBatch = ready.length > 2
+      ? [...ready.slice(newPairsCursor, newPairsCursor + 2), ...ready.slice(0, Math.max(0, newPairsCursor + 2 - ready.length))]
+      : ready;
+    newPairsCursor = ready.length ? (newPairsCursor + readyBatch.length) % ready.length : 0;
 
     const qualified = [];
-    for (const item of ready) {
+    for (const item of readyBatch) {
       const tradesPayload = await fetchQueuedGecko(
         "/networks/solana/pools/" + encodeURIComponent(item.poolAddress) + "/trades?page=1"
       );
