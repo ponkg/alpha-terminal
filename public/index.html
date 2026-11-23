@@ -623,6 +623,27 @@ body.app .hero-film{display:none!important}
  #t1 .coin-ca{font-size:9px}
  #t1 .trd{font-size:11px;gap:5px}
 }
+
+/* Configurable keyboard map */
+#t4 .hk-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+#t4 .hk-title{font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.1em;color:var(--ac)}
+#t4 .hk-toolbar .btn{width:auto;padding:5px 8px;font-size:9px}
+#t4 .hk-help{font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut);margin:0 0 10px}
+#t4 .hk-section{padding:10px 0 5px;border-bottom:1px solid color-mix(in srgb,var(--fg) 20%,transparent);font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.1em;color:var(--ac)}
+#t4 .hk-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--fg) 12%,transparent)}
+#t4 .hk-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+#t4 .hk-copy b{font-size:12px;font-weight:600;color:var(--fg)}
+#t4 .hk-copy small{font-size:10px;line-height:1.4;color:var(--mut)}
+#t4 .hk-bind{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+#t4 .hk-alias{font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-record{max-width:190px;padding:5px 7px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent);background:transparent;color:var(--fg);font:10px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer}
+#t4 .hk-record:hover,#t4 .hk-record:focus-visible{border-color:var(--ac);outline:1px solid var(--ac);outline-offset:1px}
+#t4 .hk-record.recording{border-color:var(--ac);color:var(--ac);animation:bl 1s steps(1) infinite}
+#t4 #t4capturestatus{font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ac);margin:0 0 9px;min-height:15px}
+#t4 #t4q{font-size:12px}
+#t4 #t4list{max-height:55vh;overflow:auto}
+.narrative-token:focus-visible{outline:1px solid var(--ac);outline-offset:-1px;background:color-mix(in srgb,var(--ac) 9%,transparent)}
+@media(max-width:650px){#t4 .hk-row{gap:6px}#t4 .hk-copy b{font-size:11px}#t4 .hk-copy small{font-size:9px}#t4 .hk-record{font-size:9px;max-width:150px}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -1146,7 +1167,7 @@ const renderT1=()=>{
     :'<span class="narrative-tag unclassified">UNCLASSIFIED</span>';
    const reasons=token.detection.labels.map(label=>label.name+': '+label.reason).join(' · ')||'No configured entity or narrative keyword matched the available token metadata.';
    const matchReason=token.groupMatch?.reason||'No configured entity or narrative keyword matched symbol, name, or pool name.';
-   return '<div class="pump-row narrative-token" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="'+esc(reasons)+'">'+
+   return '<div class="pump-row narrative-token" role="button" tabindex="0" aria-label="Open $'+esc(token.symbol||'UNKNOWN')+' chart" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="'+esc(reasons)+'">'+
     '<div class="pump-logo">'+imageTag+'</div>'+
     '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div><div class="narrative-tags">'+tags+'</div><div class="narrative-match-reason">match: '+esc(matchReason)+'</div></div>'+
     '<div class="narrative-liq">liq '+usd(token.liquidity)+'</div>'+
@@ -1517,9 +1538,81 @@ $('#cvs').onclick=()=>{
  input.value=mint;
  $('#t3f').requestSubmit();
 };
-// hotkey lookup
-const HK=[['Alt+1','Coin tracker'],['Alt+2','X feed'],['Alt+3','Coin scanner'],['Alt+4 or ?','Hotkey lookup'],['Alt+← ↓ ↑ →','Focus window (or Alt+H J K L)'],['Alt+Shift+← ↓ ↑ →','Move window (swap)'],['Alt+Ctrl+← ↓ ↑ →','Resize (move split edge)'],['Alt+Shift+Q','Close focused window (or Esc)'],['Alt+T','Toggle light / dark'],['Alt+Shift+E','Log out'],['Click a coin','Chart + bubble map inside the tracker (Esc = back)']];
-const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTML=HK.filter(h=>!q||(h[0]+' '+h[1]).toLowerCase().includes(q)).map(h=>`<div class="kr"><span class="kk">${h[0].split('+').map(x=>`<kbd>${esc(x)}</kbd>`).join('+')}</span><span>${esc(h[1])}</span></div>`).join('')||'<p class="mut" style="padding:10px 0">No match.</p>'};
+// Configurable keyboard controls, inspired by i3.
+const hk=(code,mods={})=>({code,alt:mods.alt??true,ctrl:mods.ctrl??false,shift:mods.shift??false,meta:mods.meta??false});
+const HOTKEY_ACTIONS=[
+ {id:'toggleTracker',group:'Windows',label:'Coin Tracker',detail:'Open / focus / hide tool 1',key:hk('Digit1')},
+ {id:'toggleFeed',group:'Windows',label:'News Feed',detail:'Open / focus / hide tool 2',key:hk('Digit2')},
+ {id:'toggleScanner',group:'Windows',label:'Coin Scanner',detail:'Open / focus / hide tool 3',key:hk('Digit3')},
+ {id:'toggleHotkeys',group:'Windows',label:'Hotkeys / Settings',detail:'Open / focus / hide tool 4',key:hk('Digit4')},
+ {id:'focusLeft',group:'Navigate panes',label:'Focus left',detail:'Move focus left',key:hk('KeyJ'),alias:hk('ArrowLeft')},
+ {id:'focusDown',group:'Navigate panes',label:'Focus down',detail:'Move focus down',key:hk('KeyK'),alias:hk('ArrowDown')},
+ {id:'focusUp',group:'Navigate panes',label:'Focus up',detail:'Move focus up',key:hk('KeyL'),alias:hk('ArrowUp')},
+ {id:'focusRight',group:'Navigate panes',label:'Focus right',detail:'Move focus right',key:hk('Semicolon'),alias:hk('ArrowRight')},
+ {id:'moveLeft',group:'Move / resize',label:'Move pane left',detail:'Swap with left neighbour',key:hk('KeyJ',{shift:true}),alias:hk('ArrowLeft',{shift:true})},
+ {id:'moveDown',group:'Move / resize',label:'Move pane down',detail:'Swap with pane below',key:hk('KeyK',{shift:true}),alias:hk('ArrowDown',{shift:true})},
+ {id:'moveUp',group:'Move / resize',label:'Move pane up',detail:'Swap with pane above',key:hk('KeyL',{shift:true}),alias:hk('ArrowUp',{shift:true})},
+ {id:'moveRight',group:'Move / resize',label:'Move pane right',detail:'Swap with right neighbour',key:hk('Semicolon',{shift:true}),alias:hk('ArrowRight',{shift:true})},
+ {id:'resizeLeft',group:'Move / resize',label:'Resize left',detail:'Change focused split size',key:hk('KeyJ',{ctrl:true}),alias:hk('ArrowLeft',{ctrl:true})},
+ {id:'resizeDown',group:'Move / resize',label:'Resize down',detail:'Change focused split size',key:hk('KeyK',{ctrl:true}),alias:hk('ArrowDown',{ctrl:true})},
+ {id:'resizeUp',group:'Move / resize',label:'Resize up',detail:'Change focused split size',key:hk('KeyL',{ctrl:true}),alias:hk('ArrowUp',{ctrl:true})},
+ {id:'resizeRight',group:'Move / resize',label:'Resize right',detail:'Change focused split size',key:hk('Semicolon',{ctrl:true}),alias:hk('ArrowRight',{ctrl:true})},
+ {id:'splitHorizontal',group:'Window layout',label:'Next split: horizontal',detail:'Next pane opens left / right',key:hk('KeyH')},
+ {id:'splitVertical',group:'Window layout',label:'Next split: vertical',detail:'Next pane opens top / bottom',key:hk('KeyV')},
+ {id:'toggleFullscreen',group:'Window layout',label:'Toggle pane fullscreen',detail:'Expand the focused pane',key:hk('KeyF')},
+ {id:'focusNext',group:'Navigation',label:'Focus next pane',detail:'Cycle through open panes',key:hk('KeyN')},
+ {id:'focusPrevious',group:'Navigation',label:'Focus previous pane',detail:'Cycle backwards through open panes',key:hk('KeyP')},
+ {id:'focusSearch',group:'Navigation',label:'Focus search',detail:'Jump to the active tool search field',key:hk('Slash')},
+ {id:'scrollUp',group:'Navigation',label:'Scroll up',detail:'Scroll active tool content',key:hk('PageUp')},
+ {id:'scrollDown',group:'Navigation',label:'Scroll down',detail:'Scroll active tool content',key:hk('PageDown')},
+ {id:'closeFocused',group:'Actions',label:'Close focused pane',detail:'Close active tool',key:hk('KeyQ',{shift:true})},
+ {id:'backOrClose',group:'Actions',label:'Back / close',detail:'Back from chart or close active pane',key:hk('Escape',{alt:false})},
+ {id:'toggleTheme',group:'Actions',label:'Toggle theme',detail:'Switch light / dark',key:hk('KeyT')},
+ {id:'logout',group:'Actions',label:'Log out',detail:'End terminal session',key:hk('KeyE',{shift:true})}
+];
+const HOTKEY_STORAGE_KEY='alpha_terminal_hotkeys_v1';
+const loadHotkeyBindings=()=>{
+ try{const saved=JSON.parse(localStorage.getItem(HOTKEY_STORAGE_KEY)||'{}'),valid={};
+  HOTKEY_ACTIONS.forEach(action=>{const v=saved[action.id];if(v&&typeof v.code==='string'&&v.code.length<40&&['alt','ctrl','shift','meta'].every(k=>typeof v[k]==='boolean'))valid[action.id]={code:v.code,alt:v.alt,ctrl:v.ctrl,shift:v.shift,meta:v.meta}});
+  return valid;
+ }catch(error){console.warn('Could not load hotkeys:',error);return {}}
+};
+let hotkeyBindings=loadHotkeyBindings(),recordingHotkeyAction=null;
+const hotkeyCurrent=action=>hotkeyBindings[action.id]||action.key;
+const hotkeyCodeLabel=code=>{
+ if(/^Key[A-Z]$/.test(code))return code.slice(3);
+ if(/^Digit[0-9]$/.test(code))return code.slice(5);
+ const labels={ArrowLeft:'←',ArrowRight:'→',ArrowUp:'↑',ArrowDown:'↓',Semicolon:';',Escape:'Esc',PageUp:'PgUp',PageDown:'PgDn',Slash:'/',Space:'Space',Enter:'Enter',Tab:'Tab'};
+ return labels[code]||code;
+};
+const hotkeyLabel=key=>{
+ if(!key)return 'UNASSIGNED';const parts=[];
+ if(key.ctrl)parts.push('Ctrl');if(key.alt)parts.push('Alt');if(key.shift)parts.push('Shift');if(key.meta)parts.push('Super');
+ parts.push(hotkeyCodeLabel(key.code));return parts.join(' + ');
+};
+const hotkeySame=(a,b)=>!!a&&!!b&&a.code===b.code&&a.alt===b.alt&&a.ctrl===b.ctrl&&a.shift===b.shift&&a.meta===b.meta;
+const saveHotkeyBindings=()=>{try{localStorage.setItem(HOTKEY_STORAGE_KEY,JSON.stringify(hotkeyBindings));return true}catch(error){return false}};
+const rk=()=>{
+ const query=$('#t4q').value.trim().toLowerCase(),matching=HOTKEY_ACTIONS.filter(action=>!query||[action.label,action.detail,action.group,hotkeyLabel(hotkeyCurrent(action))].join(' ').toLowerCase().includes(query));
+ let group='';
+ $('#t4list').innerHTML=matching.map(action=>{
+  const heading=action.group!==group?'<div class="hk-section">'+esc(action.group)+'</div>':'';
+  group=action.group;
+  const alias=action.alias?'<small class="hk-alias">ARROWS: '+esc(hotkeyLabel(action.alias))+'</small>':'';
+  const active=recordingHotkeyAction===action.id;
+  return heading+'<div class="hk-row"><div class="hk-copy"><b>'+esc(action.label)+'</b><small>'+esc(action.detail)+'</small></div><div class="hk-bind">'+alias+'<button type="button" class="hk-record'+(active?' recording':'')+'" data-hk="'+esc(action.id)+'">'+(active?'PRESS KEYS…':esc(hotkeyLabel(hotkeyCurrent(action))))+'</button></div></div>';
+ }).join('')||'<p class="mut">No matching shortcuts.</p>';
+};
+$('#t4').classList.add('wide');
+$('#t4 .wb').insertAdjacentHTML('afterbegin','<div class="hk-toolbar"><span class="hk-title">KEYBINDINGS / LOCAL PROFILE</span><button type="button" id="t4reset" class="btn o">RESET</button></div><p class="hk-help" id="t4capturestatus" aria-live="polite">Select a shortcut, then press the new combination. Use Alt, Ctrl, Shift or Super.</p>');
+$('#t4 .wb > p.mut').textContent='Tab / Shift+Tab moves between controls. Enter or Space activates a focused control. Shortcuts are saved in this browser only.';
+$('#t4list').addEventListener('click',event=>{
+ const button=event.target.closest('[data-hk]');if(!button)return;
+ const id=button.dataset.hk;recordingHotkeyAction=recordingHotkeyAction===id?null:id;
+ $('#t4capturestatus').textContent=recordingHotkeyAction?'RECORDING — press the new key combination. Esc cancels.':'Recording cancelled.';
+ rk();$('#t4list').querySelector('[data-hk="'+id+'"]')?.focus();
+});
+$('#t4reset').addEventListener('click',()=>{recordingHotkeyAction=null;hotkeyBindings={};saveHotkeyBindings();$('#t4capturestatus').textContent='Default shortcuts restored.';rk()});
 $('#t4q').oninput=rk;rk();
 // coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
 const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
@@ -1739,6 +1832,14 @@ const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},60000);
 $('#t1list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+$('#t1list').addEventListener('keydown',event=>{
+ const row=event.target.closest('.narrative-token');if(!row)return;
+ if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoin(row.dataset.c,row.dataset.p,row.dataset.m);return}
+ if(event.key==='ArrowDown'||event.key==='ArrowUp'){
+  const rows=[...$('#t1list').querySelectorAll('.narrative-token')],index=rows.indexOf(row),next=rows[index+(event.key==='ArrowDown'?1:-1)];
+  if(next){event.preventDefault();next.focus({preventScroll:true});next.scrollIntoView({block:'nearest'})}
+ }
+});
 // theme
 const thm=$('#thm'),rootEl=document.documentElement;
 const setTheme=t=>{rootEl.dataset.theme=t;thm.textContent=t==='dark'?'◑ Dark':'◐ Light';try{localStorage.setItem('alpha_theme',t)}catch(e){}if(chart)chart.applyOptions(copts())};
@@ -1805,14 +1906,26 @@ $('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authC
 
 const verifyAdmin=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/admin/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify administrator access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account is not authorized for administrator access.')};
 if(authClient){authClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&b.classList.contains('app'))exit()})}
-const TW=[...ids,'w-legal'].map(i=>A.W[i]),hero=$('#top');let root=null,foc=null,R={};
+const TW=[...ids,'w-legal'].map(i=>A.W[i]),hero=$('#top');let root=null,foc=null,R={},fullscreenId=null,nextSplitAxis=null;
 const leaves=(n,o=[])=>{n.id?o.push(n):(leaves(n.a,o),leaves(n.b,o));return o};
 const lay=(n,r,o)=>{if(n.id){o[n.id]=r;return}if(n.d==='h'){const w=r.w*n.r;lay(n.a,{x:r.x,y:r.y,w,h:r.h},o);lay(n.b,{x:r.x+w,y:r.y,w:r.w-w,h:r.h},o)}else{const h=r.h*n.r;lay(n.a,{x:r.x,y:r.y,w:r.w,h},o);lay(n.b,{x:r.x,y:r.y+h,w:r.w,h:r.h-h},o)}};
 const find=id=>root&&leaves(root).find(l=>l.id===id);
 const par=(n,id)=>n.id?null:(n.a.id===id||n.b.id===id)?n:par(n.a,id)||par(n.b,id);
-const apply=()=>{R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)},R);TW.forEach(w=>{const r=R[w.id],on=!!r,was=w.classList.contains('tile');w.classList.toggle('tile',on);w.classList.toggle('foc',on&&w.id===foc);if(!on){if(was)['left','top','width','height'].forEach(p=>w.style.removeProperty(p));return}const g=6,S=(p,v)=>w.style.setProperty(p,v+'px','important');S('left',r.x+g);S('top',r.y+g);S('width',r.w-2*g);S('height',r.h-2*g)})};
-const add=id=>{if(!root){root={id};foc=id;apply();return}const f=find(foc)||leaves(root)[0],r=R[f.id]||{w:1,h:1},old={id:f.id};delete f.id;f.d=r.w>=r.h?'h':'v';f.r=.5;f.a=old;f.b={id};foc=id;apply()};
-const rm=id=>{const n=find(id);if(!n)return;if(root===n)root=null;else{const p=par(root,id),sb=p.a.id===id?p.b:p.a,c={...sb};Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,c)}apply()};
+const apply=()=>{
+ R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)},R);
+ TW.forEach(w=>{
+  const r=R[w.id],on=!!r,was=w.classList.contains('tile');
+  w.classList.toggle('tile',on);w.classList.toggle('foc',on&&w.id===foc);
+  w.style.removeProperty('visibility');w.style.removeProperty('pointer-events');
+  if(!on){if(was)['left','top','width','height'].forEach(p=>w.style.removeProperty(p));return}
+  const g=6,S=(p,v)=>w.style.setProperty(p,v+'px','important');
+  if(fullscreenId&&w.id!==fullscreenId){w.style.setProperty('visibility','hidden','important');w.style.setProperty('pointer-events','none','important');return}
+  if(fullscreenId===w.id){S('left',g);S('top',g);S('width',Math.max(120,hero.clientWidth-g*2));S('height',Math.max(120,hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)-g*2))}
+  else{S('left',r.x+g);S('top',r.y+g);S('width',r.w-2*g);S('height',r.h-2*g)}
+ });
+};
+const add=id=>{if(!root){root={id};foc=id;apply();return}const f=find(foc)||leaves(root)[0],r=R[f.id]||{w:1,h:1},old={id:f.id};delete f.id;f.d=nextSplitAxis||(r.w>=r.h?'h':'v');nextSplitAxis=null;f.r=.5;f.a=old;f.b={id};foc=id;apply()};
+const rm=id=>{const n=find(id);if(!n)return;if(fullscreenId===id)fullscreenId=null;if(root===n)root=null;else{const p=par(root,id),sb=p.a.id===id?p.b:p.a,c={...sb};Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,c)}apply()};
 const sync2=()=>{const app=b.classList.contains('app');TW.forEach(w=>{const inT=!!find(w.id);if((w.hidden||!app)&&inT)rm(w.id);else if(!w.hidden&&app&&!inT)add(w.id)});if(!root)foc=null;else if(!find(foc))foc=leaves(root)[0].id;apply()};
 const mo=new MutationObserver(sync2);TW.forEach(w=>{mo.observe(w,{attributes:true,attributeFilter:['hidden']});w.addEventListener('pointerdown',()=>{if(find(w.id)){foc=w.id;apply()}})});
 addEventListener('resize',apply);
@@ -1822,16 +1935,93 @@ if(g>-2&&o>0&&g<bs){bs=g;best=k}}return best};
 const rs=d=>{if(!root||!foc)return;const ax=d==='L'||d==='R'?'h':'v',path=[],f=n=>{if(n.id)return n.id===foc;path.push(n);if(f(n.a)||f(n.b))return true;path.pop();return false};f(root);const n=[...path].reverse().find(x=>x.d===ax);if(!n)return;n.r=Math.min(.85,Math.max(.15,n.r+(d==='R'||d==='D'?.05:-.05)));apply()};
 const closeW=id=>A.hide(A.W[id]);
 const tog=id=>{const w=A.W[id];if(w.hidden)A.open(id);else if(foc!==id){foc=id;apply()}else closeW(id)};
-const DM={ArrowLeft:'L',ArrowRight:'R',ArrowUp:'U',ArrowDown:'D',KeyH:'L',KeyL:'R',KeyK:'U',KeyJ:'D'};
-addEventListener('keydown',e=>{if(!b.classList.contains('app'))return;const mod=e.altKey||e.metaKey,typing=/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName);
-if(e.key==='Escape'){if(foc==='t1'&&!$('#t1v2').hidden){setV(false);return}if(foc)closeW(foc);return}
-if(mod&&e.shiftKey&&e.code==='KeyE'){e.preventDefault();exit();return}
-if(mod&&e.shiftKey&&e.code==='KeyQ'){e.preventDefault();if(foc)closeW(foc);return}
-if(mod&&e.code==='KeyT'){e.preventDefault();thm.click();return}
-const d=DM[e.code];
-if(mod&&d){e.preventDefault();if(e.ctrlKey)rs(d);else{const n=foc&&nb(foc,d);if(n){if(e.shiftKey){const la=find(foc),lb=find(n),t=la.id;la.id=lb.id;lb.id=t}else foc=n;apply()}}return}
-const m=e.code.match(/^(Digit|Numpad)([1-4])$/);if(m){if(!mod&&(typing||e.ctrlKey))return;e.preventDefault();tog('t'+m[2]);return}
-if(e.key==='?'&&!typing){e.preventDefault();tog('t4')}});
+const keyMatchesEvent=(event,binding)=>!!binding&&event.code===binding.code&&event.altKey===binding.alt&&event.ctrlKey===binding.ctrl&&event.shiftKey===binding.shift&&event.metaKey===binding.meta;
+const findHotkeyAction=event=>HOTKEY_ACTIONS.find(action=>keyMatchesEvent(event,hotkeyCurrent(action))||(action.alias&&keyMatchesEvent(event,action.alias)));
+const focusWorkArea=id=>{
+ const win=A.W[id];if(!win||win.hidden)return;
+ const area=id==='t2'?$('#t2list'):win.querySelector('.wb');
+ if(area){area.setAttribute('tabindex','0');area.focus({preventScroll:true})}
+};
+const focusPane=id=>{
+ if(!id||!find(id))return;
+ if(fullscreenId&&fullscreenId!==id)fullscreenId=null;
+ foc=id;apply();requestAnimationFrame(()=>focusWorkArea(id));
+};
+const cycleFocus=direction=>{
+ const open=root?leaves(root).map(node=>node.id).filter(id=>A.W[id]&&!A.W[id].hidden):[];
+ if(open.length){const index=Math.max(0,open.indexOf(foc));focusPane(open[(index+direction+open.length)%open.length])}
+};
+const scrollFocused=direction=>{
+ const win=A.W[foc];if(!win)return;
+ let area=foc==='t2'?$('#t2list'):win.querySelector('.wb');
+ if(foc==='t3'&&$('#t3r').scrollHeight>$('#t3r').clientHeight)area=$('#t3r');
+ if(area)area.scrollBy({top:direction*Math.max(140,area.clientHeight*.72),behavior:'smooth'});
+};
+const focusSearch=()=>{
+ const target={t2:$('#t2q'),t3:$('#t3q'),t4:$('#t4q')}[foc];
+ if(target){target.focus();target.select?.();return}
+ if(foc==='t1'){const row=$('#t1list').querySelector('.narrative-token');if(row)row.focus();else $('#t1tabs button')?.focus()}
+};
+const moveFocusedPane=direction=>{
+ const neighbour=foc&&nb(foc,direction);if(!neighbour)return;
+ const a=find(foc),b=find(neighbour);if(!a||!b)return;
+ const id=a.id;a.id=b.id;b.id=id;apply();requestAnimationFrame(()=>focusWorkArea(foc));
+};
+const runHotkeyAction=id=>{
+ const dir={focusLeft:'L',focusDown:'D',focusUp:'U',focusRight:'R',moveLeft:'L',moveDown:'D',moveUp:'U',moveRight:'R',resizeLeft:'L',resizeDown:'D',resizeUp:'U',resizeRight:'R'};
+ if(id.startsWith('toggle')&&id!=='toggleTheme'){
+  const target={toggleTracker:'t1',toggleFeed:'t2',toggleScanner:'t3',toggleHotkeys:'t4'}[id];
+  if(target){if(A.W[target].hidden){A.open(target);requestAnimationFrame(()=>focusWorkArea(target))}else if(foc!==target)focusPane(target);else closeW(target)}
+  return;
+ }
+ if(id.startsWith('focus')&&dir[id]){const next=foc&&nb(foc,dir[id]);if(next)focusPane(next);return}
+ if(id.startsWith('move')&&dir[id]){moveFocusedPane(dir[id]);return}
+ if(id.startsWith('resize')&&dir[id]){rs(dir[id]);return}
+ switch(id){
+  case 'splitHorizontal':nextSplitAxis='h';return;
+  case 'splitVertical':nextSplitAxis='v';return;
+  case 'toggleFullscreen':if(foc){fullscreenId=fullscreenId===foc?null:foc;apply();requestAnimationFrame(()=>focusWorkArea(foc))}return;
+  case 'focusNext':cycleFocus(1);return;
+  case 'focusPrevious':cycleFocus(-1);return;
+  case 'focusSearch':focusSearch();return;
+  case 'scrollUp':scrollFocused(-1);return;
+  case 'scrollDown':scrollFocused(1);return;
+  case 'closeFocused':if(foc)closeW(foc);return;
+  case 'backOrClose':if(foc==='t1'&&!$('#t1v2').hidden){setV(false);focusWorkArea('t1')}else if(foc)closeW(foc);return;
+  case 'toggleTheme':thm.click();return;
+  case 'logout':exit();return;
+ }
+};
+const isTypingTarget=target=>{
+ if(!target)return false;const tag=String(target.tagName||'').toUpperCase();
+ return tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'||target.isContentEditable;
+};
+addEventListener('keydown',event=>{
+ if(!b.classList.contains('app'))return;
+ if(recordingHotkeyAction){
+  if(event.repeat)return;
+  if(event.code==='Escape'&&recordingHotkeyAction!=='backOrClose'){
+   event.preventDefault();event.stopPropagation();recordingHotkeyAction=null;$('#t4capturestatus').textContent='Recording cancelled.';rk();return;
+  }
+  if(['AltLeft','AltRight','ControlLeft','ControlRight','ShiftLeft','ShiftRight','MetaLeft','MetaRight'].includes(event.code))return;
+  if(!event.altKey&&!event.ctrlKey&&!event.metaKey&&event.code!=='Escape'){
+   $('#t4capturestatus').textContent='Use a modifier (Alt, Ctrl or Super) with the key.';return;
+  }
+  event.preventDefault();event.stopPropagation();
+  const binding={code:event.code,alt:event.altKey,ctrl:event.ctrlKey,shift:event.shiftKey,meta:event.metaKey};
+  const reserved=((binding.ctrl||binding.meta)&&['KeyR','KeyW','KeyT','KeyL'].includes(binding.code))||(binding.alt&&binding.code==='F4')||(binding.meta&&binding.code==='KeyQ');
+  if(reserved){$('#t4capturestatus').textContent='Browser / system shortcut. Choose another.';return}
+  const conflict=HOTKEY_ACTIONS.find(action=>action.id!==recordingHotkeyAction&&(hotkeySame(binding,hotkeyCurrent(action))||(action.alias&&hotkeySame(binding,action.alias))));
+  if(conflict){$('#t4capturestatus').textContent='Already assigned to '+conflict.label+'. Choose another.';return}
+  hotkeyBindings[recordingHotkeyAction]=binding;
+  const saved=saveHotkeyBindings(),action=HOTKEY_ACTIONS.find(item=>item.id===recordingHotkeyAction);
+  recordingHotkeyAction=null;$('#t4capturestatus').textContent=saved?'Saved '+action.label+'.':'Saved for this session only.';
+  rk();$('#t4list').querySelector('[data-hk="'+action.id+'"]')?.focus();return;
+ }
+ if(isTypingTarget(event.target)||event.repeat)return;
+ const action=findHotkeyAction(event);if(!action)return;
+ event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
+},true);
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
 if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){await verifyAdmin(data.session);U.name=data.session.user?.email?.split('@')[0]||'admin';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase admin session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
