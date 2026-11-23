@@ -1224,6 +1224,8 @@ const narrativeGroups=()=>{
 };
 const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
+ const focusedMint=document.activeElement?.closest?.('.narrative-token')?.dataset.m||'';
+ const focusedGroup=document.activeElement?.closest?.('.narrative-group')?.querySelector('.narrative-name')?.textContent||'';
  const openedName=$('#t1list').querySelector('.narrative-group[open] .narrative-name')?.textContent||'';
  const groups=narrativeGroups();
  const reopenName=groups.some(g=>g.name===openedName)?openedName:(groups[0]?.name||'');
@@ -1264,6 +1266,8 @@ const renderT1=()=>{
  uniqueTokens.filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
  $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' TOKENS · '+matched+' WITH MATCHES · MULTI-LABEL DETECTION';
+ if(focusedMint){const selected=[...$('#t1list').querySelectorAll('.narrative-token')].find(row=>row.dataset.m===focusedMint);if(selected)selected.focus({preventScroll:true})}
+ else if(focusedGroup){const selected=[...$('#t1list').querySelectorAll('.narrative-group summary')].find(row=>row.textContent.includes(focusedGroup));if(selected)selected.focus({preventScroll:true})}
 };
 let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
@@ -1433,6 +1437,7 @@ const renderNewsTabs=()=>{
  tabs.appendChild(refresh);
 };
 const rf=()=>{
+ const focusedNewsUrl=document.activeElement?.matches?.('a.news-item-title')?document.activeElement.getAttribute('href'):'';
  const query=$('#t2q').value.trim().toLowerCase();
  const selected=NEWS_FILTERS[t2tab];
  const articles=narrativeNews.map(classifyNewsArticle)
@@ -1476,6 +1481,7 @@ const rf=()=>{
  const updated=narrativeNewsMeta.fetchedAt?new Date(narrativeNewsMeta.fetchedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'—';
  const stale=narrativeNewsMeta.stale?' · CACHED':'';
  $('#t2n').textContent='LIVE RSS · '+sourceCount+' SOURCES · '+narrativeNews.length+' ARTICLES · UPDATED '+updated+stale;
+ if(focusedNewsUrl){const selected=[...$('#t2list').querySelectorAll('a.news-item-title')].find(link=>link.getAttribute('href')===focusedNewsUrl);if(selected)selected.focus({preventScroll:true})}
 };
 $('#t2q').oninput=rf;
 renderNewsTabs();
@@ -1593,6 +1599,7 @@ $('#t3f').onsubmit=async e=>{
    '<p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(mintLabel)+' · '+esc(mint)+'</p>'+
    F2.map(row=>'<div class="fd" tabindex="0" data-kbd-item="scanner" role="group" aria-label="'+esc(row[0])+'"><i>'+row[0]+'</i><span class="g'+row[1]+'">'+esc(row[2])+'</span></div>').join('')+
    '<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Missing provider fields are marked unavailable, not assumed safe. Not financial advice. DYOR.</p>';
+  requestAnimationFrame(()=>R.querySelector('[data-kbd-item="scanner"]')?.focus());
  }catch(error){
   if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(error.message||'Scanner request failed. Please try again.')+'</p>';
  }finally{
@@ -1735,7 +1742,7 @@ $('#t4reset').addEventListener('click',()=>{
 $('#t4q').oninput=rk;
 // coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
 const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
-let chart=null,chartResizeObserver=null,chartLoadVersion=0,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
+let chart=null,chartResizeObserver=null,chartLoadVersion=0,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve(),chartCursorIndex=-1;
 const fk=x=>{const a=Math.abs(x);return a>=1e9?(x/1e9).toFixed(2)+'B':a>=1e6?(x/1e6).toFixed(2)+'M':a>=1e3?(x/1e3).toFixed(1)+'K':x.toFixed(a<10?2:0)};
 const pf=x=>!isFinite(x)?'n/a':x>=1?'$'+x.toFixed(2):'$'+x.toFixed(Math.min(10,3-Math.floor(Math.log10(x))));
 const copts=()=>({layout:{background:{color:'transparent'},textColor:getComputedStyle(document.body).color},grid:{vertLines:{color:'rgba(127,127,127,.12)'},horzLines:{color:'rgba(127,127,127,.12)'}}});
@@ -1892,6 +1899,7 @@ const loadChart=async fit=>{
    low:Number(row[3])*multiplier,close:Number(row[4])*multiplier,v:Number(row[5])||0
   })).filter(c=>Number.isFinite(c.time)&&[c.open,c.high,c.low,c.close].every(Number.isFinite));
   if(!CAN.length)throw new Error('GeckoTerminal returned invalid candle data for this pool.');
+  chartCursorIndex=CAN.length-1;
   const last=CAN[CAN.length-1].close;
   PR=multiplier>1?2:Math.min(12,Math.max(2,3-Math.floor(Math.log10(Math.max(last,1e-12)))));
   series.applyOptions({priceFormat:{
@@ -1921,13 +1929,13 @@ const loadTrades=async()=>{
     (j.data||[]).slice(0,60).map(t=>{
       const a=t.attributes,b=a.kind==='buy',px=+(b?a.price_to_in_usd:a.price_from_in_usd),mk=a.tx_from_address||'';
       const tx=a.tx_hash||'';
-      return '<div class="trd"><span class="mut">'+new Date(a.block_timestamp).toLocaleTimeString([],{hour12:false})+'</span><span class="'+(b?'up':'dn')+'">'+(b?'BUY':'SELL')+'</span><span class="'+(b?'up':'dn')+'">'+fm(+a.volume_in_usd)+'</span><span>'+pf(px)+'</span><span>'+(tx?'<a target="_blank" rel="noopener" href="https://solscan.io/tx/'+encodeURIComponent(tx)+'">':'')+esc(mk.slice(0,4)+'…'+mk.slice(-4))+(tx?'</a>':'')+'</span></div>';
+      return '<div class="trd" tabindex="0"><span class="mut">'+new Date(a.block_timestamp).toLocaleTimeString([],{hour12:false})+'</span><span class="'+(b?'up':'dn')+'">'+(b?'BUY':'SELL')+'</span><span class="'+(b?'up':'dn')+'">'+fm(+a.volume_in_usd)+'</span><span>'+pf(px)+'</span><span>'+(tx?'<a target="_blank" rel="noopener" href="https://solscan.io/tx/'+encodeURIComponent(tx)+'">':'')+esc(mk.slice(0,4)+'…'+mk.slice(-4))+(tx?'</a>':'')+'</span></div>';
     }).join('')||'<p class="mut">No recent trades.</p>';
    $('#chn').textContent='FREE PUBLIC DATA · GECKOTERMINAL TRADES · '+new Date().toLocaleTimeString();
  }catch(e){if(tab===1)el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'}
 };
 const BM=m=>'<a class="btn o" target="_blank" rel="noopener" href="https://app.bubblemaps.io/sol/token/'+encodeURIComponent(m)+'">Open Bubblemaps ↗</a>';
-const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
+const showBubble=async()=>{const el=$('#bmc'),m=curM;el.innerHTML=ldr('LOADING HOLDERS');try{const a=(await gt('/networks/solana/tokens/'+m+'/info',120000)).data.attributes,h=a.holders,d=h&&h.distribution_percentage;if(m!==curM||tab!==2)return;const seg=d?[['Top 10',d.top_10,'#3f8fd0'],['11–20',d['11_20'],'#7c6fe0'],['21–40',d['21_40'],'#8fb7d6'],['Rest',d.rest,'#2a8a52']]:[];el.innerHTML='<div class="kr" tabindex="0"><span>Holders</span><span>'+(h?Number(h.count).toLocaleString():'n/a')+'</span></div>'+(d?'<div style="display:flex;height:22px;margin:12px 0 8px">'+seg.map(x=>'<div title="'+x[0]+' '+(+x[1]).toFixed(1)+'%" style="width:'+(+x[1])+'%;background:'+x[2]+'"></div>').join('')+'</div>'+seg.map(x=>'<div class="kr" tabindex="0"><span>'+x[0]+'</span><span>'+(+x[1]).toFixed(1)+'%</span></div>').join(''):'<p class="mut">Distribution not available for this token yet.</p>')+'<div class="kr" tabindex="0"><span>Mint authority</span><span>'+esc(String(a.mint_authority==null?'not reported':a.mint_authority))+'</span></div><div class="kr"><span>Freeze authority</span><span>'+esc(String(a.freeze_authority==null?'not reported':a.freeze_authority))+'</span></div><p class="mut" style="font-size:12px;margin:12px 0">Share of total supply; includes pools, exchanges and treasuries. For the wallet-by-wallet bubble map:</p>'+BM(m);$('#chn').textContent='LIVE · GECKOTERMINAL TOKEN INFO · '+new Date().toLocaleTimeString()}catch(e){el.innerHTML='<p class="mut">'+esc(e.message)+'</p>'+BM(m)}};
 const showTab=i=>{tab=i;[...$('#chtabs').children].forEach((c,j)=>c.classList.toggle('on',i===j));const c=i===0;$('#chtf').hidden=!c;$('#chb').hidden=!c;$('#chc').hidden=!c;$('#bmc').hidden=c;if(i===0)loadChart(true);else if(i===1){$('#bmc').innerHTML=ldr('LOADING TRADES')+'<div class="sk"></div>';loadTrades()}else showBubble()};
 ['Chart','Trades','Holders'].forEach((t,i)=>{const x=document.createElement('button');x.textContent=t;x.onclick=()=>showTab(i);$('#chtabs').appendChild(x)});
 const onG=(g,i)=>$('#chtf').querySelectorAll('[data-g="'+g+'"]').forEach((b,j)=>b.classList.toggle('on',i===j));
@@ -1945,7 +1953,7 @@ const openCoin=(tk,p,m)=>{
  cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;SUP=0;CAN=[];solUsd=0;
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
  $('#cvl').href='https://dexscreener.com/solana/'+encodeURIComponent(curP||m);
- setV(true);STP=loadStats();loadInfo();showTab(tab);
+ setV(true);STP=loadStats();loadInfo();showTab(tab);requestAnimationFrame(()=>document.querySelector('#chtabs button.on')?.focus());
 };
 const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
@@ -2056,11 +2064,29 @@ const closeW=id=>A.hide(A.W[id]);
 const tog=id=>{const w=A.W[id];if(w.hidden)A.open(id);else if(foc!==id){foc=id;apply()}else closeW(id)};
 const keyMatchesEvent=(event,binding)=>!!binding&&event.code===binding.code&&event.altKey===binding.alt&&event.ctrlKey===binding.ctrl&&event.shiftKey===binding.shift&&event.metaKey===binding.meta;
 const findHotkeyAction=event=>HOTKEY_ACTIONS.find(action=>keyMatchesEvent(event,hotkeyCurrent(action))||(action.alias&&keyMatchesEvent(event,action.alias)));
-const focusWorkArea=id=>{
- const win=A.W[id];if(!win||win.hidden)return;
- const area=id==='t2'?$('#t2list'):win.querySelector('.wb');
- if(area){area.setAttribute('tabindex','0');area.focus({preventScroll:true})}
+const focusEl=element=>{
+ if(!element)return false;
+ element.focus({preventScroll:true});element.scrollIntoView?.({block:'nearest',inline:'nearest'});return true;
 };
+const moveFocusInList=(items,current,direction)=>{
+ const list=items.filter(element=>element&&!element.disabled&&!element.closest('[hidden]'));
+ if(!list.length)return false;
+ let index=list.indexOf(current);if(index<0)index=direction>0?-1:list.length;
+ const next=list[index+direction];return next?focusEl(next):false;
+};
+const focusInitialInWindow=id=>{
+ const win=A.W[id];if(!win||win.hidden)return;
+ if(id==='t1'){
+  if(!$('#t1v2').hidden){focusEl($('#chtabs button.on')||$('#chtabs button')||$('#cvb'))}
+  else{const summary=$('#t1list .narrative-group summary');if(summary)focusEl(summary);else focusEl($('#t1tabs button.on')||$('#t1tabs button'))}
+  return;
+ }
+ if(id==='t2'){focusEl($('#t2tabs button.on')||$('#t2tabs button[data-news-tab]'));return}
+ if(id==='t3'){focusEl($('#t3q'));return}
+ if(id==='t4'){focusEl($('#t4groups button.on')||$('#t4groups button'));return}
+ const area=win.querySelector('.wb');if(area){area.setAttribute('tabindex','0');focusEl(area)}
+};
+const focusWorkArea=id=>focusInitialInWindow(id);
 const focusPane=id=>{
  if(!id||!find(id))return;
  if(fullscreenId&&fullscreenId!==id)fullscreenId=null;
@@ -2072,19 +2098,169 @@ const cycleFocus=direction=>{
 };
 const scrollFocused=direction=>{
  const win=A.W[foc];if(!win)return;
- let area=foc==='t2'?$('#t2list'):win.querySelector('.wb');
- if(foc==='t3'&&$('#t3r').scrollHeight>$('#t3r').clientHeight)area=$('#t3r');
+ let area=foc==='t2'?$('#t2list'):win.querySelector('.wb');if(foc==='t3')area=$('#t3r');
  if(area)area.scrollBy({top:direction*Math.max(140,area.clientHeight*.72),behavior:'smooth'});
 };
-const focusSearch=()=>{
- const target={t2:$('#t2q'),t3:$('#t3q'),t4:$('#t4q')}[foc];
+const focusPaneSearch=id=>{
+ const target={t2:$('#t2q'),t3:$('#t3q'),t4:$('#t4q')}[id];
  if(target){target.focus();target.select?.();return}
- if(foc==='t1'){const row=$('#t1list').querySelector('.narrative-token');if(row)row.focus();else $('#t1tabs button')?.focus()}
+ if(id==='t1'){const row=$('#t1list .narrative-token');if(row)focusEl(row);else focusEl($('#t1tabs button.on')||$('#t1tabs button'))}
 };
 const moveFocusedPane=direction=>{
  const neighbour=foc&&nb(foc,direction);if(!neighbour)return;
  const a=find(foc),b=find(neighbour);if(!a||!b)return;
  const id=a.id;a.id=b.id;b.id=id;apply();requestAnimationFrame(()=>focusWorkArea(foc));
+};
+const moveChartCursor=direction=>{
+ if(!chart||!series||!CAN.length)return false;
+ if(chartCursorIndex<0)chartCursorIndex=CAN.length-1;
+ chartCursorIndex=Math.max(0,Math.min(CAN.length-1,chartCursorIndex+direction));
+ const candle=CAN[chartCursorIndex];
+ try{chart.setCrosshairPosition(candle.close,candle.time,series);lgd(candle,candle.v)}catch(error){console.warn('Chart keyboard crosshair unavailable:',error)}
+ $('#chn').textContent='KEYBOARD CANDLE '+(chartCursorIndex+1)+' / '+CAN.length+' · '+new Date(candle.time*1000).toLocaleString();
+ return true;
+};
+const trackerNavNodes=()=>{
+ const nodes=[];
+ $('#t1list').querySelectorAll('.narrative-group').forEach(group=>{
+  const summary=group.querySelector('summary');if(summary)nodes.push(summary);
+  if(group.open)nodes.push(...group.querySelectorAll('.narrative-token'));
+ });
+ return nodes;
+};
+const navigateTracker=direction=>{
+ const active=document.activeElement,intervalButtons=[...$('#t1tabs').querySelectorAll('button')];
+ if(intervalButtons.includes(active)){
+  if(direction==='left'||direction==='right')return moveFocusInList(intervalButtons,active,direction==='left'?-1:1);
+  if(direction==='down')return focusEl(trackerNavNodes()[0]);
+  if(direction==='up')return focusEl($('#t1tabs .narrative-j7'));
+ }
+ const group=active?.closest('.narrative-group'),summary=active?.matches('summary')?active:null,token=active?.closest('.narrative-token');
+ if(summary&&(direction==='left'||direction==='right')){
+  const details=summary.closest('details');
+  if(direction==='right'){details.open=true;const first=details.querySelector('.narrative-token');return first?focusEl(first):true}
+  if(details.open){details.open=false;return true}
+  return false;
+ }
+ if(token&&direction==='left')return focusEl(token.closest('.narrative-group')?.querySelector('summary'));
+ if(token&&direction==='right')return false;
+ if(direction==='up'||direction==='down'){
+  const nodes=trackerNavNodes();if(!nodes.length)return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
+  return moveFocusInList(nodes,nodes.includes(active)?active:null,direction==='up'?-1:1);
+ }
+ if(direction==='right'&&!group)return focusEl($('#t1list .narrative-group summary'));
+ if(direction==='down'&&!group)return focusEl(trackerNavNodes()[0]);
+ return false;
+};
+const navigateCoinChart=direction=>{
+ const active=document.activeElement,chartArea=$('#chc');
+ const tabs=[...$('#chtabs').querySelectorAll('button')],timeframes=[...$('#chtf').querySelectorAll('button')],modes=[...$('#chb').querySelectorAll('button')];
+ const rows=[...$('#bmc').querySelectorAll('.trd:not(.h),.kr')];
+ if(active===chartArea||chartArea.contains(active)){
+  if(direction==='left')return moveChartCursor(-1);
+  if(direction==='right')return moveChartCursor(1);
+  if(direction==='up')return focusEl(timeframes.find(button=>button.classList.contains('on'))||timeframes[0]);
+  if(direction==='down')return focusEl(modes.find(button=>button.classList.contains('on'))||modes[0]);
+ }
+ if(tabs.includes(active)){
+  if(direction==='left'||direction==='right')return moveFocusInList(tabs,active,direction==='left'?-1:1);
+  if(direction==='down')return focusEl(timeframes.find(button=>button.classList.contains('on'))||timeframes[0]);
+  if(direction==='up')return focusEl($('#cvb'));
+ }
+ if(timeframes.includes(active)){
+  if(direction==='left'||direction==='right')return moveFocusInList(timeframes,active,direction==='left'?-1:1);
+  if(direction==='up')return focusEl(tabs.find(button=>button.classList.contains('on'))||tabs[0]);
+  if(direction==='down')return focusEl(chartArea);
+ }
+ if(modes.includes(active)){
+  if(direction==='left'||direction==='right')return moveFocusInList(modes,active,direction==='left'?-1:1);
+  if(direction==='up')return focusEl(chartArea);
+ }
+ if(rows.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(rows,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(tabs.find(button=>button.classList.contains('on'))||tabs[0]);
+ }
+ if(active?.closest('#cvh')){
+  const controls=[...$('#cvh').querySelectorAll('button,a')];
+  if(direction==='left'||direction==='right')return moveFocusInList(controls,active,direction==='left'?-1:1);
+  if(direction==='down')return focusEl(tabs.find(button=>button.classList.contains('on'))||tabs[0]);
+ }
+ if(direction==='down')return focusEl(tabs[0]);
+ if(direction==='up')return focusEl($('#cvb'));
+ return false;
+};
+const navigateNews=direction=>{
+ const active=document.activeElement,categories=[...$('#t2tabs').querySelectorAll('button[data-news-tab]')],stories=[...$('#t2list').querySelectorAll('a[data-kbd-item="news"]')];
+ if(categories.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(categories,active,direction==='up'?-1:1);
+  if(direction==='right')return focusEl(stories[0]);
+ }
+ if(stories.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(stories,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(categories[t2tab]||categories[0]);
+ }
+ if(direction==='right')return focusEl(stories[0]);
+ if(direction==='left')return focusEl(categories[t2tab]||categories[0]);
+ if(direction==='up'||direction==='down')return focusEl(categories[0]);
+ return false;
+};
+const navigateScanner=direction=>{
+ const active=document.activeElement,rows=[...$('#t3r').querySelectorAll('[data-kbd-item="scanner"]')],input=$('#t3q'),button=$('#t3f button');
+ if(rows.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(rows,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(input);
+ }
+ if(active===button){if(direction==='up')return focusEl(input);if(direction==='down')return focusEl(rows[0])}
+ if(direction==='up')return focusEl(input);
+ if(direction==='down')return focusEl(button);
+ return false;
+};
+const navigateHotkeys=direction=>{
+ const active=document.activeElement,groups=[...$('#t4groups').querySelectorAll('button[data-hk-group]')],bindings=[...$('#t4list').querySelectorAll('button[data-hk]')];
+ if(groups.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(groups,active,direction==='up'?-1:1);
+  if(direction==='right')return focusEl(bindings[0]);
+ }
+ if(bindings.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(bindings,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(groups.find(button=>button.dataset.hkGroup===hotkeyGroup));
+ }
+ if(direction==='right')return focusEl(bindings[0]);
+ if(direction==='left')return focusEl(groups.find(button=>button.dataset.hkGroup===hotkeyGroup)||groups[0]);
+ if(direction==='up'||direction==='down')return focusEl(groups[0]);
+ return false;
+};
+const navigateWithinWindow=direction=>{
+ if(foc==='t1')return $('#t1v2').hidden?navigateTracker(direction):navigateCoinChart(direction);
+ if(foc==='t2')return navigateNews(direction);
+ if(foc==='t3')return navigateScanner(direction);
+ if(foc==='t4')return navigateHotkeys(direction);
+ return false;
+};
+const activateSelection=()=>{
+ const active=document.activeElement,win=A.W[foc];
+ if(active&&win?.contains(active)&&active.matches('button,a,summary,[role="button"]')){active.click();return true}
+ return false;
+};
+const backInWindow=()=>{
+ const active=document.activeElement,win=A.W[foc];
+ if(foc==='t1'){
+  if(!$('#t1v2').hidden){
+   setV(false);
+   const row=[...$('#t1list').querySelectorAll('.narrative-token')].find(item=>item.dataset.m===curM);
+   if(row)focusEl(row);else focusEl($('#t1list .narrative-group summary'));
+   return true;
+  }
+  const token=active?.closest('.narrative-token');
+  if(token){focusEl(token.closest('.narrative-group')?.querySelector('summary'));return true}
+  const summary=active?.matches('summary')?active:null;
+  if(summary){const details=summary.closest('details');if(details.open){details.open=false;return true}}
+ }
+ if(foc==='t2'&&active?.matches('a.news-item-title')){focusEl($('#t2tabs button[data-news-tab].on')||$('#t2tabs button[data-news-tab]'));return true}
+ if(foc==='t3'&&active?.matches('[data-kbd-item="scanner"]')){focusEl($('#t3q'));return true}
+ if(foc==='t4'&&active?.matches('button[data-hk]')){focusEl($('#t4groups button.on')||$('#t4groups button'));return true}
+ if(win)closeW(foc);
+ return true;
 };
 const runHotkeyAction=id=>{
  const dir={focusLeft:'L',focusDown:'D',focusUp:'U',focusRight:'R',moveLeft:'L',moveDown:'D',moveUp:'U',moveRight:'R',resizeLeft:'L',resizeDown:'D',resizeUp:'U',resizeRight:'R'};
@@ -2097,16 +2273,21 @@ const runHotkeyAction=id=>{
  if(id.startsWith('move')&&dir[id]){moveFocusedPane(dir[id]);return}
  if(id.startsWith('resize')&&dir[id]){rs(dir[id]);return}
  switch(id){
+  case 'selectPrevious':navigateWithinWindow('up');return;
+  case 'selectNext':navigateWithinWindow('down');return;
+  case 'moveColumnLeft':navigateWithinWindow('left');return;
+  case 'moveColumnRight':navigateWithinWindow('right');return;
+  case 'activateSelection':activateSelection();return;
   case 'splitHorizontal':nextSplitAxis='h';return;
   case 'splitVertical':nextSplitAxis='v';return;
   case 'toggleFullscreen':if(foc){fullscreenId=fullscreenId===foc?null:foc;apply();requestAnimationFrame(()=>focusWorkArea(foc))}return;
   case 'focusNext':cycleFocus(1);return;
   case 'focusPrevious':cycleFocus(-1);return;
-  case 'focusSearch':focusSearch();return;
+  case 'focusSearch':focusPaneSearch(foc);return;
   case 'scrollUp':scrollFocused(-1);return;
   case 'scrollDown':scrollFocused(1);return;
   case 'closeFocused':if(foc)closeW(foc);return;
-  case 'backOrClose':if(foc==='t1'&&!$('#t1v2').hidden){setV(false);focusWorkArea('t1')}else if(foc)closeW(foc);return;
+  case 'backOrClose':backInWindow();return;
   case 'toggleTheme':thm.click();return;
   case 'logout':exit();return;
  }
@@ -2120,23 +2301,23 @@ addEventListener('keydown',event=>{
  if(recordingHotkeyAction){
   if(event.repeat)return;
   if(event.code==='Escape'&&recordingHotkeyAction!=='backOrClose'){
-   event.preventDefault();event.stopPropagation();recordingHotkeyAction=null;$('#t4capturestatus').textContent='Recording cancelled.';rk();return;
+   event.preventDefault();event.stopPropagation();recordingHotkeyAction=null;$('#t4capturestatus').textContent='RECORDING CANCELLED';rk();return;
   }
   if(['AltLeft','AltRight','ControlLeft','ControlRight','ShiftLeft','ShiftRight','MetaLeft','MetaRight'].includes(event.code))return;
-  if(!event.altKey&&!event.ctrlKey&&!event.shiftKey&&!event.metaKey&&event.code!=='Escape'){
-   $('#t4capturestatus').textContent='Use Alt, Ctrl, Shift or Super with the key.';return;
-  }
-  event.preventDefault();event.stopPropagation();
   const binding={code:event.code,alt:event.altKey,ctrl:event.ctrlKey,shift:event.shiftKey,meta:event.metaKey};
+  const plainAllowed=['selectPrevious','selectNext','moveColumnLeft','moveColumnRight','activateSelection','backOrClose'].includes(recordingHotkeyAction);
+  if(!binding.alt&&!binding.ctrl&&!binding.meta&&!binding.shift&&!plainAllowed){$('#t4capturestatus').textContent='ADD A MODIFIER: ALT / CTRL / SHIFT / SUPER';return}
+  event.preventDefault();event.stopPropagation();
   const reserved=((binding.ctrl||binding.meta)&&['KeyR','KeyW','KeyT','KeyL'].includes(binding.code))||(binding.alt&&binding.code==='F4')||(binding.meta&&binding.code==='KeyQ');
-  if(reserved){$('#t4capturestatus').textContent='Browser / system shortcut. Choose another.';return}
+  if(reserved){$('#t4capturestatus').textContent='BROWSER / SYSTEM SHORTCUT · CHOOSE ANOTHER';return}
   const conflict=HOTKEY_ACTIONS.find(action=>action.id!==recordingHotkeyAction&&(hotkeySame(binding,hotkeyCurrent(action))||(action.alias&&hotkeySame(binding,action.alias))));
-  if(conflict){$('#t4capturestatus').textContent='Already assigned to '+conflict.label+'. Choose another.';return}
+  if(conflict){$('#t4capturestatus').textContent='CONFLICT · ALREADY ASSIGNED TO '+conflict.label.toUpperCase();return}
   hotkeyBindings[recordingHotkeyAction]=binding;
   const saved=saveHotkeyBindings(),action=HOTKEY_ACTIONS.find(item=>item.id===recordingHotkeyAction);
-  recordingHotkeyAction=null;$('#t4capturestatus').textContent=saved?'Saved '+action.label+'.':'Saved for this session only.';
+  recordingHotkeyAction=null;$('#t4capturestatus').textContent=saved?'SAVED · '+action.label.toUpperCase():'SESSION ONLY · BROWSER STORAGE UNAVAILABLE';
   rk();$('#t4list').querySelector('[data-hk="'+action.id+'"]')?.focus();return;
  }
+ if(event.code==='Escape'){event.preventDefault();event.stopPropagation();backInWindow();return}
  if(isTypingTarget(event.target)||event.repeat)return;
  const action=findHotkeyAction(event);if(!action)return;
  event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
