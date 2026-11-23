@@ -268,14 +268,19 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .narrative-token .pump-token b{font-size:11px;white-space:nowrap}
 .narrative-token .pump-token small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .narrative-tags{display:flex;gap:4px;flex-wrap:wrap;min-width:0}.narrative-match-reason{font-size:8px;line-height:1.3;color:var(--mut);white-space:normal;overflow-wrap:anywhere;max-width:100%}
-.narrative-news{margin:8px 0 10px;padding:8px;border:1px solid color-mix(in srgb,var(--ac) 24%,transparent);display:flex;flex-direction:column;gap:7px}
-.narrative-news-head{font-size:8px;letter-spacing:.12em;color:var(--ac)}
-.narrative-news-item{display:flex;flex-direction:column;gap:3px;padding:4px 0;color:var(--fg);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--fg) 10%,transparent)}
-.narrative-news-item:last-child{border-bottom:0}
-.narrative-news-item:hover b{color:var(--ac)}
-.narrative-news-item b{font-size:10px;line-height:1.45;font-weight:600}
-.narrative-news-item small{font-size:8px;color:var(--mut);line-height:1.4}
-.narrative-news-item p{margin:0;font-size:9px;line-height:1.45;color:var(--mut)}
+
+/* Categorized RSS news feed */
+.news-item{padding:12px 0;border-bottom:1px solid color-mix(in srgb,var(--fg) 13%,transparent);display:flex;flex-direction:column;gap:6px}
+.news-item-meta{display:flex;justify-content:space-between;gap:10px;color:var(--mut);font-size:9px;letter-spacing:.04em}
+.news-item-title{font-size:13px;line-height:1.45;font-weight:650;color:var(--fg);text-decoration:none}
+.news-item-title:hover{color:var(--ac)}
+.news-item p{margin:0;color:var(--mut);font-size:10px;line-height:1.55}
+.news-item-tags{display:flex;gap:4px;flex-wrap:wrap}
+.news-tag{font-size:8px;line-height:1.35;padding:2px 5px;border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);color:var(--mut)}
+.news-tag.entity{border-color:color-mix(in srgb,var(--ac) 45%,transparent);color:var(--ac)}
+.news-empty{padding:18px 0;color:var(--mut);font-size:11px}
+#t2tabs .news-refresh{margin-left:auto;min-width:30px;font-size:14px;padding:4px 8px}
+#t2tabs .news-refresh:disabled{opacity:.5;cursor:wait}
 
 .narrative-tag{display:inline-flex;align-items:center;gap:3px;max-width:100%;padding:1px 4px;border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);font-size:8px;line-height:1.35;color:var(--mut);white-space:nowrap}
 .narrative-tag.entity{border-color:color-mix(in srgb,var(--ac) 50%,transparent);color:var(--ac)}
@@ -485,7 +490,7 @@ body.app .hero-film{display:none!important}
 <div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">PUMPPORTAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc"><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
-<div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 X FEED</span><span>TRACKED ACCOUNTS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="tabs" id="t2tabs"></div><div class="in"><input id="t2q" placeholder="filter by account or $ticker" autocomplete="off" spellcheck="false" aria-label="Filter feed"></div><div id="t2list"></div><p class="k" id="t2n" style="margin-top:10px">SAMPLE POSTS — NOT LIVE</p></div></div>
+<div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><span>LIVE CATEGORIZED RSS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="tabs" id="t2tabs"></div><div class="in"><input id="t2q" placeholder="search headlines, topics, publishers or people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></div><div id="t2list"></div><p class="k" id="t2n" style="margin-top:10px">CONNECTING TO RSS SOURCES…</p></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
 <div class="win card tool" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEYS</span><span>LOOKUP</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="in"><input id="t4q" placeholder="look up a key or action" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></div><div id="t4list"></div><p class="mut" style="font-size:12px;margin-top:12px">New windows split the focused one along its longer side. Alt is the reliable modifier; the Windows key only works where the browser receives it. Keys 1 to 4 without a modifier also toggle windows when no field is focused.</p></div></div>
 
@@ -605,12 +610,10 @@ const gt=async(p,ttl=55000)=>{
 };
 const ago=ms=>{const m=Math.round(ms/60000);return m<1?'just now':m<60?m+'m ago':m<2880?Math.round(m/60)+'h ago':Math.round(m/1440)+'d ago'};
 const rd=x=>Math.abs(x)>=10?Math.round(x):Math.round(x*10)/10;
-// 1 PumpPortal launch + migration tracker.
 const BASE58=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
-const PUMP={launches:[],migrations:[],connected:false,socket:null,retry:null,retryDelay:1200,snapshotReady:false,snapshotWaiters:[]};
 const tokenMetadata=new Map();
 const logoAttempts=new Map();
-let POOLS=[],NEWP=[],TRP=[],tk1=0,t1ts=0;
+let POOLS=[],NEWP=[],TRP=[],tk1=0;
 
 const getTokenMeta=async mint=>{
   const cached=tokenMetadata.get(mint);
@@ -622,9 +625,6 @@ const getTokenMeta=async mint=>{
   return data;
 };
 const shortCA=m=>m?m.slice(0,4)+'…'+m.slice(-4):'';
-const eventTime=e=>Number(e.receivedAt||e.timestamp||Date.now());
-const eventMcap=e=>Number(e.marketCapSol||e.marketCapQuote||0);
-const pumpAge=e=>ago(Math.max(0,Date.now()-eventTime(e)));
 const pumpLogo=async mint=>{
   const last=logoAttempts.get(mint)||0;
   if(Date.now()-last<120000)return;
@@ -655,65 +655,6 @@ const pumpLogo=async mint=>{
       }
     });
   }catch(e){}
-};
-const connectPumpPortal=async()=>{
-  if(PUMP.ticketing||PUMP.socket&&[WebSocket.CONNECTING,WebSocket.OPEN].includes(PUMP.socket.readyState))return;
-  if(!window.WebSocket||!authClient)return;
-  PUMP.ticketing=true;
-  let socket;
-  try{
-    const {data}=await authClient.auth.getSession();
-    if(!data.session?.access_token)throw new Error('Admin session required to open PumpPortal stream.');
-    const response=await fetch('/api/pump-ticket',{method:'POST',headers:{Authorization:'Bearer '+data.session.access_token}});
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok)throw new Error(result.error||'Could not authorize PumpPortal stream.');
-    const scheme=location.protocol==='https:'?'wss:':'ws:';
-    socket=new WebSocket(scheme+'//'+location.host+'/ws/pumpportal?ticket='+encodeURIComponent(result.ticket));
-    PUMP.socket=socket;
-  }catch(error){
-    $('#chn').textContent=error.message||'Could not connect to PumpPortal.';
-    return;
-  }finally{PUMP.ticketing=false}
-  socket.onopen=()=>{
-    PUMP.retryDelay=1200;
-    $('#chn').textContent='PUMPPORTAL FREE LAUNCH + MIGRATION STREAM CONNECTED';
-  };
-  socket.onmessage=message=>{
-    let packet;try{packet=JSON.parse(message.data)}catch(e){return}
-    if(packet.type==='status'){
-      PUMP.connected=!!packet.connected;
-      $('#chn').textContent=packet.message||('PUMPPORTAL '+(PUMP.connected?'CONNECTED':'RECONNECTING'));
-      return;
-    }
-    if(packet.type==='snapshot'){
-      PUMP.launches=(packet.newTokens||[]).slice(0,120);
-      PUMP.migrations=(packet.migrations||[]).slice(0,80);
-      PUMP.snapshotReady=true;
-      PUMP.snapshotWaiters.splice(0).forEach(resolve=>resolve(true));
-      t1ts=Date.now();renderT1();rf();return;
-    }
-    if(packet.type==='newToken'&&packet.data){
-      const item=packet.data;
-      PUMP.launches=[item,...PUMP.launches.filter(x=>x.mint!==item.mint)].slice(0,120);
-      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
-    }
-    if(packet.type==='migration'&&packet.data){
-      const item=packet.data;
-      PUMP.migrations=[item,...PUMP.migrations.filter(x=>x.signature!==item.signature)].slice(0,80);
-      t1ts=Date.now();renderT1();rf();pumpLogo(item.mint);return;
-    }
-    if(packet.type==='error')$('#chn').textContent=packet.error||'PumpPortal stream error';
-  };
-  socket.onclose=()=>{
-    PUMP.connected=false;
-    if(PUMP.socket===socket)PUMP.socket=null;
-    if(!document.hidden){
-      clearTimeout(PUMP.retry);
-      PUMP.retry=setTimeout(connectPumpPortal,PUMP.retryDelay);
-      PUMP.retryDelay=Math.min(PUMP.retryDelay*1.8,20000);
-    }
-  };
-  socket.onerror=()=>{try{socket.close()}catch(e){}};
 };
 // GeckoTerminal narrative explorer. The landing-page sample remains unchanged.
 const NARRATIVE_WINDOWS=[
@@ -879,6 +820,7 @@ const loadNarrativeNews=async(force=false)=>{
     stale:!!payload.stale,
     successfulFeeds:Number(payload.successfulFeeds)||0,
     feeds:Array.isArray(payload.feeds)?payload.feeds:[],
+    fetchedAt:payload.fetchedAt||new Date().toISOString(),
     warning:payload.warning||''
    };
    narrativeNewsCheckedAt=Date.now();
@@ -1020,14 +962,7 @@ const narrativeGroups=()=>{
   const change=totalWeight?valid.reduce((sum,t)=>sum+t.change*weight(t),0)/totalWeight:null;
   const scored=group.tokens.filter(t=>Number.isFinite(t.groupMatch.confidence));
   const confidence=scored.length?scored.reduce((sum,t)=>sum+t.groupMatch.confidence,0)/scored.length:null;
-  const newsByUrl=new Map();
-  group.tokens.forEach(token=>matchNarrativeNews(token).forEach(article=>{
-   const existing=newsByUrl.get(article.url);
-   if(!existing)newsByUrl.set(article.url,article);
-   else existing.matchedEntities=[...new Set([...(existing.matchedEntities||[]),...(article.matchedEntities||[])])];
-  }));
-  const news=[...newsByUrl.values()].sort((a,b)=>(Date.parse(b.publishedAt||'')||0)-(Date.parse(a.publishedAt||'')||0)).slice(0,4);
-  return {...group,volume,change,confidence,news};
+  return {...group,volume,change,confidence};
  }).sort((a,b)=>b.volume-a.volume||a.name.localeCompare(b.name));
 };
 const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
@@ -1063,12 +998,6 @@ const renderT1=()=>{
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
    groupChange+'</summary>'+
    '<div class="narrative-stats">'+group.tokens.length+' tokens <span>·</span> 24h vol '+usd(group.volume)+confidence+'</div>'+
-   (group.news.length?'<div class="narrative-news"><div class="narrative-news-head">RELATED NEWS · ENTITY MATCHES</div>'+group.news.map(article=>{
-    const summary=article.summary?'<p>'+esc(article.summary.slice(0,190))+'</p>':'';
-    const date=article.publishedAt?ago(Math.max(0,Date.now()-Date.parse(article.publishedAt))):'date unavailable';
-    const publisher=article.source||article.domain||article.feed||'RSS';
-    return '<a class="narrative-news-item" href="'+esc(article.url)+'" target="_blank" rel="noopener noreferrer"><b>'+esc(article.title)+'</b><small>'+esc(publisher)+' · '+esc(date)+' · matched '+esc((article.matchedEntities||[]).join(', '))+'</small>'+summary+'</a>';
-   }).join('')+'</div>':'')+
    '<div class="narrative-coins">'+tokenRows+'</div></details>';
  }).join('');
  $('#t1list').innerHTML=html||'<p class="narrative-empty">No Solana trending pools returned by the current data sources.</p>';
@@ -1077,9 +1006,7 @@ const renderT1=()=>{
  });
  uniqueTokens.filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
- const relatedNews=new Set(groups.flatMap(group=>(group.news||[]).map(article=>article.url)));
- const newsStatus=narrativeNewsMeta.ok?'RSS '+narrativeNewsMeta.successfulFeeds+'/'+narrativeNewsMeta.feeds.length+' FEEDS':'RSS WAITING';
- $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' TOKENS · '+matched+' WITH MATCHES · '+relatedNews.size+' RELATED NEWS · '+newsStatus;
+ $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' TOKENS · '+matched+' WITH MATCHES · MULTI-LABEL DETECTION';
 };
 let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
@@ -1124,17 +1051,6 @@ const loadT1=async(force=false,onProgress=null)=>{
  narrativeLoadPromises.set(interval,request);
  return request;
 };
-const waitForPumpSnapshot=(timeout=2500)=>{
- if(PUMP.snapshotReady)return Promise.resolve(true);
- return new Promise(resolve=>{
-  let settled=false;
-  const finish=value=>{
-   if(settled)return;settled=true;clearTimeout(timer);resolve(value);
-  };
-  const timer=setTimeout(()=>finish(false),timeout);
-  PUMP.snapshotWaiters.push(finish);
- });
-};
 const preloadImage=src=>new Promise(resolve=>{
  if(!src||!/^https:\/\//i.test(src)||!window.Image)return resolve(false);
  const image=new Image();let settled=false;
@@ -1145,8 +1061,6 @@ const preloadImage=src=>new Promise(resolve=>{
 });
 const preloadTerminalData=async report=>{
  report(6,'LOADING DATA','Connecting to Jupiter Tokens V2 live trending feed');
- const snapshot=waitForPumpSnapshot(3000);
- const pumpConnection=connectPumpPortal();
  const market=await loadT1(true,(percent,label,detail)=>report(percent,label,detail));
  let logoSuccess=0;
  if(market.ok){
@@ -1158,7 +1072,7 @@ const preloadTerminalData=async report=>{
   const imageTasks=imageTokens.map(async token=>{
    if(await preloadImage(token.imageUrl))logoSuccess++;
    finished++;
-   report(58+(finished/Math.max(1,imageTokens.length))*26,'LOADING DATA','Preloading coin icons · '+finished+'/'+imageTokens.length);
+   report(58+(finished/Math.max(1,imageTokens.length))*30,'LOADING DATA','Preloading coin icons · '+finished+'/'+imageTokens.length);
   });
   await Promise.race([
    Promise.allSettled(imageTasks),
@@ -1166,13 +1080,11 @@ const preloadTerminalData=async report=>{
   ]);
   renderT1();
  }else{
-  report(62,'LIVE DATA UNAVAILABLE','No sample tokens loaded · retrying Jupiter when the tracker opens');
+  report(70,'LIVE DATA UNAVAILABLE','No market data loaded · retrying when Trending opens');
  }
- report(88,'LOADING DATA','Waiting for PumpPortal free launch and migration snapshot');
- await pumpConnection;
- const pumpReady=await snapshot;
- report(97,'LOADING DATA',pumpReady?'Live Jupiter data and PumpPortal snapshot ready':'Jupiter loaded · PumpPortal snapshot pending');
- return {market:market.ok,pumpPortal:pumpReady,pools:market.pools||0,logos:logoSuccess};
+ loadNarrativeNews();
+ report(97,'LOADING DATA','Market data ready · RSS news loads in Feed');
+ return {market:market.ok,pools:market.pools||0,logos:logoSuccess};
 };
 const renderNarrativeTabs=()=>{
  const tabs=$('#t1tabs');tabs.innerHTML='';
@@ -1200,34 +1112,108 @@ renderNarrativeTabs();
 $('#t1list').innerHTML=ldr('CONNECTING TO JUPITER')+'<div class="sk"></div><div class="sk"></div>';
 new MutationObserver(()=>{
  if(!A.W.t1.hidden){loadT1()}
- else if(A.W.t2.hidden&&PUMP.socket){try{PUMP.socket.close()}catch(e){}}
 }).observe(A.W.t1,{attributes:true,attributeFilter:['hidden']});
+new MutationObserver(()=>{
+ if(!A.W.t2.hidden){loadNarrativeNews().then(rf)}
+}).observe(A.W.t2,{attributes:true,attributeFilter:['hidden']});
 setInterval(()=>{
  if(document.hidden)return;
- if(!A.W.t2.hidden){connectPumpPortal();rf()}
-},15000);
+ if(!A.W.t2.hidden){loadNarrativeNews().then(rf)}
+},60000);
 setInterval(()=>{
  if(!document.hidden&&!A.W.t1.hidden&&$('#t1v2').hidden)loadT1(true)
 },60000);
-// 2 On-chain feed uses the same PumpPortal event stream; X posts remain sample content.
-const PS=[['@alpha_scout','2m','Two agent tokens clustering around the same funding wallet. Watching $AGNT and $LOOP.'],['@meta_hunter','6m','Animal metas cooling. Volume rotating into internet culture names, $LORE leading.'],['@onchain_notes','11m','$NODEX liquidity added, top 10 holders under 20%. Early, not confirmed.'],['@degen_ledger','19m','Check deployer history and holder spread before entering anything.'],['@meta_hunter','27m','$GPUX and $MESH moving together. Infrastructure meta may be next.'],['@alpha_scout','41m','$WOOF volume fading after the first hour. Crowded.']];
+// 2 Categorized live news feed. No X API or sample posts are used.
+const NEWS_FILTERS=['All','AI & Tech','Politics','Markets','Crypto','Creators','World'];
 let t2tab=0;
-const rf=()=>{
-  const q=$('#t2q').value.trim().toLowerCase();
-  let html;
-  if(t2tab===0){
-    const items=[
-      ...PUMP.launches.slice(0,30).map(e=>({e,kind:'NEW LAUNCH'})),
-      ...PUMP.migrations.slice(0,30).map(e=>({e,kind:'MIGRATION'}))
-    ].sort((a,b)=>eventTime(b.e)-eventTime(a.e)).filter(x=>!q||('$'+(x.e.symbol||'')+' '+(x.e.name||'')+' '+(x.e.mint||'')).toLowerCase().includes(q));
-    html=items.map(x=>'<div class="px pump-feed-row" data-c="$'+esc(x.e.symbol||'TOKEN')+'" data-p="'+esc(x.e.canonicalPool||x.e.poolAddress||'')+'" data-m="'+esc(x.e.mint||'')+'" style="cursor:pointer"><b>$'+esc(x.e.symbol||'TOKEN')+'</b><span class="mut">'+x.kind+'</span><div>'+esc(x.e.name||shortCA(x.e.mint))+' · '+esc(pumpAge(x.e))+' · MC '+(eventMcap(x.e)?fk(eventMcap(x.e))+' SOL':'—')+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">Waiting for PumpPortal events or no matching token.</p>';
-  } else {
-    html=PS.filter(p=>!q||(p[0]+' '+p[2]).toLowerCase().includes(q)).map(p=>'<div class="px"><b>'+p[0]+'</b><span class="mut">'+p[1]+' ago</span><div>'+esc(p[2])+'</div></div>').join('')||'<p class="mut" style="padding:10px 0">No posts match.</p>';
-  }
-  $('#t2list').innerHTML=html;
-  $('#t2n').textContent=t2tab===0?'LIVE · PUMPPORTAL NEW TOKEN + MIGRATION EVENTS':'SAMPLE POSTS — NOT LIVE';
+const classifyNewsArticle=article=>{
+ const detection=detectNewsEntities(article);
+ const narratives=new Set((detection.narratives||[]).map(item=>item.name));
+ const text=(String(article.title||'')+' '+String(article.summary||'')).toLowerCase();
+ const categories=[];
+ if(narratives.has('Political Figures'))categories.push('Politics');
+ if(narratives.has('AI & Semiconductors')||narratives.has('Technology & Robotics'))categories.push('AI & Tech');
+ if(narratives.has('Crypto & Finance')||/\b(markets?|stocks?|shares?|earnings|economy|economic|business|banking|investors?|investment|fed|federal reserve|wall street|ipo|revenue|profit)\b/i.test(text))categories.push('Markets');
+ if(/\b(bitcoin|btc|ethereum|eth|solana|crypto|cryptocurrency|defi|tokenization|stablecoin|memecoin)\b/i.test(text))categories.push('Crypto');
+ if(narratives.has('Influencers & Creators')||narratives.has('Celebrity & Creators'))categories.push('Creators');
+ if(!categories.length)categories.push('World');
+ const entities=(detection.entities||[]).map(entity=>entity.name);
+ return {...article,_alphaDetection:detection,_alphaCategories:[...new Set(categories)],_alphaEntities:entities};
 };
-$('#t2q').oninput=rf;mkTabs($('#t2tabs'),['PumpPortal','X accounts'],i=>{t2tab=i;rf()});
+const relativeNewsTime=article=>{
+ const timestamp=Date.parse(article.publishedAt||'');
+ return Number.isFinite(timestamp)?ago(Math.max(0,Date.now()-timestamp)):'time unavailable';
+};
+const renderNewsTabs=()=>{
+ const tabs=$('#t2tabs');
+ tabs.innerHTML='';
+ NEWS_FILTERS.forEach((name,index)=>{
+  const button=document.createElement('button');
+  button.type='button';
+  button.textContent=name;
+  button.classList.toggle('on',index===t2tab);
+  button.dataset.newsTab='true';
+  button.addEventListener('click',()=>{
+   t2tab=index;
+   [...tabs.querySelectorAll('button[data-news-tab]')].forEach((item,i)=>item.classList.toggle('on',i===index));
+   rf();
+  });
+  tabs.appendChild(button);
+ });
+ const refresh=document.createElement('button');
+ refresh.type='button';
+ refresh.className='news-refresh';
+ refresh.textContent='↻';
+ refresh.title='Refresh news';
+ refresh.setAttribute('aria-label','Refresh news');
+ refresh.addEventListener('click',async()=>{
+  refresh.disabled=true;
+  refresh.textContent='…';
+  await loadNarrativeNews(true);
+  renderNewsTabs();
+  rf();
+ });
+ tabs.appendChild(refresh);
+};
+const rf=()=>{
+ const query=$('#t2q').value.trim().toLowerCase();
+ const selected=NEWS_FILTERS[t2tab];
+ const articles=narrativeNews.map(classifyNewsArticle)
+  .filter(article=>selected==='All'||article._alphaCategories.includes(selected))
+  .filter(article=>!query||[
+   article.title,article.summary,article.source,article.domain,
+   ...(article._alphaCategories||[]),...(article._alphaEntities||[])
+  ].join(' ').toLowerCase().includes(query))
+  .sort((a,b)=>(Date.parse(b.publishedAt||'')||0)-(Date.parse(a.publishedAt||'')||0));
+ const html=articles.map(article=>{
+  const url=/^https?:\/\//i.test(article.url||'')?article.url:'#';
+  const categoryTags=article._alphaCategories.map(category=>'<span class="news-tag">'+esc(category)+'</span>').join('');
+  const entityTags=article._alphaEntities.map(entity=>'<span class="news-tag entity">'+esc(entity)+'</span>').join('');
+  const summary=article.summary?'<p>'+esc(article.summary.slice(0,300))+'</p>':'';
+  const publisher=article.source||article.domain||article.feed||'RSS';
+  return '<article class="news-item">'+
+   '<div class="news-item-meta"><span>'+esc(publisher)+'</span><span>'+esc(relativeNewsTime(article))+'</span></div>'+
+   '<a class="news-item-title" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a>'+
+   summary+
+   '<div class="news-item-tags">'+categoryTags+entityTags+'</div>'+
+  '</article>';
+ }).join('');
+ if(!html){
+  const message=narrativeNews.length
+   ?'No stories match this category or search.'
+   :narrativeNewsMeta.error||'No recent RSS articles are available right now.';
+  $('#t2list').innerHTML='<p class="news-empty">'+esc(message)+'</p>';
+ }else{
+  $('#t2list').innerHTML=html;
+ }
+ const sourceCount=narrativeNewsMeta.successfulFeeds+'/'+(narrativeNewsMeta.feeds.length||6);
+ const updated=narrativeNewsMeta.fetchedAt?new Date(narrativeNewsMeta.fetchedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'—';
+ const stale=narrativeNewsMeta.stale?' · CACHED':'';
+ $('#t2n').textContent='LIVE RSS · '+sourceCount+' SOURCES · '+narrativeNews.length+' ARTICLES · UPDATED '+updated+stale;
+};
+$('#t2q').oninput=rf;
+renderNewsTabs();
+rf();
 
 // 3 scanner: GeckoTerminal token info + pool data (free).
 const MINT=/^[1-9A-HJ-NP-Za-km-z]{32,44}$/;let scanN=0;
@@ -1552,7 +1538,7 @@ TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadCha
 [['%',2],['log',1],['auto',0]].forEach((c,i)=>mkB($('#chb'),'sc',c[0],i===2,()=>{chart&&chart.priceScale('right').applyOptions({mode:c[1]});$('#chb').querySelectorAll('[data-g=sc]').forEach((b,j)=>b.classList.toggle('on',i===j))}));
 $('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
 setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
-const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'PUMPPORTAL';A.scr(s);if(c){connectPumpPortal();requestAnimationFrame(resizeChart)}};
+const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'MARKET DATA';A.scr(s);if(c){requestAnimationFrame(resizeChart)}};
 const openCoin=(tk,p,m)=>{
  cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;SUP=0;CAN=[];solUsd=0;
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
@@ -1601,10 +1587,10 @@ const boot=cb=>{
   addLine('> authenticating session ........ OK');
   addLine('> initialising workspace ....... OK');
   progress(3,'LOADING DATA','Requesting live Solana market data…');
-  let result={market:false,pumpPortal:false,pools:0,logos:0};
+  let result={market:false,pools:0,logos:0};
   try{result=await preloadTerminalData(progress)}catch(error){progress(92,'LIVE DATA PARTIAL','The terminal will retry live feeds when opened')}
   addLine(result.market?'> live market data ............... OK':'> live market data ............... UNAVAILABLE');
-  addLine(result.pumpPortal?'> PumpPortal snapshot ............. OK':'> PumpPortal snapshot ............. PENDING');
+  addLine('> categorized RSS news ............ READY ON FEED OPEN');
   progress(100,result.market?'DATA READY':'LIVE DATA UNAVAILABLE',
    result.market?result.pools+' live pools · '+result.logos+' coin logos prepared':'No sample data loaded · live feed will retry in terminal');
   addLine('> ready');
