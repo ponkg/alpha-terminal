@@ -1430,9 +1430,13 @@ const mkC=()=>{
 };
 const loadStats=async()=>{
  const mint=curM,hintedPool=curP;
+ // If Trending already supplied a valid pool address, start OHLCV immediately.
+ // Do not make the chart wait for a redundant token-pools discovery request.
+ const hasPoolHint=BASE58.test(hintedPool||'');
+ if(hasPoolHint&&tab===0)loadChart(true);
  try{
   const [poolResult,metaResult]=await Promise.allSettled([
-   gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000),
+   hasPoolHint?Promise.resolve(null):gt('/networks/solana/tokens/'+mint+'/pools?page=1',60000),
    getTokenMeta(mint)
   ]);
   if(mint!==curM)return;
