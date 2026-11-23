@@ -2572,9 +2572,10 @@ const loadWaitlist=async()=>{wmMeta.textContent='FETCHING WAITLIST…';wmList.in
 $('#wm-toggle').onclick=()=>{wm.hidden=false;wm.style.zIndex='10000';loadWaitlist()};
 $('#wm-refresh').onclick=loadWaitlist;
 wmList.addEventListener('click',async event=>{const button=event.target.closest('button');if(!button)return;const row=button.closest('.wm-row');if(!row)return;const id=row.dataset.id;button.disabled=true;const old=button.textContent;button.textContent='WORKING…';
- try{if(button.hasAttribute('data-invite')){const email=row.querySelector('input').value.trim();await managerRequest('/api/admin/waitlist/'+id+'/invite',{method:'POST',body:JSON.stringify({email})})}
- else if(button.hasAttribute('data-access'))await managerRequest('/api/admin/waitlist/'+id+'/access',{method:'PATCH',body:JSON.stringify({status:button.dataset.access})});
- const outcome=button.hasAttribute('data-invite')?await managerRequest('/api/admin/waitlist/'+id+'/invite',{method:'POST',body:JSON.stringify({email:row.querySelector('input').value.trim()})}):await managerRequest('/api/admin/waitlist/'+id+'/access',{method:'PATCH',body:JSON.stringify({status:button.dataset.access})});
+ try{
+ const outcome=button.hasAttribute('data-invite')
+  ?await managerRequest('/api/admin/waitlist/'+id+'/invite',{method:'POST',body:JSON.stringify({email:row.querySelector('input').value.trim()})})
+  :await managerRequest('/api/admin/waitlist/'+id+'/access',{method:'PATCH',body:JSON.stringify({status:button.dataset.access})});
  wmMeta.textContent=button.hasAttribute('data-invite')?(outcome.invitation_sent?'INVITATION SENT · '+outcome.email:'EXISTING ACCOUNT LINKED · ASK THEM TO USE MEMBER SIGN-IN'):'ACCESS UPDATED · '+outcome.access_status.toUpperCase();
  await loadWaitlist();
  }catch(error){wmMeta.textContent=error.message;button.disabled=false;button.textContent=old}
