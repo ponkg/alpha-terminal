@@ -480,12 +480,12 @@ const getJupiterTrending = async (providerInterval) => {
 
 app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
   const interval = String(req.query.interval || "5m");
-  if (!["5m", "15m", "30m", "1h", "24h"].includes(interval)) {
-    return res.status(400).json({ error: "Unsupported interval. Use 5m, 15m, 30m, 1h or 24h." });
+  if (!["5m", "10m", "30m", "1h", "24h"].includes(interval)) {
+    return res.status(400).json({ error: "Unsupported interval. Use 5m, 10m, 30m, 1h or 24h." });
   }
-  // Jupiter provides native rankings for 5m, 1h and 24h. 15m/30m
+  // Jupiter provides native rankings for 5m, 1h and 24h. 10m/30m
   // use genuine rolling prices collected from the 5m trending feed.
-  const providerInterval = interval === "15m" || interval === "30m" ? "5m" : interval;
+  const providerInterval = interval === "10m" || interval === "30m" ? "5m" : interval;
   try {
     const entry = await getJupiterTrending(providerInterval);
     const data = entry.data.map(token => {
@@ -493,7 +493,7 @@ app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
       const price = Number(token?.usdPrice) || 0;
       return {
         ...token,
-        priceChange15m: price ? jupiterRollingChange(mint, price, 15, entry.time) : null,
+        priceChange10m: price ? jupiterRollingChange(mint, price, 10, entry.time) : null,
         priceChange30m: price ? jupiterRollingChange(mint, price, 30, entry.time) : null
       };
     });
