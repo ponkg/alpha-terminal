@@ -1,0 +1,33 @@
+name: Beta access verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "server.js"
+      - "public/index.html"
+      - "supabase/schema.sql"
+      - "package.json"
+      - ".github/workflows/beta-access-check.yml"
+  push:
+    branches: [feature/beta-access-invites]
+  workflow_dispatch:
+
+jobs:
+  syntax-and-access:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm install --ignore-scripts
+      - run: node --check server.js
+      - name: Check inline frontend JavaScript
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const html=fs.readFileSync('public/index.html','utf8'); const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).filter(s=>s.trim()); if(scripts.length!==1) throw new Error('Expected one inline app script, found '+scripts.length); fs.writeFileSync('/tmp/alpha-inline.js',scripts[0]);"
+          node --check /tmp/alpha-inline.js
+      - name: Assert protected routes and admin-only manager
+        run: |
+          node --input-type=module -e "import fs from 'node:fs'; const s=fs.readFileSync('server.js','utf8'); for(const route of ['/api/token-meta','/api/gecko','/api/jupiter/trending','/api/narrative-news']) if(!new RegExp('app\\\\.get\\\\(\\\\\"'+route.replaceAll('/','\\\\/')+'\\\\\"[^\\\\n]*requireAccess').test(s)) throw new Error('Missing access gate: '+route); for(const route of ['/api/admin/waitlist','/api/admin/waitlist/:id/invite','/api/admin/waitlist/:id/access']) if(!s.includes(route+', requireAdmin')) throw new Error('Missing admin gate: '+route);"
