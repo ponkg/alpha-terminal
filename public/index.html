@@ -2004,8 +2004,8 @@ addEventListener('keydown',event=>{
    event.preventDefault();event.stopPropagation();recordingHotkeyAction=null;$('#t4capturestatus').textContent='Recording cancelled.';rk();return;
   }
   if(['AltLeft','AltRight','ControlLeft','ControlRight','ShiftLeft','ShiftRight','MetaLeft','MetaRight'].includes(event.code))return;
-  if(!event.altKey&&!event.ctrlKey&&!event.metaKey&&event.code!=='Escape'){
-   $('#t4capturestatus').textContent='Use a modifier (Alt, Ctrl or Super) with the key.';return;
+  if(!event.altKey&&!event.ctrlKey&&!event.shiftKey&&!event.metaKey&&event.code!=='Escape'){
+   $('#t4capturestatus').textContent='Use Alt, Ctrl, Shift or Super with the key.';return;
   }
   event.preventDefault();event.stopPropagation();
   const binding={code:event.code,alt:event.altKey,ctrl:event.ctrlKey,shift:event.shiftKey,meta:event.metaKey};
