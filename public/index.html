@@ -1719,7 +1719,7 @@ const rk=()=>{
    :group.id==='SCANNER'
    ?['TAB  MOVE BETWEEN SEARCH, SCAN AND RESULTS','ENTER  RUN THE SCAN','↑ / ↓  INSPECT RESULT ROWS','ESC  RETURN TO SEARCH']
    :[];
-  if(info.length)$('#t4list').innerHTML=info.map((line,i)=>'<div class="hk-info-row"><span>['+String(i+1).padStart(2,'0')+']</span>'+esc(line)+'</div>').join('');
+  if(info.length)$('#t4list').innerHTML=info.map((line,i)=>'<div class="hk-info-row" tabindex="0" role="note"><span>['+String(i+1).padStart(2,'0')+']</span>'+esc(line)+'</div>').join('');
  }
 };
 renderHotkeyGroups();rk();
@@ -2216,16 +2216,21 @@ const navigateScanner=direction=>{
  return false;
 };
 const navigateHotkeys=direction=>{
- const active=document.activeElement,groups=[...$('#t4groups').querySelectorAll('button[data-hk-group]')],bindings=[...$('#t4list').querySelectorAll('button[data-hk]')];
+ const active=document.activeElement,groups=[...$('#t4groups').querySelectorAll('button[data-hk-group]')],
+  bindings=[...$('#t4list').querySelectorAll('button[data-hk]')],help=[...$('#t4list').querySelectorAll('.hk-info-row')];
  if(groups.includes(active)){
   if(direction==='up'||direction==='down')return moveFocusInList(groups,active,direction==='up'?-1:1);
-  if(direction==='right')return focusEl(bindings[0]);
+  if(direction==='right')return focusEl(bindings[0]||help[0]);
  }
  if(bindings.includes(active)){
   if(direction==='up'||direction==='down')return moveFocusInList(bindings,active,direction==='up'?-1:1);
   if(direction==='left')return focusEl(groups.find(button=>button.dataset.hkGroup===hotkeyGroup));
  }
- if(direction==='right')return focusEl(bindings[0]);
+ if(help.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(help,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(groups.find(button=>button.dataset.hkGroup===hotkeyGroup));
+ }
+ if(direction==='right')return focusEl(bindings[0]||help[0]);
  if(direction==='left')return focusEl(groups.find(button=>button.dataset.hkGroup===hotkeyGroup)||groups[0]);
  if(direction==='up'||direction==='down')return focusEl(groups[0]);
  return false;
