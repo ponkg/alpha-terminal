@@ -827,6 +827,106 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  #t4 .hk-footer{font-size:10px}
 }
 
+
+/* Coin Tracker tree explorer: terminal tree branches with original coin imagery. */
+#t1 .narrative-tree-command{
+ display:flex;align-items:center;justify-content:space-between;gap:12px;
+ padding:7px 2px 9px;margin:0 0 8px;
+ border-bottom:1px solid color-mix(in srgb,var(--fg) 25%,transparent);
+ color:color-mix(in srgb,var(--fg) 74%,var(--mut));
+ font:11px/1.5 var(--mono);letter-spacing:.035em;
+}
+#t1 .narrative-tree-command b,#t1 .narrative-tree-command i{color:var(--ac);font-style:normal;font-weight:600}
+#t1 .narrative-tree-command>span:last-child{font-size:10px;color:var(--mut);letter-spacing:.09em}
+#t1 .narrative-group{border-bottom:1px solid color-mix(in srgb,var(--fg) 25%,transparent)}
+#t1 .narrative-group>summary{
+ position:relative;display:flex;align-items:center;gap:12px;
+ min-height:43px;padding:10px 8px 10px 5px;
+ border-left:2px solid transparent;cursor:pointer;
+}
+#t1 .narrative-group>summary::before{
+ content:"▸";display:inline-flex;align-items:center;justify-content:center;
+ width:14px;flex:none;color:var(--ac);font:14px/1 var(--mono);
+}
+#t1 .narrative-group[open]>summary::before{content:"▾"}
+#t1 .narrative-group>summary::after{display:none!important;content:none!important}
+#t1 .narrative-group[open]>summary{
+ border-left-color:var(--ac);
+ background:color-mix(in srgb,var(--ac) 6%,transparent);
+}
+#t1 .narrative-name{font-size:15px;letter-spacing:.01em}
+#t1 .narrative-kind{font-size:10px;letter-spacing:.055em}
+#t1 .narrative-state{font-size:11px}
+#t1 .narrative-group summary>.narrative-change{font-size:13px;min-width:62px}
+#t1 .narrative-stats{
+ margin-left:21px;padding:7px 6px 8px;
+ border-bottom:0;border-left:1px solid color-mix(in srgb,var(--ac) 30%,transparent);
+ font-size:11px;line-height:1.55;
+}
+#t1 .narrative-coins{
+ position:relative;display:flex;flex-direction:column;
+ margin:0 0 10px 21px!important;
+ padding:2px 0 4px 23px!important;
+ border-left:1px solid color-mix(in srgb,var(--ac) 32%,transparent);
+}
+#t1 .narrative-tree-head{
+ display:grid;grid-template-columns:32px minmax(0,1fr) minmax(112px,.4fr) 72px;
+ gap:12px;align-items:center;padding:5px 5px 7px;
+ color:var(--mut);font:11px/1.4 var(--mono);letter-spacing:.08em;
+ border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent);
+}
+#t1 .narrative-tree-head span:nth-child(n+3){text-align:right}
+#t1 .narrative-token{
+ position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) minmax(112px,.4fr) 72px;
+ gap:12px;align-items:center;min-height:48px;padding:9px 5px;
+ border-bottom:1px solid color-mix(in srgb,var(--fg) 17%,transparent);
+}
+#t1 .narrative-token::before{
+ content:"├─";position:absolute;left:-23px;top:50%;transform:translateY(-50%);
+ width:22px;color:color-mix(in srgb,var(--fg) 54%,var(--mut));
+ font:12px/1 var(--mono);letter-spacing:-.12em;
+}
+#t1 .narrative-token:last-child::before{content:"└─"}
+#t1 .narrative-token .pump-logo{
+ width:27px;height:27px;display:flex;align-items:center;justify-content:center;
+ border:1px solid color-mix(in srgb,var(--fg) 24%,transparent);
+ background:color-mix(in srgb,var(--bg) 72%,var(--card));
+ overflow:hidden;
+}
+#t1 .narrative-token .pump-logo img{width:100%;height:100%;object-fit:cover}
+#t1 .narrative-token .pump-token b{font-size:14px}
+#t1 .narrative-token .pump-token small{font-size:11px}
+#t1 .narrative-liq{font-size:12px;font-weight:600}
+#t1 .narrative-change{font-size:13px;font-weight:600}
+#t1 .narrative-detection{margin-top:3px}
+#t1 .narrative-detection summary{font-size:10px;padding:3px 0}
+#t1 .narrative-detection .narrative-tag{font-size:10px}
+#t1 .narrative-match-reason{font-size:10px}
+#t1 .narrative-token:focus-visible,#t1 .narrative-group>summary:focus-visible{
+ outline:1px solid var(--ac);outline-offset:-1px;
+ background:color-mix(in srgb,var(--ac) 10%,transparent);
+}
+@media(max-width:650px){
+ #t1 .narrative-tree-command{font-size:10px;gap:6px}
+ #t1 .narrative-tree-command>span:last-child{font-size:9px}
+ #t1 .narrative-group>summary{gap:7px;padding:9px 5px;min-height:40px}
+ #t1 .narrative-name{font-size:12px}
+ #t1 .narrative-kind{font-size:9px}
+ #t1 .narrative-state{display:none}
+ #t1 .narrative-stats{margin-left:14px;padding-left:5px}
+ #t1 .narrative-coins{margin-left:14px!important;padding-left:19px!important}
+ #t1 .narrative-tree-head,#t1 .narrative-token{
+  grid-template-columns:25px minmax(0,1fr) 72px 52px;gap:7px;
+ }
+ #t1 .narrative-tree-head{font-size:9px;padding:5px 3px}
+ #t1 .narrative-token{min-height:44px;padding:8px 3px}
+ #t1 .narrative-token::before{left:-19px;width:18px;font-size:11px}
+ #t1 .narrative-token .pump-logo{width:22px;height:22px}
+ #t1 .narrative-token .pump-token b{font-size:12px}
+ #t1 .narrative-token .pump-token small{font-size:10px}
+ #t1 .narrative-liq,#t1 .narrative-change{font-size:10px}
+}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -856,7 +956,7 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 <div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
-<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
+<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div class="narrative-tree-command"><span><b>alpha@terminal</b>:~/narratives <i>$</i> tree --network solana</span><span>NARRATIVE EXPLORER</span></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><span>RSS / TERMINAL STREAM</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><aside class="news-rail"><div class="news-panel-title"><span>01 / FEED INDEX</span><b>ALPHA</b></div><div class="news-index-label">CATEGORIES</div><div class="tabs" id="t2tabs" aria-label="News categories"></div><div class="news-rail-foot"><span>PROTOCOL <b>RSS / HTTP</b></span><span>MODE <b>CATEGORIZED</b></span><span>STREAM <b>LIVE / CACHED</b></span></div></aside><section class="news-main"><div class="news-commandbar"><div class="news-path"><span class="path-user">alpha@terminal</span><span>:</span><span>/news</span><span>$</span><b id="t2active">ALL</b></div><label class="news-search"><span>FIND</span><input id="t2q" placeholder="search headlines / topics / people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label></div><div class="news-output-head"><span>RECENT DISPATCHES</span><b id="t2count">0 STORIES</b></div><div id="t2list"></div><div class="news-status" id="t2n">CONNECTING TO RSS SOURCES…</div></section></div></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
 <div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEY CONFIG</span><span>LOCAL KEYMAP / v1.0</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav><div class="hk-rail-foot"><span>PROFILE <b>LOCAL</b></span><span>MODE <b>EDITABLE</b></span><span>STATUS <b>ACTIVE</b></span></div></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="search action / shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" aria-live="polite">READY · SELECT A BINDING AND PRESS ENTER TO EDIT</div><div class="hk-footer">[↑↓] SELECT &nbsp; [←→] SWITCH PANE &nbsp; [ENTER] EDIT / ACTIVATE &nbsp; [ESC] BACK</div></section></div></div>
@@ -1368,7 +1468,7 @@ const renderT1=()=>{
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
    groupChange+'</summary>'+
    '<div class="narrative-stats">'+group.tokens.length+' tokens <span>·</span> 24h vol '+usd(group.volume)+confidence+'</div>'+
-   '<div class="narrative-coins">'+tokenRows+'</div></details>';
+   '<div class="narrative-coins"><div class="narrative-tree-head"><span></span><span>TOKEN</span><span>LIQUIDITY</span><span>24H</span></div>'+tokenRows+'</div></details>';
  }).join('');
  $('#t1list').innerHTML=html||'<p class="narrative-empty">No Solana trending pools returned by the current data sources.</p>';
  $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>{
