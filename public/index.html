@@ -989,6 +989,45 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  #t1v2{padding:12px}
 }
 
+
+/* Timeframe selector lives in the Market Index rail, above narrative folders. */
+#t1 .tracker-panel-title{align-items:center}
+#t1 .tracker-utility{
+ color:var(--ac);font:10px/1.3 var(--mono);letter-spacing:.05em;
+ border:1px solid color-mix(in srgb,var(--ac) 42%,transparent);padding:3px 5px
+}
+#t1 .tracker-utility:hover{background:color-mix(in srgb,var(--ac) 10%,transparent)}
+#t1 .tracker-index-label{padding-top:13px}
+#t1 .tracker-folders-label{padding-top:15px;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent);margin-top:10px}
+#t1 .tracker-rail #t1tabs.tracker-timeframes{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:4px;margin:0;padding:0
+}
+#t1 .tracker-rail #t1tabs.tracker-timeframes button{
+ width:100%;min-width:0;min-height:30px;padding:5px 3px;
+ border:1px solid color-mix(in srgb,var(--fg) 23%,transparent);
+ background:transparent;color:var(--mut);
+ font:10px/1.3 var(--mono);letter-spacing:.04em;text-align:center;cursor:pointer
+}
+#t1 .tracker-rail #t1tabs.tracker-timeframes button:hover{
+ border-color:color-mix(in srgb,var(--ac) 62%,transparent);color:var(--fg)
+}
+#t1 .tracker-rail #t1tabs.tracker-timeframes button.on{
+ border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac)
+}
+#t1 .tracker-rail #t1groups{flex:1}
+#t1 .tracker-folder{min-height:36px}
+@media(max-width:650px){
+ #t1 .tracker-panel-title{padding-bottom:6px}
+ #t1 .tracker-rail #t1tabs.tracker-timeframes{
+  display:flex;flex-wrap:nowrap;gap:5px;padding-top:7px
+ }
+ #t1 .tracker-rail #t1tabs.tracker-timeframes button{
+  flex:0 0 auto;width:auto;min-width:43px;min-height:27px;padding:4px 7px;font-size:9px
+ }
+ #t1 .tracker-folders-label{padding-top:8px;margin-top:8px}
+ #t1 .tracker-rail #t1groups{padding-top:5px}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -1020,8 +1059,10 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
-  <div class="tracker-panel-title"><span>01 / NARRATIVE INDEX</span><b>ALPHA</b></div>
-  <div class="tracker-index-label">MARKET FOLDERS</div>
+  <div class="tracker-panel-title"><span>01 / MARKET INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
+  <div class="tracker-index-label">TIMEFRAME</div>
+  <div class="tabs tracker-timeframes" id="t1tabs" aria-label="Market timeframe"></div>
+  <div class="tracker-index-label tracker-folders-label">MARKET FOLDERS</div>
   <nav id="t1groups" aria-label="Trending narrative categories"></nav>
   <div class="tracker-rail-foot"><span>NETWORK <b>SOLANA</b></span><span>SOURCE <b>JUPITER / GECKO</b></span><span id="t1groupmeta">0 CATEGORIES</span></div>
  </aside>
@@ -1031,7 +1072,6 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
    <label class="tracker-search"><span>FIND</span><input id="t1q" placeholder="search ticker / name / mint" autocomplete="off" spellcheck="false" aria-label="Search tokens in selected narrative"></label>
   </div>
   <div class="tracker-output-head"><span id="t1heading">SELECT A NARRATIVE</span><span id="t1count">0 TOKENS</span></div>
-  <div class="tabs tracker-timeframes" id="t1tabs"></div>
   <div class="tracker-col-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
   <div id="t1list"></div>
   <div class="tracker-main-foot"><p class="k" id="t1n">LOADING JUPITER TRENDING…</p></div>
@@ -1671,20 +1711,24 @@ const renderNarrativeTabs=()=>{
  const tabs=$('#t1tabs');tabs.innerHTML='';
  NARRATIVE_WINDOWS.forEach((windowOption,index)=>{
   const button=document.createElement('button');
-  button.type='button';button.textContent=windowOption.label;
+  button.type='button';
+  button.textContent=windowOption.interval.toUpperCase();
+  button.title='Show market data for '+windowOption.label;
+  button.setAttribute('aria-label','Timeframe '+windowOption.label);
+  button.setAttribute('aria-pressed',String(index===narrativeWindow));
   if(index===narrativeWindow)button.classList.add('on');
   button.addEventListener('click',()=>{
    if(narrativeWindow===index)return;
    narrativeWindow=index;
-   [...tabs.querySelectorAll('button')].forEach((b,i)=>b.classList.toggle('on',i===index));
+   [...tabs.querySelectorAll('button')].forEach((b,i)=>{
+    b.classList.toggle('on',i===index);
+    b.setAttribute('aria-pressed',String(i===index));
+   });
    $('#t1list').innerHTML=ldr('LOADING JUPITER '+windowOption.interval.toUpperCase())+'<div class="sk"></div><div class="sk"></div>';
    loadT1();
   });
   tabs.appendChild(button);
  });
- const link=document.createElement('a');
- link.className='narrative-j7';link.href='https://j7tracker.gg/';link.target='_blank';link.rel='noopener noreferrer';
- link.textContent='J7 Tracker ↗';tabs.appendChild(link);
 };
 
 
@@ -2458,9 +2502,23 @@ const navigateTracker=direction=>{
  const timeframeButtons=[...$('#t1tabs').querySelectorAll('button')];
  const detection=active?.closest('.narrative-detection');
  if(timeframeButtons.includes(active)){
-  if(direction==='left'||direction==='right')return moveFocusInList(timeframeButtons,active,direction==='left'?-1:1);
-  if(direction==='down')return focusEl(trackerSelectedFolder()||folders[0]);
-  if(direction==='up')return focusEl($('#t1tabs .narrative-j7'));
+  const index=timeframeButtons.indexOf(active),column=index%3;
+  if(direction==='left'&&column>0)return focusEl(timeframeButtons[index-1]);
+  if(direction==='right'&&index+1<timeframeButtons.length&&(index+1)%3!==0)return focusEl(timeframeButtons[index+1]);
+  if(direction==='up'){
+   const previous=timeframeButtons[index-3];
+   return previous?focusEl(previous):focusEl($('#t1j7'));
+  }
+  if(direction==='down'){
+   const next=timeframeButtons[index+3];
+   return next?focusEl(next):focusEl(trackerSelectedFolder()||folders[0]);
+  }
+  if(direction==='left'&&column===0)return focusEl($('#t1j7'));
+  if(direction==='right'&&(index+1)%3===0)return focusEl(trackerSelectedFolder()||folders[0]);
+ }
+ if(active===$('#t1j7')){
+  if(direction==='down')return focusEl(timeframeButtons[0]||folders[0]);
+  if(direction==='right')return focusEl(timeframeButtons[0]||folders[0]);
  }
  if(folders.includes(active)){
   if(direction==='up'||direction==='down'){
@@ -2468,7 +2526,7 @@ const navigateTracker=direction=>{
    return selectTrackerFolder(folders[nextIndex]);
   }
   if(direction==='right')return focusEl(rows[0]);
-  if(direction==='left')return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
+  if(direction==='left')return focusEl(timeframeButtons[0]||$('#t1j7'));
  }
  if(detection){
   const row=detection.closest('.narrative-token');
@@ -2483,9 +2541,8 @@ const navigateTracker=direction=>{
    if(details){details.open=true;return focusEl(details.querySelector('summary'))}
   }
  }
- if(direction==='right')return focusEl(folders[0]);
- if(direction==='down')return focusEl(folders[0]);
- if(direction==='left')return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
+ if(direction==='right'||direction==='down')return focusEl(timeframeButtons[0]||folders[0]);
+ if(direction==='left'||direction==='up')return focusEl($('#t1j7'));
  return false;
 };
 const navigateCoinChart=direction=>{
