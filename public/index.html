@@ -1058,6 +1058,51 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  #t1 .tracker-main #t1tabs.tracker-timeframes{gap:4px}
  #t1 .tracker-main #t1tabs.tracker-timeframes button{min-width:37px;padding:4px 6px;font-size:9px}
 }
+
+/* Tracker category rail: compact, clearly grouped, and fully clickable. */
+#t1v1.tracker-terminal{grid-template-columns:230px minmax(0,1fr)}
+#t1 .tracker-rail{padding:13px 11px 10px}
+#t1 #t1groups{
+ display:flex;flex:1;flex-direction:column;gap:10px;min-height:0;overflow:auto;
+ padding:10px 2px 5px;overscroll-behavior:contain;
+ scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ac) 42%,transparent) transparent
+}
+#t1 .tracker-folder-section{display:flex;flex-direction:column;gap:2px;min-width:0}
+#t1 .tracker-folder-section+.tracker-folder-section{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--fg) 16%,transparent)}
+#t1 .tracker-folder-section-head{
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ padding:2px 6px 5px;color:var(--mut);font:9px/1.4 var(--mono);letter-spacing:.11em
+}
+#t1 .tracker-folder-section-head b{font-weight:400;color:var(--mut);font-variant-numeric:tabular-nums}
+#t1 .tracker-folder{
+ display:grid;grid-template-columns:13px minmax(0,1fr) auto;align-items:center;gap:6px;
+ width:100%;min-height:30px;padding:5px 7px;border:1px solid transparent;border-left:2px solid transparent;
+ background:transparent;color:color-mix(in srgb,var(--fg) 67%,var(--mut));text-align:left;cursor:pointer;
+ font:10px/1.35 var(--mono);transition:background .12s,border-color .12s,color .12s
+}
+#t1 .tracker-folder-mark{display:block;color:transparent;font-size:14px;line-height:1}
+#t1 .tracker-folder-name{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#t1 .tracker-folder-count{font-size:10px;color:var(--mut);font-variant-numeric:tabular-nums}
+#t1 .tracker-folder:hover:not(.on){border-color:color-mix(in srgb,var(--ac) 35%,transparent);background:color-mix(in srgb,var(--ac) 6%,transparent);color:var(--fg)}
+#t1 .tracker-folder.on{border-color:color-mix(in srgb,var(--ac) 28%,transparent);border-left-color:var(--ac);background:color-mix(in srgb,var(--ac) 11%,transparent);color:var(--fg)}
+#t1 .tracker-folder.on .tracker-folder-mark,#t1 .tracker-folder.on .tracker-folder-count{color:var(--ac)}
+#t1 .tracker-folder:focus-visible{outline:1px solid var(--ac)!important;outline-offset:-1px!important;box-shadow:inset 3px 0 0 var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
+#t1 .tracker-folder-section-all{padding-bottom:8px;border-bottom:1px solid color-mix(in srgb,var(--fg) 16%,transparent)}
+#t1 .tracker-rail-foot{font-size:9px;line-height:1.8}
+@media(max-width:650px){
+ #t1v1.tracker-terminal{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ #t1 .tracker-rail{padding:8px 9px 7px}
+ #t1 .tracker-panel-title{padding-bottom:6px}
+ #t1 .tracker-rail-foot{display:none}
+ #t1 #t1groups{flex-direction:row;align-items:flex-start;gap:8px;overflow-x:auto;overflow-y:hidden;padding:7px 0 3px}
+ #t1 .tracker-folder-section{flex:0 0 auto;flex-direction:row;align-items:center;gap:4px}
+ #t1 .tracker-folder-section+.tracker-folder-section{padding:0;border:0}
+ #t1 .tracker-folder-section-head{display:none}
+ #t1 .tracker-folder-section-all{padding:0;border:0}
+ #t1 .tracker-folder{grid-template-columns:10px auto auto;flex:0 0 auto;width:auto;min-height:28px;gap:4px;padding:5px 7px}
+ #t1 .tracker-folder-name{max-width:145px}
+ #t1 .tracker-main{padding:8px 9px 7px}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -1089,9 +1134,8 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
-  <div class="tracker-panel-title"><span>01 / NARRATIVE INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
-  <div class="tracker-index-label">MARKET CATEGORIES</div>
-  <div id="t1groups" role="navigation" aria-label="Trending narrative categories"></div>
+  <div class="tracker-panel-title"><span>01 / MARKET INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
+  <div id="t1groups" role="navigation" aria-label="Market categories and detected entities"></div>
   <div class="tracker-rail-foot"><span>NETWORK <b>SOLANA</b></span><span>SOURCE <b>JUPITER / GECKO</b></span><span id="t1groupmeta">0 CATEGORIES</span></div>
  </aside>
  <section class="tracker-main">
@@ -1608,7 +1652,7 @@ const renderT1=()=>{
  const focusedCategory=active?.closest?.('[data-tracker-group]')?.dataset.trackerGroup||'';
  const searchFocused=active?.id==='t1q',searchCaret=searchFocused?active.selectionStart:null;
  const groups=narrativeGroups();
- const allTokens=[...new Map(groups.flatMap(group=>group.tokens).map(token=>[token.mint,token])).values()]
+ const allTokens=[...new Map(groups.flatMap(group=>group.tokens).filter(token=>token.mint).map(token=>[token.mint,token])).values()]
   .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
  const allFolder={name:'ALL TOKENS',type:'DIRECTORY',tokens:allTokens};
  const folders=[allFolder,...groups];
@@ -1616,18 +1660,29 @@ const renderT1=()=>{
  const selectedGroup=narrativeSelectedGroup===TRACKER_ALL_GROUP?allFolder:(groups.find(group=>group.name===narrativeSelectedGroup)||allFolder);
  const uniqueTokens=[...new Map(narrativePools.map(token=>[token.mint,token])).values()];
  const matched=new Set(groups.filter(group=>group.type!=='OTHER').flatMap(group=>group.tokens.map(token=>token.mint))).size;
- const categoryHtml=folders.map(group=>{
-  const active=group.name===narrativeSelectedGroup;
-  const type=group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'UNCATEGORIZED':group.type==='DIRECTORY'?'MARKET':'NARRATIVE';
+ const renderFolderButton=group=>{
+  const active=group.type==='DIRECTORY'?narrativeSelectedGroup===TRACKER_ALL_GROUP:group.name===narrativeSelectedGroup;
   const key=group.type==='DIRECTORY'?TRACKER_ALL_GROUP:group.name;
-  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(key)+'" aria-current="'+(active?'page':'false')+'">'+
-   '<span class="tracker-folder-mark">'+(active?'▸':' ')+'</span>'+
-   '<span class="tracker-folder-copy"><b>'+esc(group.name)+'</b><small>'+type+'</small></span>'+
+  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(key)+'" aria-pressed="'+String(active)+'" aria-label="Show '+esc(group.name)+' tokens, '+group.tokens.length+'" title="'+esc(group.name)+' · '+group.tokens.length+' tokens">'+
+   '<span class="tracker-folder-mark" aria-hidden="true">'+(active?'›':'')+'</span>'+
+   '<span class="tracker-folder-name">'+esc(group.name)+'</span>'+
    '<span class="tracker-folder-count">'+group.tokens.length+'</span>'+
   '</button>';
- }).join('');
+ };
+ const marketFolders=folders.filter(group=>group.type!=='ENTITY');
+ const entityFolders=folders.filter(group=>group.type==='ENTITY');
+ const categoryFolders=marketFolders.filter(group=>group.type!=='DIRECTORY');
+ const categoryHtml=
+  '<div class="tracker-folder-section tracker-folder-section-all">'+renderFolderButton(allFolder)+'</div>'+
+  '<section class="tracker-folder-section"><div class="tracker-folder-section-head"><span>MARKET CATEGORIES</span><b>'+categoryFolders.length+'</b></div>'+
+   categoryFolders.map(renderFolderButton).join('')+
+  '</section>'+
+  (entityFolders.length?
+   '<section class="tracker-folder-section tracker-entity-section"><div class="tracker-folder-section-head"><span>DETECTED ENTITIES</span><b>'+entityFolders.length+'</b></div>'+
+    entityFolders.map(renderFolderButton).join('')+
+   '</section>':'');
  $('#t1groups').innerHTML=categoryHtml||'<div class="tracker-rail-empty">NO CATEGORIES</div>';
- $('#t1groupmeta').textContent=groups.length+' CATEGORIES';
+ $('#t1groupmeta').textContent=categoryFolders.length+' CATEGORIES / '+entityFolders.length+' ENTITIES';
  $('#t1active').textContent=selectedGroup.name.toUpperCase();
  $('#t1heading').textContent=selectedGroup.name.toUpperCase()+' / TOKEN DIRECTORY';
  const query=trackerSearchTerm.trim().toLowerCase();
@@ -2541,6 +2596,11 @@ const selectTrackerFolder=(button)=>{
  trackerSelectedFolder()?.focus({preventScroll:true});
  return true;
 };
+$('#t1groups').addEventListener('click',event=>{
+ const button=event.target.closest('button[data-tracker-group]');
+ if(!button||!$('#t1groups').contains(button))return;
+ selectTrackerFolder(button);
+});
 const navigateTracker=direction=>{
  const active=document.activeElement,folders=trackerCategoryButtons(),rows=trackerCoinRows();
  const timeframeButtons=[...$('#t1tabs').querySelectorAll('button')];
