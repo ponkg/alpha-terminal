@@ -38,6 +38,12 @@ const geckoLimiter = rateLimit({
   message: { error: "Market-data request limit reached. Please wait a moment." }
 });
 
+const narrativeNewsLimiter = rateLimit({
+  windowMs: 60 * 1000, limit: 30,
+  standardHeaders: "draft-7", legacyHeaders: false,
+  message: { error: "News refresh limit reached. Please wait a moment." }
+});
+
 app.get("/api/config.js", (_req, res) => {
   res.set("Cache-Control", "no-store");
   res.type("application/javascript").send(
@@ -509,6 +515,168 @@ app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
       return res.status(503).json({ error: "Jupiter's free API is temporarily rate-limited. Please retry shortly." });
     }
     return res.status(502).json({ error: "Jupiter market data is temporarily unavailable." });
+  }
+});
+
+// Free RSS aggregation for narrative event matching.
+// Feed requests are server-side, coalesced, time-limited and cached for all visitors.
+const NARRATIVE_NEWS_FEEDS = [
+  { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
+  { name: "BBC Technology", url: "https://feeds.bbci.co.uk/news/technology/rss.xml" },
+  { name: "BBC Business", url: "https://feeds.bbci.co.uk/news/business/rss.xml" },
+  { name: "Politico", url: "https://rss.politico.com/politics-news.xml" },
+  { name: "CNBC", url: "https://www.cnbc.com/id/100003114/device/rss/rss.html" },
+  {
+    name: "Google News · Entity Search",
+    url: "https://news.google.com/rss/search?q=" +
+      encodeURIComponent('(NVIDIA OR "Jensen Huang" OR NVDA OR Blackwell OR Elon Musk OR Tesla OR xAI OR SpaceX OR OpenAI OR Anthropic OR DeepSeek OR "Sam Altman" OR Trump OR Biden OR Putin OR Zelensky) when:3d') +
+      "&hl=en-US&gl=US&ceid=US:en"
+  }
+];
+const NARRATIVE_NEWS_FRESH_MS = 5 * 60 * 1000;
+const NARRATIVE_NEWS_STALE_MS = 60 * 60 * 1000;
+const NARRATIVE_NEWS_MAX_AGE_MS = 4 * 24 * 60 * 60 * 1000;
+let narrativeNewsCache = null;
+let narrativeNewsPending = null;
+
+const decodeRssEntities = value => String(value || "").replace(
+  /&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi,
+  (match, entity) => {
+    const key = entity.toLowerCase();
+    if (key === "amp") return "&";
+    if (key === "lt") return "<";
+    if (key === "gt") return ">";
+    if (key === "quot") return '"';
+    if (key === "apos" || key === "#39") return "'";
+    if (key === "nbsp") return " ";
+    const code = key.startsWith("#x") ? parseInt(key.slice(2), 16) : parseInt(key.slice(1), 10);
+    try { return Number.isFinite(code) ? String.fromCodePoint(code) : match; }
+    catch { return " "; }
+  }
+);
+
+const cleanRssText = value => decodeRssEntities(
+  String(value || "")
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
+    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]*>/g, " ")
+).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+
+const readRssTag = (xml, tag) => {
+  // Tags are selected only from the fixed parser calls below (no user input).
+  const match = String(xml || "").match(new RegExp("<" + tag + "(?:\\s[^>]*)?>([\\s\\S]*?)</" + tag + "\\s*>", "i"));
+  return match ? cleanRssText(match[1]) : "";
+};
+
+const parseRssItems = (xml, feed) => {
+  const output = [];
+  const blocks = String(xml || "").match(/<item\b[^>]*>[\s\S]*?<\/item>/gi) || [];
+  for (const block of blocks.slice(0, 25)) {
+    const title = readRssTag(block, "title").slice(0, 240);
+    const url = readRssTag(block, "link");
+    if (!title || !/^https?:\/\//i.test(url)) continue;
+    const dateValue = readRssTag(block, "pubDate") || readRssTag(block, "published") || readRssTag(block, "updated") || readRssTag(block, "dc:date");
+    const publishedMs = dateValue ? Date.parse(dateValue) : NaN;
+    if (Number.isFinite(publishedMs) &&
+        (Date.now() - publishedMs > NARRATIVE_NEWS_MAX_AGE_MS || publishedMs > Date.now() + 24 * 60 * 60 * 1000)) continue;
+    const sourceTag = readRssTag(block, "source");
+    let domain = "";
+    try { domain = new URL(url).hostname.replace(/^www\./, ""); } catch {}
+    output.push({
+      title,
+      url,
+      summary: (readRssTag(block, "description") || readRssTag(block, "content:encoded")).slice(0, 420),
+      publishedAt: Number.isFinite(publishedMs) ? new Date(publishedMs).toISOString() : null,
+      source: sourceTag || feed.name,
+      domain,
+      feed: feed.name
+    });
+  }
+  return output;
+};
+
+const fetchNarrativeRssFeed = async feed => {
+  const response = await fetch(feed.url, {
+    headers: {
+      Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
+      "User-Agent": "AlphaTerminal/1.0 (+https://alpha-solana-terminal-4av6.onrender.com)"
+    },
+    signal: AbortSignal.timeout(9000)
+  });
+  if (!response.ok) throw new Error("HTTP " + response.status);
+  const xml = await response.text();
+  if (xml.length > 1_500_000) throw new Error("Feed response exceeded size limit");
+  const articles = parseRssItems(xml, feed);
+  if (!articles.length) throw new Error("No recent RSS items could be parsed");
+  return articles;
+};
+
+const refreshNarrativeNews = async () => {
+  const results = await Promise.allSettled(NARRATIVE_NEWS_FEEDS.map(async feed => ({
+    feed,
+    articles: await fetchNarrativeRssFeed(feed)
+  })));
+  const articlesByTitle = new Map();
+  const feeds = [];
+  for (let index = 0; index < results.length; index++) {
+    const result = results[index];
+    const feed = NARRATIVE_NEWS_FEEDS[index];
+    if (result.status === "fulfilled") {
+      feeds.push({ name: feed.name, ok: true, count: result.value.articles.length });
+      for (const article of result.value.articles) {
+        const key = article.title.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+        const previous = articlesByTitle.get(key);
+        if (!previous || (!previous.domain && article.domain)) articlesByTitle.set(key, article);
+      }
+    } else {
+      feeds.push({ name: feed.name, ok: false, error: result.reason?.message || "Feed unavailable" });
+    }
+  }
+  const articles = [...articlesByTitle.values()]
+    .sort((a, b) => (Date.parse(b.publishedAt || "") || 0) - (Date.parse(a.publishedAt || "") || 0))
+    .slice(0, 70);
+  const successfulFeeds = feeds.filter(feed => feed.ok).length;
+  const data = {
+    ok: successfulFeeds > 0,
+    provider: "free-rss",
+    fetchedAt: new Date().toISOString(),
+    stale: false,
+    successfulFeeds,
+    feeds,
+    articles
+  };
+  if (successfulFeeds > 0 && articles.length > 0) {
+    narrativeNewsCache = { time: Date.now(), data };
+    return data;
+  }
+  if (narrativeNewsCache && Date.now() - narrativeNewsCache.time < NARRATIVE_NEWS_STALE_MS) {
+    return { ...narrativeNewsCache.data, stale: true, warning: "Showing cached news while RSS sources are unavailable.", feeds };
+  }
+  return data;
+};
+
+app.get("/api/narrative-news", narrativeNewsLimiter, async (_req, res) => {
+  if (narrativeNewsCache && Date.now() - narrativeNewsCache.time < NARRATIVE_NEWS_FRESH_MS) {
+    res.set("X-Data-Cache", "HIT");
+    return res.set("Cache-Control", "public, max-age=60").json(narrativeNewsCache.data);
+  }
+  if (!narrativeNewsPending) {
+    narrativeNewsPending = refreshNarrativeNews().finally(() => { narrativeNewsPending = null; });
+  }
+  try {
+    const data = await narrativeNewsPending;
+    if (!data.ok && !data.articles.length) {
+      return res.status(503).json({ ...data, error: "News feeds are temporarily unavailable." });
+    }
+    res.set("X-Data-Cache", data.stale ? "STALE" : "MISS");
+    return res.set("Cache-Control", "public, max-age=60").json(data);
+  } catch (error) {
+    console.error("Narrative RSS refresh failed:", error.message);
+    if (narrativeNewsCache && Date.now() - narrativeNewsCache.time < NARRATIVE_NEWS_STALE_MS) {
+      return res.set("X-Data-Cache", "STALE").json({ ...narrativeNewsCache.data, stale: true });
+    }
+    return res.status(502).json({ ok: false, provider: "free-rss", articles: [], error: "News feeds are temporarily unavailable." });
   }
 });
 
