@@ -828,103 +828,165 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 }
 
 
-/* Coin Tracker tree explorer: terminal tree branches with original coin imagery. */
-#t1 .narrative-tree-command{
- display:flex;align-items:center;justify-content:space-between;gap:12px;
- padding:7px 2px 9px;margin:0 0 8px;
- border-bottom:1px solid color-mix(in srgb,var(--fg) 25%,transparent);
- color:color-mix(in srgb,var(--fg) 74%,var(--mut));
- font:11px/1.5 var(--mono);letter-spacing:.035em;
+
+/* Trending / Coin Tracker: two-pane terminal file manager matching Hotkeys. */
+#t1.win.wide{width:min(760px,97vw)}
+#t1 .wb.dm.col{padding:0;overflow:hidden}
+#t1v1.tracker-terminal{
+ display:grid;grid-template-columns:190px minmax(0,1fr);
+ flex:1;min-width:0;min-height:0;height:100%;overflow:hidden;
 }
-#t1 .narrative-tree-command b,#t1 .narrative-tree-command i{color:var(--ac);font-style:normal;font-weight:600}
-#t1 .narrative-tree-command>span:last-child{font-size:10px;color:var(--mut);letter-spacing:.09em}
-#t1 .narrative-group{border-bottom:1px solid color-mix(in srgb,var(--fg) 25%,transparent)}
-#t1 .narrative-group>summary{
- position:relative;display:flex;align-items:center;gap:12px;
- min-height:43px;padding:10px 8px 10px 5px;
- border-left:2px solid transparent;cursor:pointer;
+#t1 .tracker-rail{
+ display:flex;flex-direction:column;min-width:0;min-height:0;
+ padding:13px 10px 11px;
+ border-right:1px solid color-mix(in srgb,var(--fg) 24%,transparent);
+ background:color-mix(in srgb,var(--bg) 34%,transparent);
 }
-#t1 .narrative-group>summary::before{
- content:"▸";display:inline-flex;align-items:center;justify-content:center;
- width:14px;flex:none;color:var(--ac);font:14px/1 var(--mono);
+#t1 .tracker-panel-title{
+ display:flex;justify-content:space-between;gap:8px;
+ padding:2px 2px 10px;border-bottom:1px solid color-mix(in srgb,var(--fg) 22%,transparent);
+ font:10px/1.45 var(--mono);letter-spacing:.1em;color:var(--mut)
 }
-#t1 .narrative-group[open]>summary::before{content:"▾"}
-#t1 .narrative-group>summary::after{display:none!important;content:none!important}
-#t1 .narrative-group[open]>summary{
- border-left-color:var(--ac);
- background:color-mix(in srgb,var(--ac) 6%,transparent);
+#t1 .tracker-panel-title b{color:var(--ac);font-weight:600}
+#t1 .tracker-index-label{
+ padding:13px 2px 7px;font:10px/1.4 var(--mono);
+ letter-spacing:.1em;color:var(--mut)
 }
-#t1 .narrative-name{font-size:15px;letter-spacing:.01em}
-#t1 .narrative-kind{font-size:10px;letter-spacing:.055em}
-#t1 .narrative-state{font-size:11px}
-#t1 .narrative-group summary>.narrative-change{font-size:13px;min-width:62px}
-#t1 .narrative-stats{
- margin-left:21px;padding:7px 6px 8px;
- border-bottom:0;border-left:1px solid color-mix(in srgb,var(--ac) 30%,transparent);
- font-size:11px;line-height:1.55;
+#t1 #t1groups{display:flex;flex-direction:column;gap:2px;min-height:0;overflow:auto}
+#t1 .tracker-folder{
+ display:grid;grid-template-columns:13px minmax(0,1fr) auto;align-items:center;gap:5px;
+ width:100%;padding:8px 5px;border:1px solid transparent;
+ background:transparent;color:var(--mut);text-align:left;cursor:pointer;
+ font:11px/1.4 var(--mono)
 }
-#t1 .narrative-coins{
- position:relative;display:flex;flex-direction:column;
- margin:0 0 10px 21px!important;
- padding:2px 0 4px 23px!important;
- border-left:1px solid color-mix(in srgb,var(--ac) 32%,transparent);
+#t1 .tracker-folder-mark{color:transparent;font-size:13px}
+#t1 .tracker-folder-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+#t1 .tracker-folder-copy b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:inherit}
+#t1 .tracker-folder-copy small{font:9px/1.3 var(--mono);letter-spacing:.06em;color:var(--mut)}
+#t1 .tracker-folder-count{font-size:10px;color:var(--mut);font-variant-numeric:tabular-nums}
+#t1 .tracker-folder.on{
+ border-color:color-mix(in srgb,var(--ac) 48%,transparent);
+ background:color-mix(in srgb,var(--ac) 11%,transparent);color:var(--fg)
 }
-#t1 .narrative-tree-head{
- display:grid;grid-template-columns:32px minmax(0,1fr) minmax(112px,.4fr) 72px;
- gap:12px;align-items:center;padding:5px 5px 7px;
- color:var(--mut);font:11px/1.4 var(--mono);letter-spacing:.08em;
- border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent);
+#t1 .tracker-folder.on .tracker-folder-mark,#t1 .tracker-folder.on .tracker-folder-count{color:var(--ac)}
+#t1 .tracker-folder.on .tracker-folder-copy small{color:var(--ac)}
+#t1 .tracker-folder:hover:not(.on){border-color:color-mix(in srgb,var(--fg) 22%,transparent);color:var(--fg)}
+#t1 .tracker-rail-empty{padding:8px 3px;color:var(--mut);font:10px/1.5 var(--mono)}
+#t1 .tracker-rail-foot{
+ margin-top:auto;padding:11px 2px 0;border-top:1px solid color-mix(in srgb,var(--fg) 20%,transparent);
+ font:10px/1.9 var(--mono);color:var(--mut)
 }
-#t1 .narrative-tree-head span:nth-child(n+3){text-align:right}
+#t1 .tracker-rail-foot span{display:block}
+#t1 .tracker-rail-foot b{color:var(--ac);font-weight:500}
+#t1 .tracker-main{
+ display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px 13px 9px;overflow:hidden
+}
+#t1 .tracker-commandbar{
+ display:flex;align-items:center;justify-content:space-between;gap:10px;
+ min-width:0;padding:0 0 10px;border-bottom:1px solid color-mix(in srgb,var(--fg) 22%,transparent)
+}
+#t1 .tracker-path{
+ display:flex;align-items:center;gap:5px;min-width:0;overflow:hidden;white-space:nowrap;
+ font:10px/1.5 var(--mono);color:var(--mut)
+}
+#t1 .tracker-path .tracker-user{color:var(--ac)}
+#t1 .tracker-path b{overflow:hidden;text-overflow:ellipsis;color:var(--fg);font-weight:500}
+#t1 .tracker-search{
+ display:flex;align-items:center;gap:6px;flex:none;max-width:48%;min-width:135px;
+ padding:6px 7px;border:1px solid color-mix(in srgb,var(--fg) 24%,transparent);
+ font:10px/1.3 var(--mono);color:var(--mut)
+}
+#t1 .tracker-search span{color:var(--ac);letter-spacing:.07em}
+#t1 .tracker-search input{
+ width:100%;min-width:0;padding:0;border:0;outline:0;background:transparent;color:var(--fg);font:inherit
+}
+#t1 .tracker-search input::placeholder{color:var(--mut);opacity:.78}
+#t1 .tracker-output-head{
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ padding:11px 0 7px;color:var(--ac);font:11px/1.4 var(--mono);letter-spacing:.08em
+}
+#t1 .tracker-output-head span:last-child{color:var(--mut);font-size:10px}
+#t1tabs.tracker-timeframes{
+ display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0 0 7px
+}
+#t1tabs.tracker-timeframes button{
+ min-height:27px;padding:5px 8px;font:10px/1.3 var(--mono);
+ border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);
+ background:transparent;color:var(--mut);cursor:pointer
+}
+#t1tabs.tracker-timeframes button.on{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--ac)}
+#t1tabs.tracker-timeframes .narrative-j7{margin-left:auto;font:10px/1.3 var(--mono);padding:5px 8px;min-height:27px}
+#t1 .tracker-col-head{
+ display:grid;grid-template-columns:34px minmax(0,1fr) minmax(68px,.35fr) minmax(68px,.35fr) 66px;
+ gap:9px;align-items:center;padding:7px 5px;
+ border-top:1px solid color-mix(in srgb,var(--fg) 20%,transparent);
+ border-bottom:1px solid color-mix(in srgb,var(--fg) 22%,transparent);
+ color:var(--mut);font:9px/1.4 var(--mono);letter-spacing:.08em
+}
+#t1 .tracker-col-head span:first-child{grid-column:1/3}
+#t1 .tracker-col-head span:nth-child(n+2){text-align:right}
+#t1 #t1list{
+ flex:1;min-height:0;overflow:auto;
+ scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ac) 42%,transparent) transparent
+}
 #t1 .narrative-token{
- position:relative;display:grid;grid-template-columns:32px minmax(0,1fr) minmax(112px,.4fr) 72px;
- gap:12px;align-items:center;min-height:48px;padding:9px 5px;
- border-bottom:1px solid color-mix(in srgb,var(--fg) 17%,transparent);
+ display:grid;grid-template-columns:34px minmax(0,1fr) minmax(68px,.35fr) minmax(68px,.35fr) 66px;
+ gap:9px;align-items:center;min-height:54px;padding:9px 5px;
+ border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent);
+ cursor:pointer
 }
-#t1 .narrative-token::before{
- content:"├─";position:absolute;left:-23px;top:50%;transform:translateY(-50%);
- width:22px;color:color-mix(in srgb,var(--fg) 54%,var(--mut));
- font:12px/1 var(--mono);letter-spacing:-.12em;
-}
-#t1 .narrative-token:last-child::before{content:"└─"}
+#t1 .narrative-token:hover{background:color-mix(in srgb,var(--ac) 6%,transparent)}
 #t1 .narrative-token .pump-logo{
- width:27px;height:27px;display:flex;align-items:center;justify-content:center;
+ width:29px;height:29px;display:flex;align-items:center;justify-content:center;overflow:hidden;
  border:1px solid color-mix(in srgb,var(--fg) 24%,transparent);
- background:color-mix(in srgb,var(--bg) 72%,var(--card));
- overflow:hidden;
+ background:color-mix(in srgb,var(--bg) 76%,var(--card));font-size:16px
 }
 #t1 .narrative-token .pump-logo img{width:100%;height:100%;object-fit:cover}
-#t1 .narrative-token .pump-token b{font-size:14px}
-#t1 .narrative-token .pump-token small{font-size:11px}
-#t1 .narrative-liq{font-size:12px;font-weight:600}
-#t1 .narrative-change{font-size:13px;font-weight:600}
-#t1 .narrative-detection{margin-top:3px}
-#t1 .narrative-detection summary{font-size:10px;padding:3px 0}
-#t1 .narrative-detection .narrative-tag{font-size:10px}
-#t1 .narrative-match-reason{font-size:10px}
-#t1 .narrative-token:focus-visible,#t1 .narrative-group>summary:focus-visible{
- outline:1px solid var(--ac);outline-offset:-1px;
- background:color-mix(in srgb,var(--ac) 10%,transparent);
+#t1 .narrative-token .pump-token{display:flex;flex-direction:column;gap:3px;min-width:0}
+#t1 .narrative-token-heading{display:flex;align-items:baseline;gap:8px;min-width:0;max-width:100%}
+#t1 .narrative-token .pump-token b{font-size:13px;line-height:1.4;color:var(--fg)}
+#t1 .narrative-token .pump-token small{font-size:10px;line-height:1.4;color:color-mix(in srgb,var(--fg) 70%,var(--mut));overflow:hidden;text-overflow:ellipsis}
+#t1 .narrative-volume,#t1 .narrative-liq{text-align:right;white-space:nowrap;color:color-mix(in srgb,var(--fg) 82%,var(--mut));font:11px/1.4 var(--mono);font-variant-numeric:tabular-nums}
+#t1 .narrative-change{text-align:right;white-space:nowrap;font:600 12px/1.4 var(--mono);font-variant-numeric:tabular-nums}
+#t1 .narrative-detection{border:0;padding:0;margin-top:2px}
+#t1 .narrative-detection summary{display:inline-flex;align-items:center;gap:5px;padding:2px 0;color:var(--ac);font:10px/1.35 var(--mono);letter-spacing:.04em}
+#t1 .narrative-detection summary::after{content:"+";color:var(--ac)}
+#t1 .narrative-detection[open] summary::after{content:"−"}
+#t1 .narrative-detection .narrative-tags{display:flex;gap:5px;flex-wrap:wrap;margin:5px 0}
+#t1 .narrative-detection .narrative-tag{font-size:10px;line-height:1.4;padding:3px 5px;color:color-mix(in srgb,var(--fg) 76%,var(--mut))}
+#t1 .narrative-match-reason{font-size:10px;line-height:1.5;color:color-mix(in srgb,var(--fg) 72%,var(--mut));overflow-wrap:anywhere}
+#t1 .narrative-empty{padding:16px 5px;color:var(--mut);font:11px/1.6 var(--mono)}
+#t1 .tracker-main-foot{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+#t1 .tracker-main-foot #t1n{margin:0;color:var(--mut);font:9px/1.5 var(--mono);letter-spacing:.025em}
+#t1 .narrative-token:focus-visible,#t1 .tracker-folder:focus-visible{
+ outline:1px solid var(--ac)!important;outline-offset:-1px!important;
+ box-shadow:inset 3px 0 0 var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)
 }
+#t1v2{padding:22px 24px}
 @media(max-width:650px){
- #t1 .narrative-tree-command{font-size:10px;gap:6px}
- #t1 .narrative-tree-command>span:last-child{font-size:9px}
- #t1 .narrative-group>summary{gap:7px;padding:9px 5px;min-height:40px}
- #t1 .narrative-name{font-size:12px}
- #t1 .narrative-kind{font-size:9px}
- #t1 .narrative-state{display:none}
- #t1 .narrative-stats{margin-left:14px;padding-left:5px}
- #t1 .narrative-coins{margin-left:14px!important;padding-left:19px!important}
- #t1 .narrative-tree-head,#t1 .narrative-token{
-  grid-template-columns:25px minmax(0,1fr) 72px 52px;gap:7px;
- }
- #t1 .narrative-tree-head{font-size:9px;padding:5px 3px}
- #t1 .narrative-token{min-height:44px;padding:8px 3px}
- #t1 .narrative-token::before{left:-19px;width:18px;font-size:11px}
- #t1 .narrative-token .pump-logo{width:22px;height:22px}
+ #t1.win.wide{width:min(97vw,760px)}
+ #t1v1.tracker-terminal{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ #t1 .tracker-rail{padding:8px 9px 7px;border-right:0;border-bottom:1px solid color-mix(in srgb,var(--fg) 22%,transparent)}
+ #t1 .tracker-panel-title{padding-bottom:6px}
+ #t1 .tracker-index-label,#t1 .tracker-rail-foot{display:none}
+ #t1 #t1groups{flex-direction:row;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;padding-top:7px}
+ #t1 .tracker-folder{grid-template-columns:10px auto;flex:0 0 auto;width:auto;gap:4px;padding:6px 7px}
+ #t1 .tracker-folder-copy small{display:none}
+ #t1 .tracker-folder-count{font-size:9px}
+ #t1 .tracker-main{padding:8px 9px 7px}
+ #t1 .tracker-commandbar{align-items:stretch;flex-direction:column;gap:7px}
+ #t1 .tracker-search{max-width:none;width:100%}
+ #t1 .tracker-col-head,#t1 .narrative-token{grid-template-columns:27px minmax(0,1fr) 64px 64px 52px;gap:5px}
+ #t1 .tracker-col-head{font-size:8px;padding:6px 3px}
+ #t1 .narrative-token{min-height:48px;padding:8px 3px}
+ #t1 .narrative-token .pump-logo{width:24px;height:24px}
  #t1 .narrative-token .pump-token b{font-size:12px}
- #t1 .narrative-token .pump-token small{font-size:10px}
- #t1 .narrative-liq,#t1 .narrative-change{font-size:10px}
+ #t1 .narrative-token .pump-token small{font-size:9px}
+ #t1 .narrative-volume,#t1 .narrative-liq{font-size:9px}
+ #t1 .narrative-change{font-size:10px}
+ #t1tabs.tracker-timeframes button{font-size:9px;padding:4px 6px}
+ #t1 .tracker-main-foot #t1n{font-size:8px}
+ #t1v2{padding:12px}
 }
 
 </style></head><body>
@@ -956,7 +1018,25 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 <div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
-<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div class="narrative-tree-command"><span><b>alpha@terminal</b>:~/narratives <i>$</i> tree --network solana</span><span>NARRATIVE EXPLORER</span></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
+<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
+ <aside class="tracker-rail">
+  <div class="tracker-panel-title"><span>01 / NARRATIVE INDEX</span><b>ALPHA</b></div>
+  <div class="tracker-index-label">MARKET FOLDERS</div>
+  <nav id="t1groups" aria-label="Trending narrative categories"></nav>
+  <div class="tracker-rail-foot"><span>NETWORK <b>SOLANA</b></span><span>SOURCE <b>JUPITER / GECKO</b></span><span id="t1groupmeta">0 CATEGORIES</span></div>
+ </aside>
+ <section class="tracker-main">
+  <div class="tracker-commandbar">
+   <div class="tracker-path"><span class="tracker-user">alpha@terminal</span><span>:</span><span>/markets</span><span>$</span><b id="t1active">TRENDING</b></div>
+   <label class="tracker-search"><span>FIND</span><input id="t1q" placeholder="search ticker / name / mint" autocomplete="off" spellcheck="false" aria-label="Search tokens in selected narrative"></label>
+  </div>
+  <div class="tracker-output-head"><span id="t1heading">SELECT A NARRATIVE</span><span id="t1count">0 TOKENS</span></div>
+  <div class="tabs tracker-timeframes" id="t1tabs"></div>
+  <div class="tracker-col-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+  <div id="t1list"></div>
+  <div class="tracker-main-foot"><p class="k" id="t1n">LOADING JUPITER TRENDING…</p></div>
+ </section>
+</div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><span>RSS / TERMINAL STREAM</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><aside class="news-rail"><div class="news-panel-title"><span>01 / FEED INDEX</span><b>ALPHA</b></div><div class="news-index-label">CATEGORIES</div><div class="tabs" id="t2tabs" aria-label="News categories"></div><div class="news-rail-foot"><span>PROTOCOL <b>RSS / HTTP</b></span><span>MODE <b>CATEGORIZED</b></span><span>STREAM <b>LIVE / CACHED</b></span></div></aside><section class="news-main"><div class="news-commandbar"><div class="news-path"><span class="path-user">alpha@terminal</span><span>:</span><span>/news</span><span>$</span><b id="t2active">ALL</b></div><label class="news-search"><span>FIND</span><input id="t2q" placeholder="search headlines / topics / people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label></div><div class="news-output-head"><span>RECENT DISPATCHES</span><b id="t2count">0 STORIES</b></div><div id="t2list"></div><div class="news-status" id="t2n">CONNECTING TO RSS SOURCES…</div></section></div></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
 <div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEY CONFIG</span><span>LOCAL KEYMAP / v1.0</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav><div class="hk-rail-foot"><span>PROFILE <b>LOCAL</b></span><span>MODE <b>EDITABLE</b></span><span>STATUS <b>ACTIVE</b></span></div></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="search action / shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" aria-live="polite">READY · SELECT A BINDING AND PRESS ENTER TO EDIT</div><div class="hk-footer">[↑↓] SELECT &nbsp; [←→] SWITCH PANE &nbsp; [ENTER] EDIT / ACTIVATE &nbsp; [ESC] BACK</div></section></div></div>
@@ -1266,7 +1346,7 @@ const detectTokenNarratives=token=>{
   groupLabels:labels.length?labels:[{name:'Other / Unclassified',type:'OTHER',confidence:null,reason:'No configured entity or narrative keyword matched the available token metadata.'}]
  };
 };
-let narrativeWindow=0,narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
+let narrativeWindow=0,narrativeSelectedGroup='',trackerSearchTerm='',narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
 let narrativeNews=[],narrativeNewsCheckedAt=0,narrativeNewsPromise=null;
 let narrativeNewsMeta={ok:false,stale:false,successfulFeeds:0,feeds:[]};
 const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
@@ -1434,52 +1514,81 @@ const narrativeGroups=()=>{
 };
 const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
- const focusedMint=document.activeElement?.closest?.('.narrative-token')?.dataset.m||'';
- const focusedGroup=document.activeElement?.closest?.('.narrative-group')?.querySelector('.narrative-name')?.textContent||'';
- const openedName=$('#t1list').querySelector('.narrative-group[open] .narrative-name')?.textContent||'';
+ const active=document.activeElement;
+ const focusedMint=active?.closest?.('.narrative-token')?.dataset.m||'';
+ const focusedCategory=active?.closest?.('[data-tracker-group]')?.dataset.trackerGroup||'';
+ const searchFocused=active?.id==='t1q',searchCaret=searchFocused?active.selectionStart:null;
  const groups=narrativeGroups();
- const reopenName=groups.some(g=>g.name===openedName)?openedName:(groups[0]?.name||'');
- const uniqueTokens=[...new Map(narrativePools.map(t=>[t.mint,t])).values()];
+ if(!groups.some(group=>group.name===narrativeSelectedGroup))narrativeSelectedGroup=groups[0]?.name||'';
+ const selectedGroup=groups.find(group=>group.name===narrativeSelectedGroup)||null;
+ const uniqueTokens=[...new Map(narrativePools.map(token=>[token.mint,token])).values()];
  const matched=new Set(groups.filter(group=>group.type!=='OTHER').flatMap(group=>group.tokens.map(token=>token.mint))).size;
- const html=groups.map(group=>{
-  const tokenRows=group.tokens.map(token=>{
-   const image=token.imageUrl.startsWith('https://')?token.imageUrl:'';
-   const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'>'+
-    '<span class="narrative-logo-fallback">◎</span>';
-   const change=token.change==null?'<span class="mut">—</span>':'<span class="'+(token.change>=0?'up':'dn')+'">'+pct(token.change)+'</span>';
-   const tags=token.detection.labels.length
-    ?token.detection.labels.map(label=>'<span class="narrative-tag '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+' <i>'+Math.round(label.confidence*100)+'%</i></span>').join('')
-    :'<span class="narrative-tag unclassified">UNCLASSIFIED</span>';
-   const reasons=token.detection.labels.map(label=>label.name+': '+label.reason).join(' · ')||'No configured entity or narrative keyword matched the available token metadata.';
-   const matchReason=token.groupMatch?.reason||'No configured entity or narrative keyword matched symbol, name, or pool name.';
-   return '<div class="pump-row narrative-token" role="group" tabindex="0" aria-label="Coin $'+esc(token.symbol||'UNKNOWN')+'; press Enter to open chart" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'">'+
-    '<div class="pump-logo">'+imageTag+'</div>'+
-    '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
-    '<details class="narrative-detection"><summary>DETECTION · '+token.detection.labels.length+'</summary><div class="narrative-tags">'+tags+'</div><div class="narrative-match-reason">GROUP MATCH: '+esc(matchReason)+'</div><div class="narrative-match-reason">WHY: '+esc(reasons)+'</div></details></div>'+
-    '<div class="narrative-liq">LIQ '+usd(token.liquidity)+'</div>'+
-    '<div class="narrative-change">'+change+'</div>'+
-   '</div>';
-  }).join('');
-  const groupChange=group.change==null?'<span class="narrative-change mut">—</span>':'<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b>';
-  const confidence=group.confidence==null?'':' · avg match '+Math.round(group.confidence*100)+'%';
-  return '<details class="narrative-group" '+(group.name===reopenName?'open':'')+'>'+
-   '<summary tabindex="0" data-kbd-category="tracker"><span class="narrative-name">'+esc(group.name)+'</span>'+
-   '<span class="narrative-kind">'+(group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'DISCOVERY':'NARRATIVE')+'</span>'+
-   '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
-   groupChange+'</summary>'+
-   '<div class="narrative-stats">'+group.tokens.length+' tokens <span>·</span> 24h vol '+usd(group.volume)+confidence+'</div>'+
-   '<div class="narrative-coins"><div class="narrative-tree-head"><span></span><span>TOKEN</span><span>LIQUIDITY</span><span>24H</span></div>'+tokenRows+'</div></details>';
+ const categoryHtml=groups.map((group,index)=>{
+  const active=group.name===narrativeSelectedGroup;
+  const type=group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'DISCOVERY':'NARRATIVE';
+  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(group.name)+'" aria-current="'+(active?'page':'false')+'">'+
+   '<span class="tracker-folder-mark">'+(active?'▸':' ')+'</span>'+
+   '<span class="tracker-folder-copy"><b>'+esc(group.name)+'</b><small>'+type+'</small></span>'+
+   '<span class="tracker-folder-count">'+group.tokens.length+'</span>'+
+  '</button>';
  }).join('');
- $('#t1list').innerHTML=html||'<p class="narrative-empty">No Solana trending pools returned by the current data sources.</p>';
+ $('#t1groups').innerHTML=categoryHtml||'<div class="tracker-rail-empty">NO NARRATIVES</div>';
+ $('#t1groupmeta').textContent=groups.length+' CATEGORIES';
+ $('#t1active').textContent=selectedGroup?selectedGroup.name.toUpperCase():'TRENDING';
+ $('#t1heading').textContent=selectedGroup?selectedGroup.name.toUpperCase()+' / TOKEN DIRECTORY':'NO NARRATIVES AVAILABLE';
+ const query=trackerSearchTerm.trim().toLowerCase();
+ const tokens=(selectedGroup?.tokens||[]).filter(token=>!query||[
+  token.symbol,token.name,token.mint,token.poolName
+ ].join(' ').toLowerCase().includes(query));
+ $('#t1count').textContent=tokens.length+' / '+(selectedGroup?.tokens.length||0)+' TOKENS';
+ $('#t1q').value=trackerSearchTerm;
+ const tokenRows=tokens.map(token=>{
+  const image=String(token.imageUrl||'').startsWith('https://')?token.imageUrl:'';
+  const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'>'+
+   '<span class="narrative-logo-fallback">◎</span>';
+  const change=token.change==null?'<span class="mut">—</span>':'<span class="'+(token.change>=0?'up':'dn')+'">'+pct(token.change)+'</span>';
+  const tags=token.detection.labels.length
+   ?token.detection.labels.map(label=>'<span class="narrative-tag '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+' <i>'+Math.round(label.confidence*100)+'%</i></span>').join('')
+   :'<span class="narrative-tag unclassified">UNCLASSIFIED</span>';
+  const reasons=token.detection.labels.map(label=>label.name+': '+label.reason).join(' · ')||'No configured entity or narrative keyword matched the available token metadata.';
+  const matchReason=token.groupMatch?.reason||'No configured entity or narrative keyword matched symbol, name, or pool name.';
+  return '<div class="pump-row narrative-token" role="group" tabindex="0" aria-label="Coin $'+esc(token.symbol||'UNKNOWN')+'; press Enter to open chart" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'">'+
+   '<div class="pump-logo">'+imageTag+'</div>'+
+   '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
+   '<details class="narrative-detection"><summary>DETECTION · '+token.detection.labels.length+'</summary><div class="narrative-tags">'+tags+'</div><div class="narrative-match-reason">CATEGORY MATCH: '+esc(matchReason)+'</div><div class="narrative-match-reason">WHY: '+esc(reasons)+'</div></details></div>'+
+   '<div class="narrative-volume">'+usd(token.volume24)+'</div>'+
+   '<div class="narrative-liq">'+usd(token.liquidity)+'</div>'+
+   '<div class="narrative-change">'+change+'</div>'+
+  '</div>';
+ }).join('');
+ $('#t1list').innerHTML=tokenRows||'<p class="narrative-empty">'+(selectedGroup?(query?'No tokens match this search.':'No tokens in this narrative.'):'No Solana trending pools returned by the current data sources.')+'</p>';
  $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>{
   img.addEventListener('error',()=>{img.hidden=true},{once:true});
  });
- uniqueTokens.filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
+ uniqueTokens.filter(token=>!token.imageUrl).slice(0,20).forEach(token=>pumpLogo(token.mint));
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
- $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' TOKENS · '+matched+' WITH MATCHES · MULTI-LABEL DETECTION';
- if(focusedMint){const selected=[...$('#t1list').querySelectorAll('.narrative-token')].find(row=>row.dataset.m===focusedMint);if(selected)selected.focus({preventScroll:true})}
- else if(focusedGroup){const selected=[...$('#t1list').querySelectorAll('.narrative-group summary')].find(row=>row.textContent.includes(focusedGroup));if(selected)selected.focus({preventScroll:true})}
+ $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' UNIQUE TOKENS · '+matched+' WITH NARRATIVE MATCHES';
+ if(focusedMint){
+  const selected=[...$('#t1list').querySelectorAll('.narrative-token')].find(row=>row.dataset.m===focusedMint);
+  if(selected)selected.focus({preventScroll:true});
+  else if(focusedCategory)$('#t1groups [data-tracker-group="'+CSS.escape(focusedCategory)+'"]')?.focus({preventScroll:true});
+ }else if(focusedCategory){
+  $('#t1groups [data-tracker-group="'+CSS.escape(focusedCategory)+'"]')?.focus({preventScroll:true});
+ }else if(searchFocused){
+  const input=$('#t1q');input.focus({preventScroll:true});
+  if(searchCaret!=null)input.setSelectionRange(searchCaret,searchCaret);
+ }
 };
+$('#t1groups').addEventListener('click',event=>{
+ const button=event.target.closest('button[data-tracker-group]');if(!button)return;
+ narrativeSelectedGroup=button.dataset.trackerGroup;renderT1();
+ $('#t1groups [data-tracker-group="'+CSS.escape(narrativeSelectedGroup)+'"]')?.focus({preventScroll:true});
+});
+$('#t1q').addEventListener('input',event=>{
+ trackerSearchTerm=event.target.value;renderT1();
+ const input=$('#t1q');input.focus({preventScroll:true});
+ const position=trackerSearchTerm.length;input.setSelectionRange(position,position);
+});
 let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
  const interval=NARRATIVE_WINDOWS[narrativeWindow].interval;
@@ -2291,7 +2400,7 @@ const focusInitialInWindow=id=>{
  const win=A.W[id];if(!win||win.hidden)return;
  if(id==='t1'){
   if(!$('#t1v2').hidden){focusEl($('#chtabs button.on')||$('#chtabs button')||$('#cvb'))}
-  else{const summary=$('#t1list .narrative-group summary');if(summary)focusEl(summary);else focusEl($('#t1tabs button.on')||$('#t1tabs button'))}
+  else{focusEl(trackerSelectedFolder()||trackerCategoryButtons()[0]||$('#t1tabs button.on')||$('#t1tabs button'))}
   return;
  }
  if(id==='t2'){focusEl($('#t2tabs button.on')||$('#t2tabs button[data-news-tab]'));return}
@@ -2317,7 +2426,7 @@ const scrollFocused=direction=>{
 const focusPaneSearch=id=>{
  const target={t2:$('#t2q'),t3:$('#t3q'),t4:$('#t4q')}[id];
  if(target){target.focus();target.select?.();return}
- if(id==='t1'){const row=$('#t1list .narrative-token');if(row)focusEl(row);else focusEl($('#t1tabs button.on')||$('#t1tabs button'))}
+ if(id==='t1'){focusEl($('#t1q'))}
 };
 const moveFocusedPane=direction=>{
  const neighbour=foc&&nb(foc,direction);if(!neighbour)return;
@@ -2333,36 +2442,50 @@ const moveChartCursor=direction=>{
  $('#chn').textContent='KEYBOARD CANDLE '+(chartCursorIndex+1)+' / '+CAN.length+' · '+new Date(candle.time*1000).toLocaleString();
  return true;
 };
-const trackerNavNodes=()=>{
- const nodes=[];
- $('#t1list').querySelectorAll('.narrative-group').forEach(group=>{
-  const summary=group.querySelector('summary');if(summary)nodes.push(summary);
-  if(group.open)nodes.push(...group.querySelectorAll('.narrative-token'));
- });
- return nodes;
+const trackerCategoryButtons=()=>[...$('#t1groups').querySelectorAll('button[data-tracker-group]')];
+const trackerCoinRows=()=>[...$('#t1list').querySelectorAll('.narrative-token')];
+const trackerSelectedFolder=()=>$('#t1groups [data-tracker-group="'+CSS.escape(narrativeSelectedGroup)+'"]');
+const trackerNavNodes=()=>[...trackerCategoryButtons(),...trackerCoinRows()];
+const selectTrackerFolder=(button)=>{
+ if(!button)return false;
+ narrativeSelectedGroup=button.dataset.trackerGroup;
+ renderT1();
+ trackerSelectedFolder()?.focus({preventScroll:true});
+ return true;
 };
 const navigateTracker=direction=>{
- const active=document.activeElement,intervalButtons=[...$('#t1tabs').querySelectorAll('button')];
- if(intervalButtons.includes(active)){
-  if(direction==='left'||direction==='right')return moveFocusInList(intervalButtons,active,direction==='left'?-1:1);
-  if(direction==='down')return focusEl(trackerNavNodes()[0]);
+ const active=document.activeElement,folders=trackerCategoryButtons(),rows=trackerCoinRows();
+ const timeframeButtons=[...$('#t1tabs').querySelectorAll('button')];
+ const detection=active?.closest('.narrative-detection');
+ if(timeframeButtons.includes(active)){
+  if(direction==='left'||direction==='right')return moveFocusInList(timeframeButtons,active,direction==='left'?-1:1);
+  if(direction==='down')return focusEl(trackerSelectedFolder()||folders[0]);
   if(direction==='up')return focusEl($('#t1tabs .narrative-j7'));
  }
- const group=active?.closest('.narrative-group'),summary=active?.matches('summary')?active:null,token=active?.closest('.narrative-token');
- if(summary&&(direction==='left'||direction==='right')){
-  const details=summary.closest('details');
-  if(direction==='right'){details.open=true;const first=details.querySelector('.narrative-token');return first?focusEl(first):true}
-  if(details.open){details.open=false;return true}
-  return false;
+ if(folders.includes(active)){
+  if(direction==='up'||direction==='down'){
+   const nextIndex=Math.max(0,Math.min(folders.length-1,folders.indexOf(active)+(direction==='up'?-1:1)));
+   return selectTrackerFolder(folders[nextIndex]);
+  }
+  if(direction==='right')return focusEl(rows[0]);
+  if(direction==='left')return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
  }
- if(token&&direction==='left')return focusEl(token.closest('.narrative-group')?.querySelector('summary'));
- if(token&&direction==='right')return false;
- if(direction==='up'||direction==='down'){
-  const nodes=trackerNavNodes();if(!nodes.length)return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
-  return moveFocusInList(nodes,nodes.includes(active)?active:null,direction==='up'?-1:1);
+ if(detection){
+  const row=detection.closest('.narrative-token');
+  if(direction==='left')return focusEl(row);
+  if(direction==='up'||direction==='down')return moveFocusInList(rows,row,direction==='up'?-1:1);
  }
- if(direction==='right'&&!group)return focusEl($('#t1list .narrative-group summary'));
- if(direction==='down'&&!group)return focusEl(trackerNavNodes()[0]);
+ if(rows.includes(active)){
+  if(direction==='up'||direction==='down')return moveFocusInList(rows,active,direction==='up'?-1:1);
+  if(direction==='left')return focusEl(trackerSelectedFolder()||folders[0]);
+  if(direction==='right'){
+   const details=active.querySelector('.narrative-detection');
+   if(details){details.open=true;return focusEl(details.querySelector('summary'))}
+  }
+ }
+ if(direction==='right')return focusEl(folders[0]);
+ if(direction==='down')return focusEl(folders[0]);
+ if(direction==='left')return focusEl($('#t1tabs button.on')||$('#t1tabs button'));
  return false;
 };
 const navigateCoinChart=direction=>{
@@ -2473,15 +2596,14 @@ const backInWindow=()=>{
   if(!$('#t1v2').hidden){
    setV(false);
    const row=[...$('#t1list').querySelectorAll('.narrative-token')].find(item=>item.dataset.m===curM);
-   if(row)focusEl(row);else focusEl($('#t1list .narrative-group summary'));
+   if(row)focusEl(row);else focusEl(trackerSelectedFolder()||trackerCategoryButtons()[0]);
    return true;
   }
   const detection=active?.closest('.narrative-detection');
   if(detection?.open){detection.open=false;focusEl(detection.querySelector('summary'));return true}
   const token=active?.closest('.narrative-token');
-  if(token){focusEl(token.closest('.narrative-group')?.querySelector('summary'));return true}
-  const summary=active?.matches('summary')?active:null;
-  if(summary){const details=summary.closest('details');if(details.open){details.open=false;return true}}
+  if(token){focusEl(trackerSelectedFolder()||trackerCategoryButtons()[0]);return true}
+  if(active?.matches('#t1q')){focusEl(trackerSelectedFolder()||trackerCategoryButtons()[0]);return true}
  }
  if(foc==='t2'&&active?.matches('a.news-item-title')){focusEl($('#t2tabs button[data-news-tab].on')||$('#t2tabs button[data-news-tab]'));return true}
  if(foc==='t3'&&active?.matches('[data-kbd-item="scanner"]')){focusEl($('#t3q'));return true}
