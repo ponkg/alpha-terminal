@@ -1293,6 +1293,13 @@ const mkTabs=(el,labels,fn)=>{labels.forEach((t,i)=>{const x=document.createElem
 const ldr=t=>'<div class="ld"><i></i><i></i><i></i><span>'+t+'</span></div>';
 // GeckoTerminal remains as historical OHLCV backfill and token-holder data.
 const GT='/api/gecko?path=',CA={},GI=new Map();let lastCall=0;
+const apiFetch=async(url,options={})=>{
+ const {data}=await authClient.auth.getSession();
+ const token=data.session?.access_token;
+ if(!token)throw new Error("Sign in to use Alpha's beta features.");
+ return fetch(url,{...options,headers:{...(options.headers||{}),Authorization:"Bearer "+token}});
+};
+
 const gt=async(p,ttl=55000)=>{
  const cached=CA[p],now=Date.now();
  if(cached&&now-cached.t<ttl)return cached.d;
@@ -1301,7 +1308,7 @@ const gt=async(p,ttl=55000)=>{
    try{
      const wait=Math.max(0,lastCall+2100-Date.now());lastCall=Date.now()+wait;
      if(wait)await new Promise(resolve=>setTimeout(resolve,wait));
-     const response=await fetch(GT+encodeURIComponent(p),{headers:{Accept:'application/json'}});
+     const response=await apiFetch(GT+encodeURIComponent(p),{headers:{Accept:'application/json'}});
      const data=await response.json().catch(()=>({}));
      if(!response.ok){
        const retry=Number(response.headers.get('Retry-After')||0);
@@ -1330,7 +1337,7 @@ let POOLS=[],NEWP=[],TRP=[],tk1=0;
 const getTokenMeta=async mint=>{
   const cached=tokenMetadata.get(mint);
   if(cached&&Date.now()-cached.time<30000)return cached.data;
-  const response=await fetch('/api/token-meta?mint='+encodeURIComponent(mint),{headers:{Accept:'application/json'}});
+  const response=await apiFetch('/api/token-meta?mint='+encodeURIComponent(mint),{headers:{Accept:'application/json'}});
   const data=await response.json().catch(()=>({}));
   if(!response.ok)throw new Error(data.error||'Token metadata unavailable.');
   tokenMetadata.set(mint,{time:Date.now(),data});
@@ -1524,7 +1531,7 @@ const loadNarrativeNews=async(force=false)=>{
  }
  const request=(async()=>{
   try{
-   const response=await fetch('/api/narrative-news',{headers:{Accept:'application/json'},cache:'no-store'});
+   const response=await apiFetch('/api/narrative-news',{headers:{Accept:'application/json'},cache:'no-store'});
    const payload=await response.json().catch(()=>({}));
    if(!response.ok)throw new Error(payload.error||'RSS news service returned HTTP '+response.status);
    narrativeNews=Array.isArray(payload.articles)?payload.articles:[];
@@ -1792,7 +1799,7 @@ const loadT1=async(force=false,onProgress=null)=>{
   });
   onProgress?.(12,'LOADING DATA','Requesting Jupiter trending tokens · '+interval);
   try{
-   const response=await fetch('/api/jupiter/trending?interval='+encodeURIComponent(interval),{
+   const response=await apiFetch('/api/jupiter/trending?interval='+encodeURIComponent(interval),{
     headers:{Accept:'application/json'},cache:'no-store'
    });
    const payload=await response.json().catch(()=>({}));
