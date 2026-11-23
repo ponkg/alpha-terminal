@@ -919,6 +919,7 @@ const renderNarrativeTabs=()=>{
  link.textContent='J7 Tracker ↗';tabs.appendChild(link);
 };
 
+
 let t1Mode='pairs',newPairsPromise=null,newPairsData=[],newPairsUpdatedAt=null;
 const NEW_PAIR_CATEGORIES=[
 {name:'Animals',re:/\b(cat|cats|dog|dogs|doge|shiba|inu|frog|pepe|woof|meow|kitten|puppy|panda|bear|hamster|monkey|ape|bird|duck|fish|horse|cow|bull|goat|lion|tiger|wolf|fox|rabbit|bunny|penguin|otter|capybara)\b/i},
@@ -935,8 +936,30 @@ const pairAge=at=>{const m=Math.max(0,Math.floor((Date.now()-at)/60000));return 
 const renderNewPairs=()=>{
  const groups=new Map();newPairsData.forEach(item=>{const k=classifyNewPair(item);if(!groups.has(k))groups.set(k,[]);groups.get(k).push(item)});
  const html=[...groups.entries()].map(([category,items])=>'<details class="newpair-group" open><summary><span class="newpair-category">'+esc(category)+'</span><span class="newpair-count">'+items.length+' PAIRS</span></summary><div class="newpair-rows">'+items.map(item=>{
- const image=String(item.imageUrl||''),img=image.startsWith('https://')?'<img src="'+esc(image)+'" alt="" loading="lazy" referrerpolicy="no-referrer">':'';
- return '<div class="pump-row newpair-row" data-c="
+  const image=String(item.imageUrl||''),img=image.startsWith('https://')?'<img src="'+esc(image)+'" alt="" loading="lazy" referrerpolicy="no-referrer">':'';
+  return '<div class="pump-row newpair-row" data-c="'+('$'+esc(item.symbol||'TOKEN'))+'" data-p="'+esc(item.poolAddress||'')+'" data-m="'+esc(item.mint||'')+'" title="Open token chart"><div class="pump-logo">'+img+'<span class="narrative-logo-fallback">◎</span></div><div class="pump-token"><b>'+('$'+esc(item.symbol||'UNKNOWN'))+'</b><small>'+esc(item.name||'Unknown token')+' · '+pairAge(Number(item.createdAt)||Date.now())+'</small></div><div class="pump-metrics"><b>'+usd(item.marketCap)+'</b><small>MCAP</small></div><div class="pump-metrics"><b>'+usd(item.volume1m)+'</b><small>VOL 1M</small></div></div>';
+ }).join('')+'</div></details>').join('');
+ $('#t1pairlist').innerHTML=html||'<p class="narrative-empty">No new pairs currently meet both thresholds. The scanner checks recently created Solana pools and their latest 60 seconds of trades.</p>';
+ $('#t1pairlist').querySelectorAll('img').forEach(img=>img.addEventListener('error',()=>img.hidden=true,{once:true}));
+ const stamp=newPairsUpdatedAt?new Date(newPairsUpdatedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'WAITING';
+ $('#t1pairtime').textContent=stamp;$('#t1pairn').textContent='LIVE · '+newPairsData.length+' QUALIFIED PAIRS · NAME-BASED HEURISTIC CLASSIFICATION · UPDATED '+stamp;
+};
+const loadNewPairs=async()=>{
+ if(newPairsPromise)return newPairsPromise;
+ newPairsPromise=(async()=>{try{
+  const response=await fetch('/api/new-pairs',{headers:{Accept:'application/json'},cache:'no-store'}),payload=await response.json().catch(()=>({}));
+  if(!response.ok)throw new Error(payload.error||'New-pair feed unavailable.');
+  newPairsData=Array.isArray(payload.data)?payload.data:[];newPairsUpdatedAt=payload.updatedAt?Date.parse(payload.updatedAt):null;renderNewPairs();
+  if(payload.loading&&!newPairsUpdatedAt)$('#t1pairn').textContent='DISCOVERING NEW POOLS…';
+  if(payload.error)$('#t1pairn').textContent='FEED WARNING · '+payload.error;
+ }catch(error){$('#t1pairn').textContent='NEW-PAIR FEED · '+(error.message||'Temporarily unavailable')}})().finally(()=>{newPairsPromise=null});
+ return newPairsPromise;
+};
+const setT1Mode=mode=>{t1Mode=mode;$('#t1pairs').hidden=mode!=='pairs';$('#t1narrative').hidden=mode!=='narratives';$('#t1mode').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.mode===mode));if(mode==='pairs')loadNewPairs();else loadT1(true)};
+$('#t1mode').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>setT1Mode(b.dataset.mode)));
+$('#t1pairlist').addEventListener('click',event=>{const row=event.target.closest('[data-c][data-m]');if(row)gotoCoin(row.dataset.c,row.dataset.p,row.dataset.m)});
+renderNarrativeTabs();
+
 $('#t1list').innerHTML=ldr('CONNECTING TO JUPITER')+'<div class="sk"></div><div class="sk"></div>';
 new MutationObserver(()=>{
  if(!A.W.t1.hidden){if(t1Mode==='pairs')loadNewPairs();else loadT1()}
