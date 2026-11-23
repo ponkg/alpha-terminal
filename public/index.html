@@ -1059,44 +1059,78 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  #t1 .tracker-main #t1tabs.tracker-timeframes button{min-width:37px;padding:4px 6px;font-size:9px}
 }
 
-/* Tracker category rail: compact, clearly grouped, and fully clickable. */
+/* Tracker rail follows the News Feed index hierarchy. */
 #t1v1.tracker-terminal{grid-template-columns:230px minmax(0,1fr)}
-#t1 .tracker-rail{padding:13px 11px 10px}
+#t1 .tracker-rail{padding:12px 10px 10px}
+#t1 .tracker-index-label{
+ display:block;padding:12px 6px 6px;
+ font:9px/1.4 var(--mono);letter-spacing:.12em;color:var(--mut)
+}
 #t1 #t1groups{
- display:flex;flex:1;flex-direction:column;gap:10px;min-height:0;overflow:auto;
- padding:10px 2px 5px;overscroll-behavior:contain;
- scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ac) 42%,transparent) transparent
+ display:flex;flex:1;flex-direction:column;gap:2px;min-height:0;overflow:auto;
+ padding:0 2px 6px;overscroll-behavior:contain;
+ scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ac) 40%,transparent) transparent
 }
 #t1 .tracker-folder-section{display:flex;flex-direction:column;gap:2px;min-width:0}
-#t1 .tracker-folder-section+.tracker-folder-section{padding-top:8px;border-top:1px solid color-mix(in srgb,var(--fg) 16%,transparent)}
+#t1 .tracker-folder-section+.tracker-folder-section{
+ margin-top:8px;padding-top:8px;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent)
+}
 #t1 .tracker-folder-section-head{
  display:flex;align-items:center;justify-content:space-between;gap:8px;
- padding:2px 6px 5px;color:var(--mut);font:9px/1.4 var(--mono);letter-spacing:.11em
+ padding:2px 6px 5px;color:var(--mut);font:9px/1.4 var(--mono);letter-spacing:.12em
 }
 #t1 .tracker-folder-section-head b{font-weight:400;color:var(--mut);font-variant-numeric:tabular-nums}
 #t1 .tracker-folder{
  display:grid;grid-template-columns:13px minmax(0,1fr) auto;align-items:center;gap:6px;
- width:100%;min-height:30px;padding:5px 7px;border:1px solid transparent;border-left:2px solid transparent;
- background:transparent;color:color-mix(in srgb,var(--fg) 67%,var(--mut));text-align:left;cursor:pointer;
+ width:100%;min-width:0;min-height:29px;padding:6px 6px;
+ border:1px solid transparent;border-left:2px solid transparent;
+ background:transparent;color:var(--mut);text-align:left;cursor:pointer;
  font:10px/1.35 var(--mono);transition:background .12s,border-color .12s,color .12s
 }
-#t1 .tracker-folder-mark{display:block;color:transparent;font-size:14px;line-height:1}
-#t1 .tracker-folder-name{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#t1 .tracker-folder-count{font-size:10px;color:var(--mut);font-variant-numeric:tabular-nums}
-#t1 .tracker-folder:hover:not(.on){border-color:color-mix(in srgb,var(--ac) 35%,transparent);background:color-mix(in srgb,var(--ac) 6%,transparent);color:var(--fg)}
-#t1 .tracker-folder.on{border-color:color-mix(in srgb,var(--ac) 28%,transparent);border-left-color:var(--ac);background:color-mix(in srgb,var(--ac) 11%,transparent);color:var(--fg)}
-#t1 .tracker-folder.on .tracker-folder-mark,#t1 .tracker-folder.on .tracker-folder-count{color:var(--ac)}
-#t1 .tracker-folder:focus-visible{outline:1px solid var(--ac)!important;outline-offset:-1px!important;box-shadow:inset 3px 0 0 var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent)}
-#t1 .tracker-folder-section-all{padding-bottom:8px;border-bottom:1px solid color-mix(in srgb,var(--fg) 16%,transparent)}
-#t1 .tracker-rail-foot{font-size:9px;line-height:1.8}
+#t1 .tracker-folder-mark{
+ display:block;width:11px;color:transparent;font-size:13px;line-height:1;text-align:center
+}
+#t1 .tracker-folder-name{
+ display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+}
+#t1 .tracker-folder-count{
+ min-width:16px;text-align:right;font:9px/1.3 var(--mono);
+ color:var(--mut);font-variant-numeric:tabular-nums
+}
+#t1 .tracker-folder:hover:not(.on){
+ border-color:color-mix(in srgb,var(--fg) 18%,transparent);
+ background:color-mix(in srgb,var(--fg) 4%,transparent);color:var(--fg)
+}
+#t1 .tracker-folder.on{
+ border-color:color-mix(in srgb,var(--ac) 42%,transparent);
+ border-left-color:var(--ac);
+ background:color-mix(in srgb,var(--ac) 9%,transparent);color:var(--fg)
+}
+#t1 .tracker-folder.on .tracker-folder-mark,
+#t1 .tracker-folder.on .tracker-folder-count{color:var(--ac)}
+#t1 .tracker-folder:focus-visible{
+ outline:1px solid var(--ac)!important;outline-offset:-1px!important;
+ box-shadow:inset 3px 0 0 var(--ac);
+ background:color-mix(in srgb,var(--ac) 12%,transparent)
+}
+#t1 .tracker-folder-section-all{padding-bottom:8px;border-bottom:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+#t1 .tracker-rail-foot{
+ margin-top:auto;padding:10px 2px 0;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent);
+ font:9px/1.8 var(--mono);color:var(--mut)
+}
+#t1 .tracker-rail-foot span{display:block}
+#t1 .tracker-rail-foot b{color:var(--ac);font-weight:500}
 @media(max-width:650px){
  #t1v1.tracker-terminal{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
  #t1 .tracker-rail{padding:8px 9px 7px}
  #t1 .tracker-panel-title{padding-bottom:6px}
- #t1 .tracker-rail-foot{display:none}
- #t1 #t1groups{flex-direction:row;align-items:flex-start;gap:8px;overflow-x:auto;overflow-y:hidden;padding:7px 0 3px}
+ #t1 .tracker-index-label,#t1 .tracker-rail-foot{display:none}
+ #t1 #t1groups{
+  flex-direction:row;align-items:flex-start;gap:8px;
+  overflow-x:auto;overflow-y:hidden;padding:7px 0 3px
+ }
  #t1 .tracker-folder-section{flex:0 0 auto;flex-direction:row;align-items:center;gap:4px}
- #t1 .tracker-folder-section+.tracker-folder-section{padding:0;border:0}
+ #t1 .tracker-folder-section+.tracker-folder-section{margin:0;padding:0;border:0}
  #t1 .tracker-folder-section-head{display:none}
  #t1 .tracker-folder-section-all{padding:0;border:0}
  #t1 .tracker-folder{grid-template-columns:10px auto auto;flex:0 0 auto;width:auto;min-height:28px;gap:4px;padding:5px 7px}
@@ -1135,6 +1169,7 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
   <div class="tracker-panel-title"><span>01 / MARKET INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
+  <div class="tracker-index-label">CATEGORIES</div>
   <div id="t1groups" role="navigation" aria-label="Market categories and detected entities"></div>
   <div class="tracker-rail-foot"><span>NETWORK <b>SOLANA</b></span><span>SOURCE <b>JUPITER / GECKO</b></span><span id="t1groupmeta">0 CATEGORIES</span></div>
  </aside>
