@@ -243,7 +243,7 @@ app.post("/api/admin/waitlist/:id/invite", requireAdmin, async (req, res) => {
     if (!row) return res.status(404).json({ error: "Waitlist entry not found." });
     if (row.auth_user_id) return res.status(409).json({ error: "This entry already has an account. Use the access controls to approve or revoke it." });
     const { data: emailOwner, error: emailError } = await supabaseAdmin.from("waitlist")
-      .select("id").ilike("email", email).neq("id", id).maybeSingle();
+      .select("id").eq("email", email).neq("id", id).maybeSingle();
     if (emailError) throw emailError;
     if (emailOwner) return res.status(409).json({ error: "That email is already linked to another waitlist entry." });
 
@@ -254,17 +254,31 @@ app.post("/api/admin/waitlist/:id/invite", requireAdmin, async (req, res) => {
     const { data: invited, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       redirectTo: APP_URL + "/"
     });
+    let authUserId = invited?.user?.id || "";
+    let invitationSent = Boolean(authUserId);
     if (inviteError) {
-      console.error("beta invite failed:", inviteError.message);
-      return res.status(502).json({ error: inviteError.message.toLowerCase().includes("already been registered") ? "This email already has a Supabase account. Use the member sign-in link or a different email." : "Supabase could not send the invitation. Check Auth email/SMTP configuration and try again." });
+      const alreadyExists = /already.*registered|email_exists|already exists/i.test(inviteError.message || "");
+      if (!alreadyExists) {
+        console.error("beta invite failed:", inviteError.message);
+        return res.status(502).json({ error: "Supabase could not send the invitation. Check Auth email/SMTP configuration and try again." });
+      }
+      const { data: listed, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      if (listError) throw listError;
+      const existingAuthUser = (listed?.users || []).find(item => String(item.email || "").trim().toLowerCase() === email);
+      if (!existingAuthUser) return res.status(409).json({ error: "This email already has a Supabase account, but it could not be located for linking." });
+      authUserId = existingAuthUser.id;
+      const { data: linked, error: linkedError } = await supabaseAdmin.from("waitlist")
+        .select("id").eq("auth_user_id", authUserId).neq("id", id).maybeSingle();
+      if (linkedError) throw linkedError;
+      if (linked) return res.status(409).json({ error: "This Supabase account is already linked to another waitlist entry." });
+      invitationSent = false;
     }
-    const authUserId = invited?.user?.id;
     if (!authUserId) throw new Error("Supabase invitation did not return a user id.");
     const { error: linkError } = await supabaseAdmin.from("waitlist").update({
       auth_user_id: authUserId, access_status: "approved", invited_at: new Date().toISOString()
     }).eq("id", id);
     if (linkError) throw linkError;
-    return res.json({ ok: true, handle: row.handle, email, access_status: "approved" });
+    return res.json({ ok: true, handle: row.handle, email, access_status: "approved", invitation_sent: invitationSent });
   } catch (error) {
     console.error("beta invitation workflow failed:", error.message);
     return res.status(500).json({ error: "Invitation could not be completed. Refresh the waitlist before retrying." });
