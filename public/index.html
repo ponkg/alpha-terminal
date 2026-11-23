@@ -1589,6 +1589,8 @@ TFS.forEach((t,i)=>mkB($('#chtf'),'tf',t[0],i===tf,()=>{tf=i;onG('tf',i);loadCha
 $('#chb').insertAdjacentHTML('beforeend','<span id="chk"></span>');
 setInterval(()=>{if($('#t1v2').hidden)return;const o=-new Date().getTimezoneOffset()/60;$('#chk').textContent=new Date().toLocaleTimeString([],{hour12:false})+' UTC'+(o>=0?'+':'')+o},1000);
 const setV=c=>{$('#t1v1').hidden=c;$('#t1v2').hidden=!c;const s=$('#t1S');s.dataset.t=c?'CHART · '+cur:'MARKET DATA';A.scr(s);if(c){requestAnimationFrame(resizeChart)}};
+// Return from the selected coin chart to the Trending narrative list.
+$('#cvb').addEventListener('click',()=>setV(false));
 const openCoin=(tk,p,m)=>{
  cur=tk;curP=BASE58.test(p||'')?p:'';curM=m;SUP=0;CAN=[];solUsd=0;
  $('#cvt').textContent=tk;$('#cvnm').textContent='';$('#cvca').textContent=m;$('#cvi').hidden=true;$('#cvso').innerHTML='';$('#cvst').innerHTML='';$('#chg').textContent='';
