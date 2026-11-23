@@ -644,6 +644,79 @@ body.app .hero-film{display:none!important}
 #t4 #t4list{max-height:55vh;overflow:auto}
 .narrative-token:focus-visible{outline:1px solid var(--ac);outline-offset:-1px;background:color-mix(in srgb,var(--ac) 9%,transparent)}
 @media(max-width:650px){#t4 .hk-row{gap:6px}#t4 .hk-copy b{font-size:11px}#t4 .hk-copy small{font-size:9px}#t4 .hk-record{font-size:9px;max-width:150px}}
+
+/* Terminal-wide keyboard selection */
+:where(#t1,#t2,#t3,#t4) :is(button,a,[role="button"],summary,[tabindex="0"]):focus-visible{
+ outline:1px solid var(--ac)!important;outline-offset:1px!important;
+ box-shadow:inset 3px 0 0 var(--ac);background:color-mix(in srgb,var(--ac) 11%,transparent);
+}
+#t1 .narrative-token:focus-visible{outline:1px solid var(--ac);outline-offset:-1px;background:color-mix(in srgb,var(--ac) 11%,transparent)}
+#t2 .news-item-title:focus-visible{outline:1px solid var(--ac);outline-offset:2px;color:var(--ac)}
+#t3 .fd:focus-visible{outline:1px solid var(--ac);outline-offset:1px;background:color-mix(in srgb,var(--ac) 9%,transparent)}
+#t1 #chc:focus-visible{outline:1px solid var(--ac);outline-offset:1px}
+#t1 .trd:focus-visible,#t1 .kr:focus-visible{outline:1px solid var(--ac);outline-offset:-1px;background:color-mix(in srgb,var(--ac) 9%,transparent)}
+
+/* Hotkeys as an editable terminal configuration panel */
+#t4.win.wide{width:min(760px,96vw)}
+#t4 .hk-terminal.wb{display:grid;grid-template-columns:172px minmax(0,1fr);padding:0;min-height:420px;max-height:min(78vh,760px);overflow:hidden}
+#t4 .hk-rail{display:flex;flex-direction:column;min-width:0;padding:12px 10px 10px;border-right:1px solid color-mix(in srgb,var(--fg) 22%,transparent);background:color-mix(in srgb,var(--bg) 32%,transparent)}
+#t4 .hk-panel-title{display:flex;justify-content:space-between;gap:8px;padding:2px 2px 10px;border-bottom:1px solid color-mix(in srgb,var(--fg) 20%,transparent);font:9px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--mut)}
+#t4 .hk-panel-title b{color:var(--ac);font-weight:600}
+#t4 .hk-index-label{padding:12px 2px 6px;font:9px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--mut)}
+#t4 #t4groups{display:flex;flex-direction:column;gap:2px}
+#t4 #t4groups button{display:flex;align-items:center;justify-content:space-between;gap:6px;width:100%;padding:7px 6px;border:1px solid transparent;background:transparent;color:var(--mut);text-align:left;font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer}
+#t4 #t4groups button i{font-style:normal;color:transparent}
+#t4 #t4groups button.on{border-color:color-mix(in srgb,var(--ac) 48%,transparent);background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--fg)}
+#t4 #t4groups button.on i{color:var(--ac)}
+#t4 #t4groups button:hover:not(.on){border-color:color-mix(in srgb,var(--fg) 18%,transparent);color:var(--fg)}
+#t4 .hk-rail-foot{margin-top:auto;padding:11px 2px 0;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent);font:9px/1.8 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-rail-foot span{display:block}
+#t4 .hk-rail-foot b{color:var(--ac);font-weight:500}
+#t4 .hk-main{display:flex;flex-direction:column;min-width:0;min-height:0;padding:10px 12px 9px}
+#t4 .hk-commandbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:1px 0 9px;border-bottom:1px solid color-mix(in srgb,var(--fg) 20%,transparent)}
+#t4 .hk-path{display:flex;align-items:center;gap:5px;min-width:0;overflow:hidden;white-space:nowrap;font:9px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-user{color:var(--ac)}
+#t4 .hk-search{display:flex;align-items:center;gap:5px;flex:none;max-width:46%;padding:5px 6px;border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-search span{color:var(--ac)}
+#t4 .hk-search input{width:100%;min-width:0;padding:0;border:0;outline:0;background:transparent;color:var(--fg);font:inherit}
+#t4 .hk-search input::placeholder{color:var(--mut);opacity:.75}
+#t4 .hk-output-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0 7px;border-bottom:1px solid color-mix(in srgb,var(--fg) 16%,transparent);font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.1em;color:var(--ac)}
+#t4 .hk-output-head span:nth-child(2){margin-left:auto;color:var(--mut);font-size:9px}
+#t4 #t4reset{padding:4px 7px;border:1px solid color-mix(in srgb,var(--fg) 26%,transparent);background:transparent;color:var(--fg);font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer}
+#t4 #t4reset:hover{border-color:var(--ac);color:var(--ac)}
+#t4 .hk-group-hint{padding:8px 0 9px;color:var(--mut);font:9px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.03em}
+#t4 #t4list{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--ac) 40%,transparent) transparent}
+#t4 .hk-row{display:grid;grid-template-columns:32px minmax(0,1fr) minmax(120px,auto);align-items:center;gap:9px;padding:9px 3px;border-bottom:1px dashed color-mix(in srgb,var(--fg) 16%,transparent)}
+#t4 .hk-row-no{font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ac)}
+#t4 .hk-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+#t4 .hk-copy b{font:600 12px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--fg)}
+#t4 .hk-copy small{font:10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-bind{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+#t4 .hk-alias{font:9px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-record{min-width:105px;max-width:200px;padding:5px 7px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent);background:transparent;color:var(--ac);font:10px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;cursor:pointer}
+#t4 .hk-record:hover,#t4 .hk-record:focus-visible{border-color:var(--ac);outline:1px solid var(--ac);outline-offset:1px}
+#t4 .hk-record.recording{border-color:var(--ac);background:color-mix(in srgb,var(--ac) 12%,transparent);animation:bl 1s steps(1) infinite}
+#t4 .hk-empty,#t4 .hk-info-row{padding:9px 3px;border-bottom:1px dashed color-mix(in srgb,var(--fg) 16%,transparent);font:10px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+#t4 .hk-info-row span{display:inline-block;width:30px;color:var(--ac)}
+#t4 #t4capturestatus{padding-top:8px;color:var(--ac);font:9px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;min-height:23px}
+#t4 .hk-footer{margin-top:4px;padding-top:7px;border-top:1px solid color-mix(in srgb,var(--fg) 18%,transparent);font:8px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.04em;color:var(--mut)}
+@media(max-width:650px){
+ #t4 .hk-terminal.wb{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);max-height:80vh}
+ #t4 .hk-rail{padding:8px 9px 7px;border-right:0;border-bottom:1px solid color-mix(in srgb,var(--fg) 20%,transparent)}
+ #t4 .hk-panel-title{padding-bottom:6px}
+ #t4 .hk-index-label,#t4 .hk-rail-foot{display:none}
+ #t4 #t4groups{flex-direction:row;flex-wrap:wrap;gap:3px;padding-top:7px}
+ #t4 #t4groups button{width:auto;flex:0 0 auto;padding:5px 6px;font-size:9px}
+ #t4 #t4groups button i{display:none}
+ #t4 .hk-main{padding:8px 9px}
+ #t4 .hk-commandbar{align-items:stretch;flex-direction:column;gap:7px}
+ #t4 .hk-search{max-width:none;width:100%}
+ #t4 .hk-row{grid-template-columns:24px minmax(0,1fr) minmax(90px,auto);gap:5px;padding:8px 1px}
+ #t4 .hk-copy b{font-size:10px}
+ #t4 .hk-copy small{font-size:9px}
+ #t4 .hk-record{font-size:9px;min-width:80px;max-width:130px}
+ #t4 .hk-footer{font-size:7px}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -673,12 +746,12 @@ body.app .hero-film{display:none!important}
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 <div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
-<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc"><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
+<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1"><div class="tabs" id="t1tabs"></div><div id="t1list"></div><p class="k" id="t1n" style="margin-top:10px">LOADING JUPITER TRENDING…</p></div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><span>RSS / TERMINAL STREAM</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><aside class="news-rail"><div class="news-panel-title"><span>01 / FEED INDEX</span><b>ALPHA</b></div><div class="news-index-label">CATEGORIES</div><div class="tabs" id="t2tabs" aria-label="News categories"></div><div class="news-rail-foot"><span>PROTOCOL <b>RSS / HTTP</b></span><span>MODE <b>CATEGORIZED</b></span><span>STREAM <b>LIVE / CACHED</b></span></div></aside><section class="news-main"><div class="news-commandbar"><div class="news-path"><span class="path-user">alpha@terminal</span><span>:</span><span>/news</span><span>$</span><b id="t2active">ALL</b></div><label class="news-search"><span>FIND</span><input id="t2q" placeholder="search headlines / topics / people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label></div><div class="news-output-head"><span>RECENT DISPATCHES</span><b id="t2count">0 STORIES</b></div><div id="t2list"></div><div class="news-status" id="t2n">CONNECTING TO RSS SOURCES…</div></section></div></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
-<div class="win card tool" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEYS</span><span>LOOKUP</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div class="in"><input id="t4q" placeholder="look up a key or action" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></div><div id="t4list"></div><p class="mut" style="font-size:12px;margin-top:12px">New windows split the focused one along its longer side. Alt is the reliable modifier; the Windows key only works where the browser receives it. Keys 1 to 4 without a modifier also toggle windows when no field is focused.</p></div></div>
+<div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEY CONFIG</span><span>LOCAL KEYMAP / v1.0</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav><div class="hk-rail-foot"><span>PROFILE <b>LOCAL</b></span><span>MODE <b>EDITABLE</b></span><span>STATUS <b>ACTIVE</b></span></div></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="search action / shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" aria-live="polite">READY · SELECT A BINDING AND PRESS ENTER TO EDIT</div><div class="hk-footer">[↑↓] SELECT &nbsp; [←→] SWITCH PANE &nbsp; [ENTER] EDIT / ACTIVATE &nbsp; [ESC] BACK</div></section></div></div>
 
-<div class="hint" id="hint" hidden>alt+4 hotkeys · alt+1/2/3 windows</div>
+<div class="hint" id="hint" hidden>Alt+J/K/L/; focus panes · arrows select within window · Alt+4 keymap</div>
 <div class="win card" id="reg" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>WAITLIST</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div id="fv"><h3>Get ahead of the next meta.</h3><p>alpha is launching in private beta. Join the waitlist and get priority access as we open the platform to our first users.</p>
 <form id="f" novalidate><div class="in"><span class="mut" style="padding-left:16px">@</span><input id="h" name="h" placeholder="yourusername" autocomplete="off" autocapitalize="none" spellcheck="false" inputmode="text" aria-label="X handle" maxlength="16"></div>
 <input class="hp" name="website" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -1177,7 +1250,7 @@ const renderT1=()=>{
   const groupChange=group.change==null?'<span class="narrative-change mut">—</span>':'<b class="narrative-change '+(group.change>=0?'up':'dn')+'">'+pct(group.change)+'</b>';
   const confidence=group.confidence==null?'':' · avg match '+Math.round(group.confidence*100)+'%';
   return '<details class="narrative-group" '+(group.name===reopenName?'open':'')+'>'+
-   '<summary><span class="narrative-name">'+esc(group.name)+'</span>'+
+   '<summary tabindex="0" data-kbd-category="tracker"><span class="narrative-name">'+esc(group.name)+'</span>'+
    '<span class="narrative-kind">'+(group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'DISCOVERY':'NARRATIVE')+'</span>'+
    '<span class="narrative-state">'+narrativeState(group.change)+'</span>'+
    groupChange+'</summary>'+
@@ -1378,7 +1451,7 @@ const rf=()=>{
   const published=relativeNewsTime(article);
   return '<article class="news-item">'+
    '<div class="news-item-index"><span class="news-item-no">['+String(index+1).padStart(2,'0')+']</span><span class="news-item-source">'+esc(publisher)+'</span><span class="news-item-time">'+esc(published)+'</span></div>'+
-   '<div class="news-item-line"><span class="news-prompt">›</span><a class="news-item-title" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a></div>'+
+   '<div class="news-item-line"><span class="news-prompt">›</span><a class="news-item-title" data-kbd-item="news" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a></div>'+
    summary+
    '<div class="news-item-tags">'+categoryTags+entityTags+'</div>'+
   '</article>';
@@ -1518,7 +1591,7 @@ $('#t3f').onsubmit=async e=>{
   R.innerHTML='<p class="k" style="margin-top:12px">LIVE FROM GECKOTERMINAL — SIGNALS, NOT A GUARANTEE</p>'+
    '<div class="vd"><b class="'+verdict[1]+'">'+verdict[0]+'</b><span class="mut">signal score '+score+'/100</span></div>'+
    '<p class="mut" style="font-size:12px;margin-bottom:6px;word-break:break-all">$'+esc(sym)+' · '+esc(mintLabel)+' · '+esc(mint)+'</p>'+
-   F2.map(row=>'<div class="fd"><i>'+row[0]+'</i><span class="g'+row[1]+'">'+esc(row[2])+'</span></div>').join('')+
+   F2.map(row=>'<div class="fd" tabindex="0" data-kbd-item="scanner" role="group" aria-label="'+esc(row[0])+'"><i>'+row[0]+'</i><span class="g'+row[1]+'">'+esc(row[2])+'</span></div>').join('')+
    '<p class="mut" style="font-size:11px;margin-top:10px">Heuristic checks on public data. Missing provider fields are marked unavailable, not assumed safe. Not financial advice. DYOR.</p>';
  }catch(error){
   if(id===scanN)R.innerHTML='<p class="mut" style="margin-top:12px">'+esc(error.message||'Scanner request failed. Please try again.')+'</p>';
@@ -1538,82 +1611,128 @@ $('#cvs').onclick=()=>{
  input.value=mint;
  $('#t3f').requestSubmit();
 };
-// Configurable keyboard controls, inspired by i3.
+// Configurable keyboard controls and contextual arrow navigation.
 const hk=(code,mods={})=>({code,alt:mods.alt??true,ctrl:mods.ctrl??false,shift:mods.shift??false,meta:mods.meta??false});
+const HOTKEY_GROUPS=[
+ {id:'NAVIGATION',label:'NAVIGATION',hint:'↑ / ↓ SELECT ITEMS · ← / → MOVE BETWEEN COLUMNS · ENTER ACTIVATE',note:'Global selection controls and movement between terminal panes.'},
+ {id:'WINDOWS',label:'WINDOWS',hint:'ALT + J K L ; MOVE FOCUS BETWEEN TILED WINDOWS',note:'Open, focus and hide terminal windows.'},
+ {id:'LAYOUT',label:'LAYOUT',hint:'SHIFT MOVES PANES · CTRL RESIZES · H / V SET THE NEXT SPLIT',note:'Rearrange the terminal workspace without a mouse.'},
+ {id:'TRACKER',label:'TRACKER',hint:'↑ / ↓ NARRATIVE GROUPS AND COINS · → ENTER GROUP · ← PARENT · ENTER OPEN CHART',note:'Within Trending, move through narrative headers and their coin rows.'},
+ {id:'NEWS FEED',label:'NEWS FEED',hint:'↑ / ↓ CATEGORIES OR HEADLINES · → STORIES · ← CATEGORY INDEX · ENTER OPEN',note:'The category index and story list behave as two keyboard columns.'},
+ {id:'SCANNER',label:'SCANNER',hint:'TAB SEARCH / SCAN / RESULTS · ENTER RUN SCAN · ↑ / ↓ INSPECT RESULTS',note:'Type a ticker or mint, submit the scan, then inspect the result rows.'},
+ {id:'SYSTEM',label:'SYSTEM',hint:'ESC BACK · ALT + SHIFT + Q CLOSE PANE · ALT + T THEME',note:'Terminal-wide actions and session controls.'}
+];
 const HOTKEY_ACTIONS=[
- {id:'toggleTracker',group:'Windows',label:'Coin Tracker',detail:'Open / focus / hide tool 1',key:hk('Digit1')},
- {id:'toggleFeed',group:'Windows',label:'News Feed',detail:'Open / focus / hide tool 2',key:hk('Digit2')},
- {id:'toggleScanner',group:'Windows',label:'Coin Scanner',detail:'Open / focus / hide tool 3',key:hk('Digit3')},
- {id:'toggleHotkeys',group:'Windows',label:'Hotkeys / Settings',detail:'Open / focus / hide tool 4',key:hk('Digit4')},
- {id:'focusLeft',group:'Navigate panes',label:'Focus left',detail:'Move focus left',key:hk('KeyJ'),alias:hk('ArrowLeft')},
- {id:'focusDown',group:'Navigate panes',label:'Focus down',detail:'Move focus down',key:hk('KeyK'),alias:hk('ArrowDown')},
- {id:'focusUp',group:'Navigate panes',label:'Focus up',detail:'Move focus up',key:hk('KeyL'),alias:hk('ArrowUp')},
- {id:'focusRight',group:'Navigate panes',label:'Focus right',detail:'Move focus right',key:hk('Semicolon'),alias:hk('ArrowRight')},
- {id:'moveLeft',group:'Move / resize',label:'Move pane left',detail:'Swap with left neighbour',key:hk('KeyJ',{shift:true}),alias:hk('ArrowLeft',{shift:true})},
- {id:'moveDown',group:'Move / resize',label:'Move pane down',detail:'Swap with pane below',key:hk('KeyK',{shift:true}),alias:hk('ArrowDown',{shift:true})},
- {id:'moveUp',group:'Move / resize',label:'Move pane up',detail:'Swap with pane above',key:hk('KeyL',{shift:true}),alias:hk('ArrowUp',{shift:true})},
- {id:'moveRight',group:'Move / resize',label:'Move pane right',detail:'Swap with right neighbour',key:hk('Semicolon',{shift:true}),alias:hk('ArrowRight',{shift:true})},
- {id:'resizeLeft',group:'Move / resize',label:'Resize left',detail:'Change focused split size',key:hk('KeyJ',{ctrl:true}),alias:hk('ArrowLeft',{ctrl:true})},
- {id:'resizeDown',group:'Move / resize',label:'Resize down',detail:'Change focused split size',key:hk('KeyK',{ctrl:true}),alias:hk('ArrowDown',{ctrl:true})},
- {id:'resizeUp',group:'Move / resize',label:'Resize up',detail:'Change focused split size',key:hk('KeyL',{ctrl:true}),alias:hk('ArrowUp',{ctrl:true})},
- {id:'resizeRight',group:'Move / resize',label:'Resize right',detail:'Change focused split size',key:hk('Semicolon',{ctrl:true}),alias:hk('ArrowRight',{ctrl:true})},
- {id:'splitHorizontal',group:'Window layout',label:'Next split: horizontal',detail:'Next pane opens left / right',key:hk('KeyH')},
- {id:'splitVertical',group:'Window layout',label:'Next split: vertical',detail:'Next pane opens top / bottom',key:hk('KeyV')},
- {id:'toggleFullscreen',group:'Window layout',label:'Toggle pane fullscreen',detail:'Expand the focused pane',key:hk('KeyF')},
- {id:'focusNext',group:'Navigation',label:'Focus next pane',detail:'Cycle through open panes',key:hk('KeyN')},
- {id:'focusPrevious',group:'Navigation',label:'Focus previous pane',detail:'Cycle backwards through open panes',key:hk('KeyP')},
- {id:'focusSearch',group:'Navigation',label:'Focus search',detail:'Jump to the active tool search field',key:hk('Slash')},
- {id:'scrollUp',group:'Navigation',label:'Scroll up',detail:'Scroll active tool content',key:hk('PageUp')},
- {id:'scrollDown',group:'Navigation',label:'Scroll down',detail:'Scroll active tool content',key:hk('PageDown')},
- {id:'closeFocused',group:'Actions',label:'Close focused pane',detail:'Close active tool',key:hk('KeyQ',{shift:true})},
- {id:'backOrClose',group:'Actions',label:'Back / close',detail:'Back from chart or close active pane',key:hk('Escape',{alt:false})},
- {id:'toggleTheme',group:'Actions',label:'Toggle theme',detail:'Switch light / dark',key:hk('KeyT')},
- {id:'logout',group:'Actions',label:'Log out',detail:'End terminal session',key:hk('KeyE',{shift:true})}
+ {id:'selectPrevious',group:'NAVIGATION',label:'Select previous item',detail:'Move selection up inside the active window',key:hk('ArrowUp',{alt:false})},
+ {id:'selectNext',group:'NAVIGATION',label:'Select next item',detail:'Move selection down inside the active window',key:hk('ArrowDown',{alt:false})},
+ {id:'moveColumnLeft',group:'NAVIGATION',label:'Previous column / category',detail:'Move from stories to categories or return to parent',key:hk('ArrowLeft',{alt:false})},
+ {id:'moveColumnRight',group:'NAVIGATION',label:'Next column / enter group',detail:'Move from categories to stories or enter a group',key:hk('ArrowRight',{alt:false})},
+ {id:'activateSelection',group:'NAVIGATION',label:'Activate selection',detail:'Open selected coin / article or activate focused control',key:hk('Enter',{alt:false})},
+ {id:'focusSearch',group:'NAVIGATION',label:'Focus search',detail:'Jump to the active tool search field',key:hk('Slash')},
+ {id:'focusNext',group:'NAVIGATION',label:'Focus next window',detail:'Cycle forward through open windows',key:hk('KeyN')},
+ {id:'focusPrevious',group:'NAVIGATION',label:'Focus previous window',detail:'Cycle backward through open windows',key:hk('KeyP')},
+ {id:'scrollUp',group:'NAVIGATION',label:'Scroll up',detail:'Scroll active tool content',key:hk('PageUp')},
+ {id:'scrollDown',group:'NAVIGATION',label:'Scroll down',detail:'Scroll active tool content',key:hk('PageDown')},
+
+ {id:'toggleTracker',group:'WINDOWS',label:'Coin Tracker',detail:'Open / focus / hide tool 1',key:hk('Digit1')},
+ {id:'toggleFeed',group:'WINDOWS',label:'News Feed',detail:'Open / focus / hide tool 2',key:hk('Digit2')},
+ {id:'toggleScanner',group:'WINDOWS',label:'Coin Scanner',detail:'Open / focus / hide tool 3',key:hk('Digit3')},
+ {id:'toggleHotkeys',group:'WINDOWS',label:'Hotkeys / Settings',detail:'Open / focus / hide tool 4',key:hk('Digit4')},
+ {id:'focusLeft',group:'WINDOWS',label:'Focus window left',detail:'Move focus to the tiled pane on the left',key:hk('KeyJ'),alias:hk('ArrowLeft')},
+ {id:'focusDown',group:'WINDOWS',label:'Focus window down',detail:'Move focus to the tiled pane below',key:hk('KeyK'),alias:hk('ArrowDown')},
+ {id:'focusUp',group:'WINDOWS',label:'Focus window up',detail:'Move focus to the tiled pane above',key:hk('KeyL'),alias:hk('ArrowUp')},
+ {id:'focusRight',group:'WINDOWS',label:'Focus window right',detail:'Move focus to the tiled pane on the right',key:hk('Semicolon'),alias:hk('ArrowRight')},
+
+ {id:'moveLeft',group:'LAYOUT',label:'Move pane left',detail:'Swap the focused pane with its left neighbour',key:hk('KeyJ',{shift:true}),alias:hk('ArrowLeft',{shift:true})},
+ {id:'moveDown',group:'LAYOUT',label:'Move pane down',detail:'Swap the focused pane with the pane below',key:hk('KeyK',{shift:true}),alias:hk('ArrowDown',{shift:true})},
+ {id:'moveUp',group:'LAYOUT',label:'Move pane up',detail:'Swap the focused pane with the pane above',key:hk('KeyL',{shift:true}),alias:hk('ArrowUp',{shift:true})},
+ {id:'moveRight',group:'LAYOUT',label:'Move pane right',detail:'Swap the focused pane with its right neighbour',key:hk('Semicolon',{shift:true}),alias:hk('ArrowRight',{shift:true})},
+ {id:'resizeLeft',group:'LAYOUT',label:'Resize left',detail:'Adjust the focused split boundary',key:hk('KeyJ',{ctrl:true}),alias:hk('ArrowLeft',{ctrl:true})},
+ {id:'resizeDown',group:'LAYOUT',label:'Resize down',detail:'Adjust the focused split boundary',key:hk('KeyK',{ctrl:true}),alias:hk('ArrowDown',{ctrl:true})},
+ {id:'resizeUp',group:'LAYOUT',label:'Resize up',detail:'Adjust the focused split boundary',key:hk('KeyL',{ctrl:true}),alias:hk('ArrowUp',{ctrl:true})},
+ {id:'resizeRight',group:'LAYOUT',label:'Resize right',detail:'Adjust the focused split boundary',key:hk('Semicolon',{ctrl:true}),alias:hk('ArrowRight',{ctrl:true})},
+ {id:'splitHorizontal',group:'LAYOUT',label:'Next split: horizontal',detail:'The next opened pane splits left / right',key:hk('KeyH')},
+ {id:'splitVertical',group:'LAYOUT',label:'Next split: vertical',detail:'The next opened pane splits top / bottom',key:hk('KeyV')},
+ {id:'toggleFullscreen',group:'LAYOUT',label:'Toggle pane fullscreen',detail:'Temporarily expand the focused pane',key:hk('KeyF')},
+
+ {id:'backOrClose',group:'SYSTEM',label:'Back / close',detail:'Return to parent selection or close the active pane',key:hk('Escape',{alt:false})},
+ {id:'closeFocused',group:'SYSTEM',label:'Close focused pane',detail:'Close the currently focused tool',key:hk('KeyQ',{shift:true})},
+ {id:'toggleTheme',group:'SYSTEM',label:'Toggle theme',detail:'Switch between light and dark mode',key:hk('KeyT')},
+ {id:'logout',group:'SYSTEM',label:'Log out',detail:'End the current terminal session',key:hk('KeyE',{shift:true})}
 ];
 const HOTKEY_STORAGE_KEY='alpha_terminal_hotkeys_v1';
 const loadHotkeyBindings=()=>{
- try{const saved=JSON.parse(localStorage.getItem(HOTKEY_STORAGE_KEY)||'{}'),valid={};
-  HOTKEY_ACTIONS.forEach(action=>{const v=saved[action.id];if(v&&typeof v.code==='string'&&v.code.length<40&&['alt','ctrl','shift','meta'].every(k=>typeof v[k]==='boolean'))valid[action.id]={code:v.code,alt:v.alt,ctrl:v.ctrl,shift:v.shift,meta:v.meta}});
+ try{
+  const saved=JSON.parse(localStorage.getItem(HOTKEY_STORAGE_KEY)||'{}'),valid={};
+  HOTKEY_ACTIONS.forEach(action=>{
+   const v=saved[action.id];
+   if(v&&typeof v.code==='string'&&v.code.length<40&&['alt','ctrl','shift','meta'].every(k=>typeof v[k]==='boolean'))valid[action.id]={code:v.code,alt:v.alt,ctrl:v.ctrl,shift:v.shift,meta:v.meta};
+  });
   return valid;
  }catch(error){console.warn('Could not load hotkeys:',error);return {}}
 };
-let hotkeyBindings=loadHotkeyBindings(),recordingHotkeyAction=null;
+let hotkeyBindings=loadHotkeyBindings(),recordingHotkeyAction=null,hotkeyGroup='NAVIGATION';
 const hotkeyCurrent=action=>hotkeyBindings[action.id]||action.key;
 const hotkeyCodeLabel=code=>{
  if(/^Key[A-Z]$/.test(code))return code.slice(3);
  if(/^Digit[0-9]$/.test(code))return code.slice(5);
- const labels={ArrowLeft:'←',ArrowRight:'→',ArrowUp:'↑',ArrowDown:'↓',Semicolon:';',Escape:'Esc',PageUp:'PgUp',PageDown:'PgDn',Slash:'/',Space:'Space',Enter:'Enter',Tab:'Tab'};
+ const labels={ArrowLeft:'←',ArrowRight:'→',ArrowUp:'↑',ArrowDown:'↓',Semicolon:';',Escape:'ESC',PageUp:'PGUP',PageDown:'PGDN',Slash:'/',Space:'SPACE',Enter:'ENTER',Tab:'TAB'};
  return labels[code]||code;
 };
 const hotkeyLabel=key=>{
- if(!key)return 'UNASSIGNED';const parts=[];
- if(key.ctrl)parts.push('Ctrl');if(key.alt)parts.push('Alt');if(key.shift)parts.push('Shift');if(key.meta)parts.push('Super');
+ if(!key)return 'UNASSIGNED';
+ const parts=[];
+ if(key.ctrl)parts.push('CTRL');if(key.alt)parts.push('ALT');if(key.shift)parts.push('SHIFT');if(key.meta)parts.push('SUPER');
  parts.push(hotkeyCodeLabel(key.code));return parts.join(' + ');
 };
 const hotkeySame=(a,b)=>!!a&&!!b&&a.code===b.code&&a.alt===b.alt&&a.ctrl===b.ctrl&&a.shift===b.shift&&a.meta===b.meta;
 const saveHotkeyBindings=()=>{try{localStorage.setItem(HOTKEY_STORAGE_KEY,JSON.stringify(hotkeyBindings));return true}catch(error){return false}};
+const renderHotkeyGroups=()=>{
+ $('#t4groups').innerHTML=HOTKEY_GROUPS.map(group=>
+  '<button type="button" data-hk-group="'+esc(group.id)+'" class="'+(group.id===hotkeyGroup?'on':'')+'"><span>'+esc(group.label)+'</span><i>›</i></button>'
+ ).join('');
+};
 const rk=()=>{
- const query=$('#t4q').value.trim().toLowerCase(),matching=HOTKEY_ACTIONS.filter(action=>!query||[action.label,action.detail,action.group,hotkeyLabel(hotkeyCurrent(action))].join(' ').toLowerCase().includes(query));
- let group='';
- $('#t4list').innerHTML=matching.map(action=>{
-  const heading=action.group!==group?'<div class="hk-section">'+esc(action.group)+'</div>':'';
-  group=action.group;
+ const query=$('#t4q').value.trim().toLowerCase(),group=HOTKEY_GROUPS.find(item=>item.id===hotkeyGroup)||HOTKEY_GROUPS[0];
+ const actions=HOTKEY_ACTIONS.filter(action=>action.group===hotkeyGroup&&(!query||[action.label,action.detail,hotkeyLabel(hotkeyCurrent(action))].join(' ').toLowerCase().includes(query)));
+ $('#t4activeGroup').textContent=group.id+' / KEYMAP';
+ $('#t4groupHint').textContent=group.hint;
+ $('#t4count').textContent=actions.length+' BINDINGS';
+ const rows=actions.map((action,index)=>{
   const alias=action.alias?'<small class="hk-alias">ARROWS: '+esc(hotkeyLabel(action.alias))+'</small>':'';
   const active=recordingHotkeyAction===action.id;
-  return heading+'<div class="hk-row"><div class="hk-copy"><b>'+esc(action.label)+'</b><small>'+esc(action.detail)+'</small></div><div class="hk-bind">'+alias+'<button type="button" class="hk-record'+(active?' recording':'')+'" data-hk="'+esc(action.id)+'">'+(active?'PRESS KEYS…':esc(hotkeyLabel(hotkeyCurrent(action))))+'</button></div></div>';
- }).join('')||'<p class="mut">No matching shortcuts.</p>';
+  return '<div class="hk-row" data-hk-row><span class="hk-row-no">['+String(index+1).padStart(2,'0')+']</span><div class="hk-copy"><b>'+esc(action.label)+'</b><small>'+esc(action.detail)+'</small></div><div class="hk-bind">'+alias+'<button type="button" class="hk-record'+(active?' recording':'')+'" data-hk="'+esc(action.id)+'">'+(active?'LISTENING…':esc(hotkeyLabel(hotkeyCurrent(action))))+'</button></div></div>';
+ }).join('');
+ $('#t4list').innerHTML=rows||'<p class="hk-empty">NO BINDINGS MATCH THIS SEARCH.</p>';
+ if(!actions.length){
+  const info=group.id==='TRACKER'
+   ?['↑ / ↓  CYCLE NARRATIVE GROUPS AND COINS','→  OPEN THE SELECTED GROUP','←  RETURN TO THE GROUP HEADER','ENTER  OPEN THE SELECTED COIN CHART']
+   :group.id==='NEWS FEED'
+   ?['↑ / ↓  CYCLE CATEGORIES OR HEADLINES','→  MOVE TO THE STORY COLUMN','←  RETURN TO THE CATEGORY INDEX','ENTER  OPEN THE SELECTED STORY']
+   :group.id==='SCANNER'
+   ?['TAB  MOVE BETWEEN SEARCH, SCAN AND RESULTS','ENTER  RUN THE SCAN','↑ / ↓  INSPECT RESULT ROWS','ESC  RETURN TO SEARCH']
+   :[];
+  if(info.length)$('#t4list').innerHTML=info.map((line,i)=>'<div class="hk-info-row"><span>['+String(i+1).padStart(2,'0')+']</span>'+esc(line)+'</div>').join('');
+ }
 };
-$('#t4').classList.add('wide');
-$('#t4 .wb').insertAdjacentHTML('afterbegin','<div class="hk-toolbar"><span class="hk-title">KEYBINDINGS / LOCAL PROFILE</span><button type="button" id="t4reset" class="btn o">RESET</button></div><p class="hk-help" id="t4capturestatus" aria-live="polite">Select a shortcut, then press the new combination. Use Alt, Ctrl, Shift or Super.</p>');
-$('#t4 .wb > p.mut').textContent='Tab / Shift+Tab moves between controls. Enter or Space activates a focused control. Shortcuts are saved in this browser only.';
+renderHotkeyGroups();rk();
+$('#t4groups').addEventListener('click',event=>{
+ const button=event.target.closest('[data-hk-group]');if(!button)return;
+ hotkeyGroup=button.dataset.hkGroup;renderHotkeyGroups();rk();
+ const active=$('#t4groups').querySelector('[data-hk-group="'+hotkeyGroup+'"]');if(active)active.focus();
+});
 $('#t4list').addEventListener('click',event=>{
  const button=event.target.closest('[data-hk]');if(!button)return;
- const id=button.dataset.hk;recordingHotkeyAction=recordingHotkeyAction===id?null:id;
- $('#t4capturestatus').textContent=recordingHotkeyAction?'RECORDING — press the new key combination. Esc cancels.':'Recording cancelled.';
+ const id=button.dataset.hk;
+ recordingHotkeyAction=recordingHotkeyAction===id?null:id;
+ $('#t4capturestatus').textContent=recordingHotkeyAction?'LISTENING · PRESS A NEW KEY COMBINATION · ESC TO CANCEL':'READY · EDIT CANCELLED';
  rk();$('#t4list').querySelector('[data-hk="'+id+'"]')?.focus();
 });
-$('#t4reset').addEventListener('click',()=>{recordingHotkeyAction=null;hotkeyBindings={};saveHotkeyBindings();$('#t4capturestatus').textContent='Default shortcuts restored.';rk()});
-$('#t4q').oninput=rk;rk();
+$('#t4reset').addEventListener('click',()=>{
+ recordingHotkeyAction=null;hotkeyBindings={};saveHotkeyBindings();
+ $('#t4capturestatus').textContent='DEFAULT KEYMAP RESTORED';rk();
+});
+$('#t4q').oninput=rk;
 // coin view (Axiom-style): real OHLCV, stats, trades, holders from GeckoTerminal
 const TFS=[['1m','minute',1],['5m','minute',5],['15m','minute',15],['1h','hour',1],['4h','hour',4],['1d','day',1]];
 let chart=null,chartResizeObserver=null,chartLoadVersion=0,series=null,vol=null,cur='',curP='',curM='',tab=0,tf=1,ccy='usd',mode='price',SUP=0,QS='SOL',DEX='dex',CAN=[],PR=6,STP=Promise.resolve();
