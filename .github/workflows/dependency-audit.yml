@@ -1,0 +1,63 @@
+name: Dependency security audit
+
+on:
+  push:
+    branches:
+      - security/dependency-audit
+    paths:
+      - package.json
+      - public/index.html
+      - server.js
+      - .github/workflows/dependency-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Resolve exact dependency tree
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Capture baseline audit
+        run: npm audit --json > audit-before.json || true
+
+      - name: Apply non-breaking audit fixes only
+        run: npm audit fix --package-lock-only --ignore-scripts --no-fund || true
+
+      - name: Capture final audits
+        run: |
+          npm audit --json > audit-after.json || true
+          npm audit --omit=dev --json > audit-production.json || true
+          npm ls --all --json > dependency-tree.json || true
+
+      - name: Verify clean locked install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Verify server syntax
+        run: node --check server.js
+
+      - name: Upload audit reports and candidate lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: alpha-dependency-audit
+          if-no-files-found: error
+          retention-days: 7
+          path: |
+            package-lock.json
+            audit-before.json
+            audit-after.json
+            audit-production.json
+            dependency-tree.json
