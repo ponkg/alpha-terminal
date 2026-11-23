@@ -1028,6 +1028,36 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  #t1 .tracker-folders-label{padding-top:8px;margin-top:8px}
  #t1 .tracker-rail #t1groups{padding-top:5px}
 }
+
+/* Restore timeframe strip to the top of the token directory; keep categories in the left rail. */
+#t1 .tracker-folders-label{padding-top:13px;border-top:0;margin-top:0}
+#t1 .tracker-timeframe-row{
+ display:flex;align-items:center;gap:12px;min-width:0;
+ padding:1px 0 9px;border-bottom:1px solid color-mix(in srgb,var(--fg) 20%,transparent)
+}
+#t1 .tracker-timeframe-row>span{
+ flex:none;color:var(--mut);font:10px/1.4 var(--mono);letter-spacing:.1em
+}
+#t1 .tracker-main #t1tabs.tracker-timeframes{
+ display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:0;min-width:0
+}
+#t1 .tracker-main #t1tabs.tracker-timeframes button{
+ width:auto;min-width:42px;min-height:27px;padding:5px 8px;
+ border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);
+ background:transparent;color:var(--mut);font:10px/1.3 var(--mono);cursor:pointer
+}
+#t1 .tracker-main #t1tabs.tracker-timeframes button.on{
+ border-color:var(--ac);background:color-mix(in srgb,var(--ac) 10%,transparent);color:var(--ac)
+}
+#t1 .tracker-main #t1tabs.tracker-timeframes button:hover{border-color:var(--ac);color:var(--fg)}
+#t1 .tracker-main #t1tabs.tracker-timeframes .narrative-j7{display:none}
+#t1 .tracker-rail #t1groups{flex:1}
+@media(max-width:650px){
+ #t1 .tracker-timeframe-row{gap:7px;flex-wrap:wrap;padding-bottom:7px}
+ #t1 .tracker-timeframe-row>span{font-size:9px}
+ #t1 .tracker-main #t1tabs.tracker-timeframes{gap:4px}
+ #t1 .tracker-main #t1tabs.tracker-timeframes button{min-width:37px;padding:4px 6px;font-size:9px}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
@@ -1059,10 +1089,8 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>ADMIN LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Admin access</h2><p>Sign in with the administrator account. Public account creation is disabled during the closed beta.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="admin email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Admin email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — not an admin? <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Request early access</a>.</p></div></div>
 <div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
-  <div class="tracker-panel-title"><span>01 / MARKET INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
-  <div class="tracker-index-label">TIMEFRAME</div>
-  <div class="tabs tracker-timeframes" id="t1tabs" aria-label="Market timeframe"></div>
-  <div class="tracker-index-label tracker-folders-label">MARKET FOLDERS</div>
+  <div class="tracker-panel-title"><span>01 / NARRATIVE INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
+  <div class="tracker-index-label">MARKET CATEGORIES</div>
   <nav id="t1groups" aria-label="Trending narrative categories"></nav>
   <div class="tracker-rail-foot"><span>NETWORK <b>SOLANA</b></span><span>SOURCE <b>JUPITER / GECKO</b></span><span id="t1groupmeta">0 CATEGORIES</span></div>
  </aside>
@@ -1071,7 +1099,8 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
    <div class="tracker-path"><span class="tracker-user">alpha@terminal</span><span>:</span><span>/markets</span><span>$</span><b id="t1active">TRENDING</b></div>
    <label class="tracker-search"><span>FIND</span><input id="t1q" placeholder="search ticker / name / mint" autocomplete="off" spellcheck="false" aria-label="Search tokens in selected narrative"></label>
   </div>
-  <div class="tracker-output-head"><span id="t1heading">SELECT A NARRATIVE</span><span id="t1count">0 TOKENS</span></div>
+  <div class="tracker-output-head"><span id="t1heading">ALL TOKENS / MARKET DIRECTORY</span><span id="t1count">0 TOKENS</span></div>
+  <div class="tracker-timeframe-row"><span>TIMEFRAME</span><div class="tabs tracker-timeframes" id="t1tabs" aria-label="Market timeframe"></div></div>
   <div class="tracker-col-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
   <div id="t1list"></div>
   <div class="tracker-main-foot"><p class="k" id="t1n">LOADING JUPITER TRENDING…</p></div>
@@ -1386,7 +1415,8 @@ const detectTokenNarratives=token=>{
   groupLabels:labels.length?labels:[{name:'Other / Unclassified',type:'OTHER',confidence:null,reason:'No configured entity or narrative keyword matched the available token metadata.'}]
  };
 };
-let narrativeWindow=0,narrativeSelectedGroup='',trackerSearchTerm='',narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
+const TRACKER_ALL_GROUP='__ALL_MARKETS__';
+let narrativeWindow=0,narrativeSelectedGroup=TRACKER_ALL_GROUP,trackerSearchTerm='',narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
 let narrativeNews=[],narrativeNewsCheckedAt=0,narrativeNewsPromise=null;
 let narrativeNewsMeta={ok:false,stale:false,successfulFeeds:0,feeds:[]};
 const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
@@ -1540,7 +1570,7 @@ const narrativeGroups=()=>{
    groups.get(label.name).tokens.push({...token,groupMatch:label});
   });
  });
- return [...groups.values()].map(group=>{
+ const populated=[...groups.values()].map(group=>{
   group.tokens.sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
   const volume=group.tokens.reduce((sum,t)=>sum+t.volume24,0);
   const valid=group.tokens.filter(t=>t.change!=null&&Number.isFinite(t.change));
@@ -1550,7 +1580,26 @@ const narrativeGroups=()=>{
   const scored=group.tokens.filter(t=>Number.isFinite(t.groupMatch.confidence));
   const confidence=scored.length?scored.reduce((sum,t)=>sum+t.groupMatch.confidence,0)/scored.length:null;
   return {...group,volume,change,confidence};
- }).sort((a,b)=>b.volume-a.volume||a.name.localeCompare(b.name));
+ });
+ const categories=NARRATIVE_CATEGORY_RULES.map(rule=>
+  populated.find(group=>group.name===rule.name)||
+  {name:rule.name,type:'NARRATIVE',tokens:[],volume:0,change:null,confidence:null}
+ );
+ const other=populated.find(group=>group.name==='Other / Unclassified')||
+  {name:'Other / Unclassified',type:'OTHER',tokens:[],volume:0,change:null,confidence:null};
+ return [...categories,...populated.filter(group=>group.type==='ENTITY'),other]
+  .sort((a,b)=>{
+   if(a.type==='OTHER'&&b.type!=='OTHER')return 1;
+   if(b.type==='OTHER'&&a.type!=='OTHER')return -1;
+   if(a.type==='ENTITY'&&b.type!=='ENTITY')return 1;
+   if(b.type==='ENTITY'&&a.type!=='ENTITY')return -1;
+   if(a.type==='NARRATIVE'&&b.type==='NARRATIVE'){
+    const ai=NARRATIVE_CATEGORY_RULES.findIndex(rule=>rule.name===a.name);
+    const bi=NARRATIVE_CATEGORY_RULES.findIndex(rule=>rule.name===b.name);
+    return (ai<0?999:ai)-(bi<0?999:bi)||b.volume-a.volume;
+   }
+   return b.volume-a.volume||a.name.localeCompare(b.name);
+  });
 };
 const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
 const renderT1=()=>{
@@ -1559,28 +1608,33 @@ const renderT1=()=>{
  const focusedCategory=active?.closest?.('[data-tracker-group]')?.dataset.trackerGroup||'';
  const searchFocused=active?.id==='t1q',searchCaret=searchFocused?active.selectionStart:null;
  const groups=narrativeGroups();
- if(!groups.some(group=>group.name===narrativeSelectedGroup))narrativeSelectedGroup=groups[0]?.name||'';
- const selectedGroup=groups.find(group=>group.name===narrativeSelectedGroup)||null;
+ const allTokens=[...new Map(groups.flatMap(group=>group.tokens).map(token=>[token.mint,token])).values()]
+  .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
+ const allFolder={name:'ALL TOKENS',type:'DIRECTORY',tokens:allTokens};
+ const folders=[allFolder,...groups];
+ if(!folders.some(group=>group.name===narrativeSelectedGroup))narrativeSelectedGroup=TRACKER_ALL_GROUP;
+ const selectedGroup=narrativeSelectedGroup===TRACKER_ALL_GROUP?allFolder:(groups.find(group=>group.name===narrativeSelectedGroup)||allFolder);
  const uniqueTokens=[...new Map(narrativePools.map(token=>[token.mint,token])).values()];
  const matched=new Set(groups.filter(group=>group.type!=='OTHER').flatMap(group=>group.tokens.map(token=>token.mint))).size;
- const categoryHtml=groups.map((group,index)=>{
+ const categoryHtml=folders.map(group=>{
   const active=group.name===narrativeSelectedGroup;
-  const type=group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'DISCOVERY':'NARRATIVE';
-  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(group.name)+'" aria-current="'+(active?'page':'false')+'">'+
+  const type=group.type==='ENTITY'?'ENTITY':group.type==='OTHER'?'UNCATEGORIZED':group.type==='DIRECTORY'?'MARKET':'NARRATIVE';
+  const key=group.type==='DIRECTORY'?TRACKER_ALL_GROUP:group.name;
+  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(key)+'" aria-current="'+(active?'page':'false')+'">'+
    '<span class="tracker-folder-mark">'+(active?'▸':' ')+'</span>'+
    '<span class="tracker-folder-copy"><b>'+esc(group.name)+'</b><small>'+type+'</small></span>'+
    '<span class="tracker-folder-count">'+group.tokens.length+'</span>'+
   '</button>';
  }).join('');
- $('#t1groups').innerHTML=categoryHtml||'<div class="tracker-rail-empty">NO NARRATIVES</div>';
+ $('#t1groups').innerHTML=categoryHtml||'<div class="tracker-rail-empty">NO CATEGORIES</div>';
  $('#t1groupmeta').textContent=groups.length+' CATEGORIES';
- $('#t1active').textContent=selectedGroup?selectedGroup.name.toUpperCase():'TRENDING';
- $('#t1heading').textContent=selectedGroup?selectedGroup.name.toUpperCase()+' / TOKEN DIRECTORY':'NO NARRATIVES AVAILABLE';
+ $('#t1active').textContent=selectedGroup.name.toUpperCase();
+ $('#t1heading').textContent=selectedGroup.name.toUpperCase()+' / TOKEN DIRECTORY';
  const query=trackerSearchTerm.trim().toLowerCase();
- const tokens=(selectedGroup?.tokens||[]).filter(token=>!query||[
+ const tokens=(selectedGroup.tokens||[]).filter(token=>!query||[
   token.symbol,token.name,token.mint,token.poolName
  ].join(' ').toLowerCase().includes(query));
- $('#t1count').textContent=tokens.length+' / '+(selectedGroup?.tokens.length||0)+' TOKENS';
+ $('#t1count').textContent=tokens.length+' / '+(selectedGroup.tokens.length||0)+' TOKENS';
  $('#t1q').value=trackerSearchTerm;
  const tokenRows=tokens.map(token=>{
   const image=String(token.imageUrl||'').startsWith('https://')?token.imageUrl:'';
@@ -1601,7 +1655,7 @@ const renderT1=()=>{
    '<div class="narrative-change">'+change+'</div>'+
   '</div>';
  }).join('');
- $('#t1list').innerHTML=tokenRows||'<p class="narrative-empty">'+(selectedGroup?(query?'No tokens match this search.':'No tokens in this narrative.'):'No Solana trending pools returned by the current data sources.')+'</p>';
+ $('#t1list').innerHTML=tokenRows||'<p class="narrative-empty">'+(selectedGroup.name==='Other / Unclassified'?'No unclassified tokens in this market snapshot.':query?'No tokens match this search.':'No tokens currently match this category.')+'</p>';
  $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>{
   img.addEventListener('error',()=>{img.hidden=true},{once:true});
  });
@@ -1619,16 +1673,6 @@ const renderT1=()=>{
   if(searchCaret!=null)input.setSelectionRange(searchCaret,searchCaret);
  }
 };
-$('#t1groups').addEventListener('click',event=>{
- const button=event.target.closest('button[data-tracker-group]');if(!button)return;
- narrativeSelectedGroup=button.dataset.trackerGroup;renderT1();
- $('#t1groups [data-tracker-group="'+CSS.escape(narrativeSelectedGroup)+'"]')?.focus({preventScroll:true});
-});
-$('#t1q').addEventListener('input',event=>{
- trackerSearchTerm=event.target.value;renderT1();
- const input=$('#t1q');input.focus({preventScroll:true});
- const position=trackerSearchTerm.length;input.setSelectionRange(position,position);
-});
 let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
  const interval=NARRATIVE_WINDOWS[narrativeWindow].interval;
@@ -2502,27 +2546,13 @@ const navigateTracker=direction=>{
  const timeframeButtons=[...$('#t1tabs').querySelectorAll('button')];
  const detection=active?.closest('.narrative-detection');
  if(timeframeButtons.includes(active)){
-  const index=timeframeButtons.indexOf(active),column=index%3;
-  if(direction==='left'){
-   if(column>0)return focusEl(timeframeButtons[index-1]);
-   return focusEl($('#t1j7'));
-  }
-  if(direction==='right'){
-   if(column<2&&index+1<timeframeButtons.length)return focusEl(timeframeButtons[index+1]);
-   return focusEl(trackerSelectedFolder()||folders[0]);
-  }
-  if(direction==='up'){
-   const previous=timeframeButtons[index-3];
-   return previous?focusEl(previous):focusEl($('#t1j7'));
-  }
-  if(direction==='down'){
-   const next=timeframeButtons[index+3];
-   return next?focusEl(next):focusEl(trackerSelectedFolder()||folders[0]);
-  }
+  if(direction==='left'||direction==='right')return moveFocusInList(timeframeButtons,active,direction==='left'?-1:1);
+  if(direction==='down')return focusEl(trackerSelectedFolder()||folders[0]);
+  if(direction==='up')return focusEl($('#t1q'));
  }
- if(active===$('#t1j7')){
-  if(direction==='down')return focusEl(timeframeButtons[0]||folders[0]);
-  if(direction==='right')return focusEl(timeframeButtons[0]||folders[0]);
+ if(active===$('#t1q')){
+  if(direction==='down')return focusEl(trackerSelectedFolder()||folders[0]);
+  if(direction==='up')return focusEl(timeframeButtons.find(button=>button.classList.contains('on'))||timeframeButtons[0]);
  }
  if(folders.includes(active)){
   if(direction==='up'||direction==='down'){
@@ -2530,7 +2560,7 @@ const navigateTracker=direction=>{
    return selectTrackerFolder(folders[nextIndex]);
   }
   if(direction==='right')return focusEl(rows[0]);
-  if(direction==='left')return focusEl(timeframeButtons[0]||$('#t1j7'));
+  if(direction==='left')return focusEl(timeframeButtons.find(button=>button.classList.contains('on'))||timeframeButtons[0]);
  }
  if(detection){
   const row=detection.closest('.narrative-token');
@@ -2545,8 +2575,8 @@ const navigateTracker=direction=>{
    if(details){details.open=true;return focusEl(details.querySelector('summary'))}
   }
  }
- if(direction==='right'||direction==='down')return focusEl(timeframeButtons[0]||folders[0]);
- if(direction==='left'||direction==='up')return focusEl($('#t1j7'));
+ if(direction==='right'||direction==='down')return focusEl(trackerSelectedFolder()||folders[0]);
+ if(direction==='left'||direction==='up')return focusEl(timeframeButtons.find(button=>button.classList.contains('on'))||timeframeButtons[0]);
  return false;
 };
 const navigateCoinChart=direction=>{
