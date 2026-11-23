@@ -779,8 +779,8 @@ const narrativeEditDistance=(left,right)=>{
  return previous[right.length];
 };
 const politicianAliasTypoMatch=(value,alias)=>{
- const candidateWords=normalizeNarrativeText(value).match(/[a-z0-9]+/g)||[];
- const aliasWords=normalizeNarrativeText(alias).match(/[a-z0-9]+/g)||[];
+ const candidateWords=String(value||'').toLowerCase().match(/[a-z0-9]+/g)||[];
+ const aliasWords=String(alias||'').toLowerCase().match(/[a-z0-9]+/g)||[];
  if(!candidateWords.length||!aliasWords.length)return null;
  let best=null;
  for(let i=0;i<=candidateWords.length-aliasWords.length;i++){
