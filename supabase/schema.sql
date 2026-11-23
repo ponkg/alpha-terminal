@@ -7,11 +7,20 @@ create table if not exists public.waitlist (
   referral_code text not null unique,
   referred_by text null references public.waitlist(referral_code) on delete set null,
   consent boolean not null default false,
+  email text,
+  auth_user_id uuid references auth.users(id) on delete set null,
+  access_status text not null default 'pending' check (access_status in ('pending', 'approved', 'revoked')),
+  invited_at timestamptz,
   created_at timestamptz not null default now()
 );
 
 create index if not exists waitlist_referred_by_idx on public.waitlist (referred_by);
+create unique index if not exists waitlist_email_unique_idx
+  on public.waitlist (lower(email)) where email is not null;
+create unique index if not exists waitlist_auth_user_unique_idx
+  on public.waitlist (auth_user_id) where auth_user_id is not null;
 
 alter table public.waitlist enable row level security;
+-- Waitlist and access records are accessed only through server-side routes using the Supabase secret key.
 revoke all on table public.waitlist from anon, authenticated;
 grant all on table public.waitlist to service_role;

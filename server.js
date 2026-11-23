@@ -14,6 +14,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL || "";
 const SUPABASE_PUBLISHABLE_KEY = process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || "";
 const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "").trim().toLowerCase();
+const APP_URL = (process.env.APP_URL || "https://alpha-solana-terminal-4av6.onrender.com").replace(/\/+$/, "");
 const authConfigured = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY);
 const JUPITER_API_KEY = (process.env.JUPITER_API_KEY || "").trim();
 const databaseConfigured = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
@@ -21,6 +22,38 @@ const databaseConfigured = Boolean(SUPABASE_URL && SUPABASE_SECRET_KEY);
 const supabaseAdmin = databaseConfigured
   ? createClient(SUPABASE_URL, SUPABASE_SECRET_KEY, { auth: { autoRefreshToken: false, persistSession: false } })
   : null;
+
+const accessError = (message, status = 401) => Object.assign(new Error(message), { status });
+const identifyRequest = async req => {
+  if (!supabaseAdmin) throw accessError("Authentication is not configured.", 503);
+  const match = String(req.get("authorization") || "").match(/^Bearer\s+(.+)$/i);
+  if (!match) throw accessError("Sign in to continue.");
+  const { data, error } = await supabaseAdmin.auth.getUser(match[1]);
+  if (error || !data?.user) throw accessError("Your session is invalid or expired. Please sign in again.");
+  const user = data.user;
+  const email = String(user.email || "").trim().toLowerCase();
+  if (ADMIN_EMAIL && email === ADMIN_EMAIL) return { user, role: "admin", handle: null };
+  const { data: member, error: memberError } = await supabaseAdmin
+    .from("waitlist").select("handle, access_status").eq("auth_user_id", user.id).maybeSingle();
+  if (memberError) throw accessError("Could not verify beta access. Please try again.", 503);
+  if (!member || member.access_status !== "approved") {
+    throw accessError(member?.access_status === "revoked" ? "Your Alpha access has been revoked." : "Your account is not approved for the Alpha beta yet.", 403);
+  }
+  return { user, role: "member", handle: member.handle };
+};
+const requireAccess = async (req, res, next) => {
+  try { req.alphaIdentity = await identifyRequest(req); next(); }
+  catch (error) { res.status(error.status || 401).json({ error: error.message || "Authentication required." }); }
+};
+const requireAdmin = async (req, res, next) => {
+  try {
+    const identity = await identifyRequest(req);
+    if (identity.role !== "admin") return res.status(403).json({ error: "Administrator access required." });
+    req.alphaIdentity = identity;
+    next();
+  } catch (error) { res.status(error.status || 401).json({ error: error.message || "Authentication required." }); }
+};
+
 
 app.disable("x-powered-by");
 app.set("trust proxy", 1);
@@ -95,7 +128,7 @@ const tokenMetaLimiter = rateLimit({
   standardHeaders: "draft-7", legacyHeaders: false,
   message: { error: "Token metadata request limit reached. Please wait a moment." }
 });
-app.get("/api/token-meta", tokenMetaLimiter, async (req, res) => {
+app.get("/api/token-meta", tokenMetaLimiter, requireAccess, async (req, res) => {
   const mint = String(req.query.mint || "");
   if (!/^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(mint)) {
     return res.status(400).json({ error: "Invalid Solana token address." });
@@ -168,25 +201,110 @@ app.get("/api/token-meta", tokenMetaLimiter, async (req, res) => {
   }
 });
 
-// Verify Supabase sessions server-side and allow only the configured administrator.
-app.post("/api/admin/check", async (req, res) => {
-  if (!ADMIN_EMAIL || !supabaseAdmin) {
-    return res.status(503).json({ error: "Administrator access is not configured. Set ADMIN_EMAIL in the Render environment." });
-  }
-  const authorization = req.get("authorization") || "";
-  const match = authorization.match(/^Bearer\s+(.+)$/i);
-  if (!match) return res.status(401).json({ error: "Please sign in again." });
-
+// Session role check: administrators bypass the waitlist; beta members need an approved waitlist row.
+app.post("/api/access/check", async (req, res) => {
   try {
-    const { data, error } = await supabaseAdmin.auth.getUser(match[1]);
-    if (error || !data?.user) return res.status(401).json({ error: "Your session is invalid or expired. Please sign in again." });
-    if ((data.user.email || "").trim().toLowerCase() !== ADMIN_EMAIL) {
-      return res.status(403).json({ error: "This account is not authorized for administrator access." });
-    }
-    return res.json({ ok: true });
+    const identity = await identifyRequest(req);
+    return res.json({ ok: true, role: identity.role, handle: identity.handle });
   } catch (error) {
-    console.error("admin access check failed:", error.message);
-    return res.status(401).json({ error: "Could not verify your administrator session." });
+    return res.status(error.status || 401).json({ error: error.message || "Could not verify access." });
+  }
+});
+
+// Backward-compatible admin-only check used by privileged integrations.
+app.post("/api/admin/check", requireAdmin, (_req, res) => res.json({ ok: true }));
+
+app.get("/api/admin/waitlist", requireAdmin, async (_req, res) => {
+  try {
+    const { data, error } = await supabaseAdmin.from("waitlist")
+      .select("id, handle, email, consent, access_status, auth_user_id, created_at, invited_at, referral_code, referred_by")
+      .order("created_at", { ascending: false }).limit(300);
+    if (error) throw error;
+    const referrals = new Map();
+    for (const row of data || []) if (row.referred_by) referrals.set(row.referred_by, (referrals.get(row.referred_by) || 0) + 1);
+    return res.json({ users: (data || []).map(({ referral_code, ...row }) => ({ ...row, referrals: referrals.get(referral_code) || 0 })) });
+  } catch (error) {
+    console.error("admin waitlist read failed:", error.message);
+    return res.status(500).json({ error: "Could not load the waitlist." });
+  }
+});
+
+app.post("/api/admin/waitlist/:id/invite", requireAdmin, async (req, res) => {
+  const id = String(req.params.id || "");
+  const email = String(req.body?.email || "").trim().toLowerCase();
+  if (!/^\d{1,18}$/.test(id)) return res.status(400).json({ error: "Invalid waitlist entry." });
+  if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: "Enter a valid email address." });
+  }
+  try {
+    const { data: row, error: readError } = await supabaseAdmin.from("waitlist")
+      .select("id, handle, email, auth_user_id, access_status").eq("id", id).maybeSingle();
+    if (readError) throw readError;
+    if (!row) return res.status(404).json({ error: "Waitlist entry not found." });
+    if (row.auth_user_id) return res.status(409).json({ error: "This entry already has an account. Use the access controls to approve or revoke it." });
+    const { data: emailOwner, error: emailError } = await supabaseAdmin.from("waitlist")
+      .select("id").eq("email", email).neq("id", id).maybeSingle();
+    if (emailError) throw emailError;
+    if (emailOwner) return res.status(409).json({ error: "That email is already linked to another waitlist entry." });
+
+    const { error: saveEmailError } = await supabaseAdmin.from("waitlist")
+      .update({ email, access_status: "pending" }).eq("id", id);
+    if (saveEmailError) throw saveEmailError;
+
+    const { data: invited, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: APP_URL + "/"
+    });
+    let authUserId = invited?.user?.id || "";
+    let invitationSent = Boolean(authUserId);
+    if (inviteError) {
+      const alreadyExists = /already.*registered|email_exists|already exists/i.test(inviteError.message || "");
+      if (!alreadyExists) {
+        console.error("beta invite failed:", inviteError.message);
+        return res.status(502).json({ error: "Supabase could not send the invitation. Check Auth email/SMTP configuration and try again." });
+      }
+      const { data: listed, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page: 1, perPage: 1000 });
+      if (listError) throw listError;
+      const existingAuthUser = (listed?.users || []).find(item => String(item.email || "").trim().toLowerCase() === email);
+      if (!existingAuthUser) return res.status(409).json({ error: "This email already has a Supabase account, but it could not be located for linking." });
+      authUserId = existingAuthUser.id;
+      const { data: linked, error: linkedError } = await supabaseAdmin.from("waitlist")
+        .select("id").eq("auth_user_id", authUserId).neq("id", id).maybeSingle();
+      if (linkedError) throw linkedError;
+      if (linked) return res.status(409).json({ error: "This Supabase account is already linked to another waitlist entry." });
+      invitationSent = false;
+    }
+    if (!authUserId) throw new Error("Supabase invitation did not return a user id.");
+    const { data: linked, error: linkError } = await supabaseAdmin.from("waitlist").update({
+      auth_user_id: authUserId, access_status: "approved", invited_at: invitationSent ? new Date().toISOString() : null
+    }).eq("id", id).select("id").single();
+    if (linkError || !linked) throw linkError || new Error("Waitlist account link was not saved.");
+    return res.json({ ok: true, handle: row.handle, email, access_status: "approved", invitation_sent: invitationSent });
+  } catch (error) {
+    console.error("beta invitation workflow failed:", error.message);
+    return res.status(500).json({ error: "Invitation could not be completed. Refresh the waitlist before retrying." });
+  }
+});
+
+app.patch("/api/admin/waitlist/:id/access", requireAdmin, async (req, res) => {
+  const id = String(req.params.id || "");
+  const status = String(req.body?.status || "");
+  if (!/^\d{1,18}$/.test(id) || !["approved", "revoked"].includes(status)) {
+    return res.status(400).json({ error: "Invalid access update." });
+  }
+  try {
+    const { data: row, error: readError } = await supabaseAdmin.from("waitlist")
+      .select("id, auth_user_id").eq("id", id).maybeSingle();
+    if (readError) throw readError;
+    if (!row) return res.status(404).json({ error: "Waitlist entry not found." });
+    if (status === "approved" && !row.auth_user_id) {
+      return res.status(409).json({ error: "Send an invitation first so the account can be linked." });
+    }
+    const { error } = await supabaseAdmin.from("waitlist").update({ access_status: status }).eq("id", id);
+    if (error) throw error;
+    return res.json({ ok: true, access_status: status });
+  } catch (error) {
+    console.error("beta access update failed:", error.message);
+    return res.status(500).json({ error: "Could not update beta access." });
   }
 });
 
@@ -201,7 +319,7 @@ app.post("/api/waitlist", waitlistLimiter, async (req, res) => {
 
   try {
     const { data: existing, error: existingError } = await supabaseAdmin
-      .from("waitlist").select("handle, referral_code").eq("handle", clean).maybeSingle();
+      .from("waitlist").select("handle, referral_code, access_status").eq("handle", clean).maybeSingle();
     if (existingError) throw existingError;
 
     let user = existing;
@@ -222,11 +340,11 @@ app.post("/api/waitlist", waitlistLimiter, async (req, res) => {
           referred_by: referredBy,
           consent: consent === true
         })
-        .select("handle, referral_code").single();
+        .select("handle, referral_code, access_status").single();
 
       if (insertError && insertError.code === "23505") {
         const { data: racedUser, error: racedError } = await supabaseAdmin
-          .from("waitlist").select("handle, referral_code").eq("handle", clean).maybeSingle();
+          .from("waitlist").select("handle, referral_code, access_status").eq("handle", clean).maybeSingle();
         if (racedError || !racedUser) throw racedError || insertError;
         user = racedUser;
       } else if (insertError) throw insertError;
@@ -238,7 +356,7 @@ app.post("/api/waitlist", waitlistLimiter, async (req, res) => {
     if (countError) throw countError;
 
     res.status(existing ? 200 : 201).json({
-      user: { handle: user.handle, code: user.referral_code, referrals: count || 0, status: "On the waitlist" }
+      user: { handle: user.handle, code: user.referral_code, referrals: count || 0, status: user.access_status === "approved" ? "Approved for beta" : "On the waitlist" }
     });
   } catch (error) {
     console.error("waitlist error:", error.message);
@@ -255,7 +373,7 @@ const GECKO_STALE_MS = 15 * 60 * 1000;
 const GECKO_MIN_GAP_MS = 7000;
 const waitMs = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-app.get("/api/gecko", geckoLimiter, async (req, res) => {
+app.get("/api/gecko", geckoLimiter, requireAccess, async (req, res) => {
   const apiPath = String(req.query.path || "");
   if (!apiPath.startsWith("/") || apiPath.startsWith("//") || apiPath.includes("..") || apiPath.length > 500) {
     return res.status(400).json({ error: "Invalid market-data path." });
@@ -478,7 +596,7 @@ const getJupiterTrending = async (providerInterval) => {
   }
 };
 
-app.get("/api/jupiter/trending", jupiterLimiter, async (req, res) => {
+app.get("/api/jupiter/trending", jupiterLimiter, requireAccess, async (req, res) => {
   const interval = String(req.query.interval || "5m");
   if (!["5m", "10m", "30m", "1h", "24h"].includes(interval)) {
     return res.status(400).json({ error: "Unsupported interval. Use 5m, 10m, 30m, 1h or 24h." });
@@ -656,7 +774,7 @@ const refreshNarrativeNews = async () => {
   return data;
 };
 
-app.get("/api/narrative-news", narrativeNewsLimiter, async (_req, res) => {
+app.get("/api/narrative-news", narrativeNewsLimiter, requireAccess, async (_req, res) => {
   if (narrativeNewsCache && Date.now() - narrativeNewsCache.time < NARRATIVE_NEWS_FRESH_MS) {
     res.set("X-Data-Cache", "HIT");
     return res.set("Cache-Control", "public, max-age=60").json(narrativeNewsCache.data);
