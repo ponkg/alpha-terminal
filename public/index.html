@@ -1246,7 +1246,7 @@ const pumpLogo=async mint=>{
 // GeckoTerminal narrative explorer. The landing-page sample remains unchanged.
 const NARRATIVE_WINDOWS=[
  {label:'5 min',field:'m5',interval:'5m'},
- {label:'15 min',field:'m15',interval:'15m'},
+ {label:'10 min',field:'m10',interval:'10m'},
  {label:'30 min',field:'m30',interval:'30m'},
  {label:'1 hour',field:'h1',interval:'1h'},
  {label:'24 hours',field:'h24',interval:'24h'}
@@ -1461,7 +1461,7 @@ const readJupiterTokens=payload=>{
    organicScore:Number(token.organicScore)||0,isVerified:token.isVerified===true,
    changes:{
     m5:tokenPct(stats5),
-    m15:token.priceChange15m==null?null:Number(token.priceChange15m),
+    m10:token.priceChange10m==null?null:Number(token.priceChange10m),
     m30:token.priceChange30m==null?null:Number(token.priceChange30m),
     h1:tokenPct(stats1),
     h24:tokenPct(stats24)
