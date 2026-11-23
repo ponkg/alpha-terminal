@@ -267,7 +267,7 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .narrative-token-heading{display:flex;align-items:baseline;gap:7px;min-width:0;max-width:100%}
 .narrative-token .pump-token b{font-size:11px;white-space:nowrap}
 .narrative-token .pump-token small{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.narrative-tags{display:flex;gap:4px;flex-wrap:wrap;min-width:0}
+.narrative-tags{display:flex;gap:4px;flex-wrap:wrap;min-width:0}.narrative-match-reason{font-size:8px;line-height:1.3;color:var(--mut);white-space:normal;overflow-wrap:anywhere;max-width:100%}
 .narrative-tag{display:inline-flex;align-items:center;gap:3px;max-width:100%;padding:1px 4px;border:1px solid color-mix(in srgb,var(--fg) 18%,transparent);font-size:8px;line-height:1.35;color:var(--mut);white-space:nowrap}
 .narrative-tag.entity{border-color:color-mix(in srgb,var(--ac) 50%,transparent);color:var(--ac)}
 .narrative-tag i{font-style:normal;opacity:.72;font-variant-numeric:tabular-nums}
@@ -803,7 +803,6 @@ const detectTokenNarratives=token=>{
 let narrativeWindow=0,narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
 const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
 const pct=n=>(n>0?'+':'')+Number(n||0).toFixed(1)+'%';
-const tokenCategory=token=>detectTokenNarratives(token).groupLabels.map(label=>label.name);
 const tokenPct=stats=>{
  if(stats?.priceChange==null)return null;
  const value=Number(stats.priceChange);
@@ -921,7 +920,7 @@ const renderT1=()=>{
  const groups=narrativeGroups();
  const reopenName=groups.some(g=>g.name===openedName)?openedName:(groups[0]?.name||'');
  const uniqueTokens=[...new Map(narrativePools.map(t=>[t.mint,t])).values()];
- const matched=uniqueTokens.filter(token=>token.detection?.labels?.length).length;
+ const matched=new Set(groups.filter(group=>group.type!=='OTHER').flatMap(group=>group.tokens.map(token=>token.mint))).size;
  const html=groups.map(group=>{
   const tokenRows=group.tokens.map(token=>{
    const image=token.imageUrl.startsWith('https://')?token.imageUrl:'';
@@ -932,9 +931,10 @@ const renderT1=()=>{
     ?token.detection.labels.map(label=>'<span class="narrative-tag '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+' <i>'+Math.round(label.confidence*100)+'%</i></span>').join('')
     :'<span class="narrative-tag unclassified">UNCLASSIFIED</span>';
    const reasons=token.detection.labels.map(label=>label.name+': '+label.reason).join(' · ')||'No configured entity or narrative keyword matched the available token metadata.';
+   const matchReason=token.groupMatch?.reason||'No configured entity or narrative keyword matched symbol, name, or pool name.';
    return '<div class="pump-row narrative-token" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'" title="'+esc(reasons)+'">'+
     '<div class="pump-logo">'+imageTag+'</div>'+
-    '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div><div class="narrative-tags">'+tags+'</div></div>'+
+    '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div><div class="narrative-tags">'+tags+'</div><div class="narrative-match-reason">match: '+esc(matchReason)+'</div></div>'+
     '<div class="narrative-liq">liq '+usd(token.liquidity)+'</div>'+
     '<div class="narrative-change">'+change+'</div>'+
    '</div>';
