@@ -1367,6 +1367,18 @@ $('#t3f').onsubmit=async e=>{
   if(id===scanN&&button){button.disabled=false;button.textContent='Scan'}
  }
 };
+// Chart Scan button opens the dedicated LARP scanner and immediately scans the selected token mint.
+$('#cvs').onclick=()=>{
+ const mint=String(curM||'').trim();
+ if(!BASE58.test(mint)){
+  $('#chn').textContent='TOKEN MINT UNAVAILABLE · OPEN A TOKEN WITH A VALID SOLANA ADDRESS';
+  return;
+ }
+ A.open('t3');
+ const input=$('#t3q');
+ input.value=mint;
+ $('#t3f').requestSubmit();
+};
 // hotkey lookup
 const HK=[['Alt+1','Coin tracker'],['Alt+2','X feed'],['Alt+3','Coin scanner'],['Alt+4 or ?','Hotkey lookup'],['Alt+← ↓ ↑ →','Focus window (or Alt+H J K L)'],['Alt+Shift+← ↓ ↑ →','Move window (swap)'],['Alt+Ctrl+← ↓ ↑ →','Resize (move split edge)'],['Alt+Shift+Q','Close focused window (or Esc)'],['Alt+T','Toggle light / dark'],['Alt+Shift+E','Log out'],['Click a coin','Chart + bubble map inside the tracker (Esc = back)']];
 const rk=()=>{const q=$('#t4q').value.trim().toLowerCase();$('#t4list').innerHTML=HK.filter(h=>!q||(h[0]+' '+h[1]).toLowerCase().includes(q)).map(h=>`<div class="kr"><span class="kk">${h[0].split('+').map(x=>`<kbd>${esc(x)}</kbd>`).join('+')}</span><span>${esc(h[1])}</span></div>`).join('')||'<p class="mut" style="padding:10px 0">No match.</p>'};
