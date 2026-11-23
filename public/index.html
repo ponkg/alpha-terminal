@@ -708,12 +708,16 @@ const NARRATIVE_WINDOWS=[
  {label:'24 hours',field:'h24',interval:'24h'}
 ];
 const NARRATIVE_RULES=[
- {name:'AI Agents',re:/\b(ai|agent|agents|bot|bots|gpt|llm|autonomous|claude|openai|eliza)\b/i},
+ // Specific event aliases must come before broad AI, politics and celebrity rules.
+ {name:'Jensen Huang / NVIDIA',re:/\b(jensen|huang|nvidia|nvda|jensenhuang|jensen huang|nvidia ceo|blackwell|cuda)\b/i},
+ {name:'Elon Musk / Tesla',re:/\b(elon|musk|tesla|xai|grok|doge department)\b/i},
+ {name:'Political Figures',re:/\b(trump|maga|biden|obama|putin|zelensky|politic|election|president|vote|voter|senator|government|white house|political|congress)\b/i},
+ {name:'AI & Semiconductors',re:/\b(ai|artificial intelligence|gpu|compute|inference|llm|model|chip|semiconductor|nvidia|amd|intel|openai|claude|anthropic|deepseek|agent|agents|gpt|cuda|tensor)\b/i},
+ {name:'News & Events',re:/\b(news|breaking|announcement|announced|reinstated|reinstatement|return|returns|appointed|resigned|fired|banned|unbanned|launch|launched|partnership|acquisition|lawsuit|court|policy|update|事件|breaking news)\b/i},
  {name:'Animal Memes',re:/\b(cat|cats|dog|dogs|doge|shiba|inu|frog|pepe|woof|meow|miao|mihao|kitten|puppy|panda|bear|hamster|animal)\b/i},
  {name:'Internet Culture',re:/\b(meme|memes|viral|brainrot|wojak|npc|sigma|rizz|skibidi|lore|ratio|troll|internet)\b/i},
- {name:'AI Infrastructure',re:/\b(gpu|compute|inference|cloud|node|nodes|infra|depin|data|model|chip|storage|render|tensor)\b/i},
- {name:'Political Figures',re:/\b(trump|maga|biden|politic|election|president|vote|voter|senator|government|white house|political)\b/i},
- {name:'Celebrity',re:/\b(celebrity|celeb|rapper|singer|actor|actress|streamer|influencer|kardashian|star|fame|stan)\b/i}
+ {name:'Celebrity & Creators',re:/\b(celebrity|celeb|rapper|singer|actor|actress|streamer|influencer|kardashian|star|fame|stan|youtuber|tiktok)\b/i},
+ {name:'Crypto & Finance',re:/\b(bitcoin|btc|ethereum|eth|solana|sol|defi|airdrop|etf|crypto|trading|finance|bank|fed|federal reserve)\b/i}
 ];
 let narrativeWindow=0,narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
 const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
@@ -750,6 +754,59 @@ const readJupiterTokens=payload=>{
    }
   };
  }).filter(Boolean);
+};
+const readGeckoTrendingPools=payload=>{
+ const included=new Map((payload?.included||[])
+  .filter(item=>item?.type==='token')
+  .map(item=>[item.id,item.attributes||{}]));
+ return (Array.isArray(payload?.data)?payload.data:[]).map(item=>{
+  const attrs=item?.attributes||{};
+  const baseId=item?.relationships?.base_token?.data?.id||'';
+  const base=included.get(baseId)||{};
+  const mint=String(base.address||baseId.replace(/^solana_/,''));
+  const pct=attrs.price_change_percentage||{};
+  const vol=attrs.volume_usd||{};
+  return {
+   mint,poolAddress:String(attrs.address||''),poolName:String(attrs.name||''),
+   symbol:String(base.symbol||''),name:String(base.name||''),
+   imageUrl:String(base.image_url||''),
+   liquidity:Number(attrs.reserve_in_usd)||0,
+   volume24:Number(vol.h24)||0,
+   marketCap:Number(attrs.market_cap_usd||attrs.fdv_usd)||0,
+   priceUsd:Number(attrs.base_token_price_usd)||0,
+   changes:{
+    m5:Number.isFinite(Number(pct.m5))?Number(pct.m5):null,
+    m15:Number.isFinite(Number(pct.m15))?Number(pct.m15):null,
+    m30:Number.isFinite(Number(pct.m30))?Number(pct.m30):null,
+    h1:Number.isFinite(Number(pct.h1))?Number(pct.h1):null,
+    h24:Number.isFinite(Number(pct.h24))?Number(pct.h24):null
+   }
+  };
+ }).filter(token=>BASE58.test(token.mint)&&token.poolAddress);
+};
+const loadGeckoTrending=async()=>{
+ const interval=NARRATIVE_WINDOWS[narrativeWindow].interval;
+ const duration=interval==='24h'?'24h':interval==='1h'?'1h':'5m';
+ const payload=await gt('/networks/solana/trending_pools?duration='+duration+'&include=base_token,dex&page=1',60000);
+ return readGeckoTrendingPools(payload);
+};
+const mergeNarrativeTokens=(jupiter,gecko)=>{
+ const merged=new Map();
+ jupiter.forEach(token=>merged.set(token.mint,{...token}));
+ gecko.forEach(token=>{
+  const current=merged.get(token.mint);
+  if(!current){merged.set(token.mint,{...token,source:'GeckoTerminal'});return}
+  merged.set(token.mint,{
+   ...token,...current,
+   poolAddress:current.poolAddress||token.poolAddress,
+   imageUrl:current.imageUrl||token.imageUrl,
+   liquidity:current.liquidity||token.liquidity,
+   volume24:current.volume24||token.volume24,
+   marketCap:current.marketCap||token.marketCap,
+   changes:Object.fromEntries(Object.keys(token.changes||{}).map(key=>[key,current.changes?.[key]??token.changes?.[key]??null]))
+  });
+ });
+ return [...merged.values()];
 };
 const narrativeGroups=()=>{
  const bestByMint=new Map();
@@ -811,7 +868,7 @@ const renderT1=()=>{
  });
  [...new Map(narrativePools.map(t=>[t.mint,t])).values()].filter(t=>!t.imageUrl).slice(0,20).forEach(t=>pumpLogo(t.mint));
  const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
- $('#t1n').textContent='LIVE · JUPITER TOKENS V2 · '+time+' · '+narrativePools.length+' TOKENS · '+matched+' IN A META · KEYWORD CLASSIFICATION, HEURISTIC LABELS';
+ $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+narrativePools.length+' TOKENS · '+matched+' IN A META · EVENT ALIASES + KEYWORD CLASSIFICATION';
 };
 let narrativeLoadPromises=new Map(),narrativeRequestSequence=0;
 const loadT1=async(force=false,onProgress=null)=>{
@@ -827,13 +884,17 @@ const loadT1=async(force=false,onProgress=null)=>{
    });
    const payload=await response.json().catch(()=>({}));
    if(!response.ok)throw new Error(payload.error||'Jupiter market data returned HTTP '+response.status);
-   const tokens=readJupiterTokens(payload);
-   if(!tokens.length)throw new Error('Jupiter returned no usable Solana tokens.');
-   onProgress?.(54,'LOADING DATA','Received '+tokens.length+' live tokens · parsing market stats');
+   const jupiterTokens=readJupiterTokens(payload);
+   if(!jupiterTokens.length)throw new Error('Jupiter returned no usable Solana tokens.');
+   onProgress?.(42,'LOADING DATA','Received '+jupiterTokens.length+' Jupiter tokens · checking GeckoTerminal trending pools');
+   let geckoTokens=[];
+   try{geckoTokens=await loadGeckoTrending()}catch(error){console.warn('GeckoTerminal trending supplement unavailable:',error.message)}
+   const tokens=mergeNarrativeTokens(jupiterTokens,geckoTokens);
+   onProgress?.(68,'LOADING DATA','Merged '+jupiterTokens.length+' Jupiter + '+geckoTokens.length+' GeckoTerminal tokens');
    if(interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
     narrativePools=tokens;narrativeUpdated=payload.fetchedAt?Date.parse(payload.fetchedAt):Date.now();renderT1();
    }
-   return {ok:true,cached:!!payload.stale,tokens,pools:tokens.length,error:payload.stale?'Showing cached Jupiter data':''};
+   return {ok:true,cached:!!payload.stale,tokens,pools:tokens.length,supplement:geckoTokens.length,error:payload.stale?'Showing cached Jupiter data':''};
   }catch(error){
    if(requestId===narrativeRequestSequence&&interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
     if(narrativePools.length){
