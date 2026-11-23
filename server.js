@@ -274,10 +274,10 @@ app.post("/api/admin/waitlist/:id/invite", requireAdmin, async (req, res) => {
       invitationSent = false;
     }
     if (!authUserId) throw new Error("Supabase invitation did not return a user id.");
-    const { error: linkError } = await supabaseAdmin.from("waitlist").update({
-      auth_user_id: authUserId, access_status: "approved", invited_at: new Date().toISOString()
-    }).eq("id", id);
-    if (linkError) throw linkError;
+    const { data: linked, error: linkError } = await supabaseAdmin.from("waitlist").update({
+      auth_user_id: authUserId, access_status: "approved", invited_at: invitationSent ? new Date().toISOString() : null
+    }).eq("id", id).select("id").single();
+    if (linkError || !linked) throw linkError || new Error("Waitlist account link was not saved.");
     return res.json({ ok: true, handle: row.handle, email, access_status: "approved", invitation_sent: invitationSent });
   } catch (error) {
     console.error("beta invitation workflow failed:", error.message);
