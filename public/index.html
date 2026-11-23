@@ -2503,8 +2503,14 @@ const navigateTracker=direction=>{
  const detection=active?.closest('.narrative-detection');
  if(timeframeButtons.includes(active)){
   const index=timeframeButtons.indexOf(active),column=index%3;
-  if(direction==='left'&&column>0)return focusEl(timeframeButtons[index-1]);
-  if(direction==='right'&&index+1<timeframeButtons.length&&(index+1)%3!==0)return focusEl(timeframeButtons[index+1]);
+  if(direction==='left'){
+   if(column>0)return focusEl(timeframeButtons[index-1]);
+   return focusEl($('#t1j7'));
+  }
+  if(direction==='right'){
+   if(column<2&&index+1<timeframeButtons.length)return focusEl(timeframeButtons[index+1]);
+   return focusEl(trackerSelectedFolder()||folders[0]);
+  }
   if(direction==='up'){
    const previous=timeframeButtons[index-3];
    return previous?focusEl(previous):focusEl($('#t1j7'));
@@ -2513,8 +2519,6 @@ const navigateTracker=direction=>{
    const next=timeframeButtons[index+3];
    return next?focusEl(next):focusEl(trackerSelectedFolder()||folders[0]);
   }
-  if(direction==='left'&&column===0)return focusEl($('#t1j7'));
-  if(direction==='right'&&(index+1)%3===0)return focusEl(trackerSelectedFolder()||folders[0]);
  }
  if(active===$('#t1j7')){
   if(direction==='down')return focusEl(timeframeButtons[0]||folders[0]);
