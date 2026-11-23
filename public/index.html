@@ -1124,52 +1124,51 @@ const loadT1=async(force=false,onProgress=null)=>{
   }catch(error){
    if(requestId===narrativeRequestSequence&&interval===NARRATIVE_WINDOWS[narrativeWindow].interval){
     if(narrativePools.length){
-     renderT1();$('#t1n').textContent='CACHED · JUPITER · 'const rf=()=>{
- const query=$('#t2q').value.trim().toLowerCase();
- const selected=NEWS_FILTERS[t2tab];
- const articles=narrativeNews.map(classifyNewsArticle)
-  .filter(article=>selected==='All'||article._alphaCategories.includes(selected))
-  .filter(article=>!query||[
-   article.title,article.summary,article.source,article.domain,
-   ...(article._alphaCategories||[]),...(article._alphaEntities||[])
-  ].join(' ').toLowerCase().includes(query))
-  .sort((a,b)=>(Date.parse(b.publishedAt||'')||0)-(Date.parse(a.publishedAt||'')||0));
- const html=articles.map((article,index)=>{
-  const url=/^https?:\/\//i.test(article.url||'')?article.url:'#';
-  const categoryTags=article._alphaCategories.map(category=>'<span class="news-tag">'+esc(category)+'</span>').join('');
-  const entityTags=article._alphaEntities.map(entity=>'<span class="news-tag entity">'+esc(entity)+'</span>').join('');
-  const summary=article.summary?'<p>'+esc(article.summary.slice(0,300))+(article.summary.length>300?'…':'')+'</p>':'';
-  const publisher=article.source||article.domain||article.feed||'RSS';
-  const published=relativeNewsTime(article);
-  return '<article class="news-item">'+
-   '<div class="news-item-index"><span class="news-item-no">['+String(index+1).padStart(2,'0')+']</span><span class="news-item-source">'+esc(publisher)+'</span><span class="news-item-time">'+esc(published)+'</span></div>'+
-   '<div class="news-item-line"><span class="news-prompt">›</span><a class="news-item-title" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a></div>'+
-   summary+
-   '<div class="news-item-tags">'+categoryTags+entityTags+'</div>'+
-  '</article>';
- }).join('');
- if(!html){
-  const message=narrativeNews.length
-   ?'No stories match this category or search.'
-   :narrativeNewsMeta.error||'No recent RSS articles are available right now.';
-  $('#t2list').innerHTML='<p class="news-empty">'+esc(message)+'</p>';
- }else{
-  $('#t2list').innerHTML=html;
- }
- const categoryCounts=NEWS_FILTERS.map((name,index)=>index===0?narrativeNews.length:
-  narrativeNews.map(classifyNewsArticle).filter(article=>article._alphaCategories.includes(name)).length);
- $('#t2tabs').querySelectorAll('button[data-news-tab]').forEach((button,index)=>{
-  button.dataset.count=String(categoryCounts[index]||0);
-  button.setAttribute('aria-pressed',String(index===t2tab));
- });
- $('#t2active').textContent=selected.toUpperCase();
- $('#t2count').textContent=articles.length+' / '+narrativeNews.length+' STORIES';
- const sourceCount=narrativeNewsMeta.successfulFeeds+'/'+(narrativeNewsMeta.feeds.length||6);
- const updated=narrativeNewsMeta.fetchedAt?new Date(narrativeNewsMeta.fetchedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'—';
- const stale=narrativeNewsMeta.stale?' · CACHED':'';
- $('#t2n').textContent='LIVE RSS · '+sourceCount+' SOURCES · '+narrativeNews.length+' ARTICLES · UPDATED '+updated+stale;
+     renderT1();$('#t1n').textContent='CACHED · JUPITER · '+(error.message||'Refresh unavailable');
+    }else{
+     $('#t1list').innerHTML='<p class="narrative-empty">'+esc(error.message||'Jupiter market data is temporarily unavailable.')+'</p>';
+     $('#t1n').textContent='JUPITER · WAITING FOR MARKET DATA';
+    }
+   }
+   return {ok:narrativePools.length>0,cached:true,tokens:narrativePools,pools:narrativePools.length,error:error.message||'Market data unavailable'};
+  }
+ })().finally(()=>{if(narrativeLoadPromises.get(interval)===request)narrativeLoadPromises.delete(interval)});
+ narrativeLoadPromises.set(interval,request);
+ return request;
 };
-ata ready · RSS news loads in Feed');
+const preloadImage=src=>new Promise(resolve=>{
+ if(!src||!/^https:\/\//i.test(src)||!window.Image)return resolve(false);
+ const image=new Image();let settled=false;
+ const finish=ok=>{if(settled)return;settled=true;clearTimeout(timer);resolve(ok)};
+ const timer=setTimeout(()=>finish(false),4500);
+ image.onload=()=>finish(true);image.onerror=()=>finish(false);image.src=src;
+ if(image.complete)finish(image.naturalWidth>0);
+});
+const preloadTerminalData=async report=>{
+ report(6,'LOADING DATA','Connecting to Jupiter Tokens V2 live trending feed');
+ const market=await loadT1(true,(percent,label,detail)=>report(percent,label,detail));
+ let logoSuccess=0;
+ if(market.ok){
+  const tokens=[...new Map(market.tokens.map(token=>[token.mint,token])).values()]
+   .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity).slice(0,8);
+  const imageTokens=tokens.filter(token=>token.imageUrl);
+  let finished=0;
+  report(58,'LOADING DATA','Preloading coin icons · 0/'+imageTokens.length);
+  const imageTasks=imageTokens.map(async token=>{
+   if(await preloadImage(token.imageUrl))logoSuccess++;
+   finished++;
+   report(58+(finished/Math.max(1,imageTokens.length))*30,'LOADING DATA','Preloading coin icons · '+finished+'/'+imageTokens.length);
+  });
+  await Promise.race([
+   Promise.allSettled(imageTasks),
+   new Promise(resolve=>setTimeout(resolve,2200))
+  ]);
+  renderT1();
+ }else{
+  report(70,'LIVE DATA UNAVAILABLE','No market data loaded · retrying when Trending opens');
+ }
+ loadNarrativeNews();
+ report(97,'LOADING DATA','Market data ready · RSS news loads in Feed');
  return {market:market.ok,pools:market.pools||0,logos:logoSuccess};
 };
 const renderNarrativeTabs=()=>{
@@ -1271,15 +1270,16 @@ const rf=()=>{
    ...(article._alphaCategories||[]),...(article._alphaEntities||[])
   ].join(' ').toLowerCase().includes(query))
   .sort((a,b)=>(Date.parse(b.publishedAt||'')||0)-(Date.parse(a.publishedAt||'')||0));
- const html=articles.map(article=>{
+ const html=articles.map((article,index)=>{
   const url=/^https?:\/\//i.test(article.url||'')?article.url:'#';
   const categoryTags=article._alphaCategories.map(category=>'<span class="news-tag">'+esc(category)+'</span>').join('');
   const entityTags=article._alphaEntities.map(entity=>'<span class="news-tag entity">'+esc(entity)+'</span>').join('');
-  const summary=article.summary?'<p>'+esc(article.summary.slice(0,300))+'</p>':'';
+  const summary=article.summary?'<p>'+esc(article.summary.slice(0,300))+(article.summary.length>300?'…':'')+'</p>':'';
   const publisher=article.source||article.domain||article.feed||'RSS';
+  const published=relativeNewsTime(article);
   return '<article class="news-item">'+
-   '<div class="news-item-meta"><span>'+esc(publisher)+'</span><span>'+esc(relativeNewsTime(article))+'</span></div>'+
-   '<a class="news-item-title" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a>'+
+   '<div class="news-item-index"><span class="news-item-no">['+String(index+1).padStart(2,'0')+']</span><span class="news-item-source">'+esc(publisher)+'</span><span class="news-item-time">'+esc(published)+'</span></div>'+
+   '<div class="news-item-line"><span class="news-prompt">›</span><a class="news-item-title" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a></div>'+
    summary+
    '<div class="news-item-tags">'+categoryTags+entityTags+'</div>'+
   '</article>';
@@ -1292,6 +1292,14 @@ const rf=()=>{
  }else{
   $('#t2list').innerHTML=html;
  }
+ const categoryCounts=NEWS_FILTERS.map((name,index)=>index===0?narrativeNews.length:
+  narrativeNews.map(classifyNewsArticle).filter(article=>article._alphaCategories.includes(name)).length);
+ $('#t2tabs').querySelectorAll('button[data-news-tab]').forEach((button,index)=>{
+  button.dataset.count=String(categoryCounts[index]||0);
+  button.setAttribute('aria-pressed',String(index===t2tab));
+ });
+ $('#t2active').textContent=selected.toUpperCase();
+ $('#t2count').textContent=articles.length+' / '+narrativeNews.length+' STORIES';
  const sourceCount=narrativeNewsMeta.successfulFeeds+'/'+(narrativeNewsMeta.feeds.length||6);
  const updated=narrativeNewsMeta.fetchedAt?new Date(narrativeNewsMeta.fetchedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'—';
  const stale=narrativeNewsMeta.stale?' · CACHED':'';
