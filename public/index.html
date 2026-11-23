@@ -436,9 +436,21 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
 .hl .ctas{margin:0;justify-content:center}
 .hl .blk{pointer-events:auto}
 
-/* Uploaded Moving clouds (CSS).html — original animated cloud background */
-@property --t { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
-@keyframes sky-clock { to { --t: 360deg; } }
+/* Terminal cloud field: independent motion cycles keep layers from drifting in sync. */
+@property --cloud-t { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes cloud-orbit { to { --cloud-t: 360deg; } }
+@keyframes cloud-drift {
+  0% { translate: 0 0; }
+  32% { translate: var(--dx1) var(--dy1); }
+  68% { translate: var(--dx2) var(--dy2); }
+  100% { translate: var(--dx3) var(--dy3); }
+}
+@keyframes cloud-breathe {
+  0% { scale: 1; }
+  38% { scale: 1.075; }
+  72% { scale: .965; }
+  100% { scale: 1.035; }
+}
 @keyframes sky-grain {
   0%{transform:translate(0,0)}12%{transform:translate(-7%,5%)}
   25%{transform:translate(4%,-9%)}37%{transform:translate(-12%,-3%)}
@@ -446,23 +458,36 @@ body.app .xh{display:none}@media(pointer:coarse){.xh{display:none}}
   75%{transform:translate(11%,-6%)}87%{transform:translate(-9%,2%)}
   100%{transform:translate(0,0)}
 }
-.sky{position:absolute;inset:0;overflow:hidden;background:#e5eef5;animation:sky-clock 10s linear infinite;z-index:0;pointer-events:none}
+.sky{position:absolute;inset:0;overflow:hidden;background:#e5eef5;z-index:0;pointer-events:none}
 .cloud{
  position:absolute;left:calc(var(--x)*100%);top:calc(var(--y)*100%);
  width:calc(var(--sx)*600%);height:calc(var(--sy)*600%);
- --ang:calc(var(--t)*var(--k) + var(--ph));
- transform:translate(-50%,-50%) translate(calc(sin(var(--ang))*var(--ax)*100vw),calc(cos(var(--ang) + .6rad)*var(--ay)*100vh)) scale(calc(1 + .06*sin(var(--t) + var(--ph)*2)));
+ --ang:calc(var(--cloud-t)*var(--k) + var(--ph));
+ transform:translate(-50%,-50%) translate(calc(sin(var(--ang))*var(--ax)*100vw),calc(cos(var(--ang) + .6rad)*var(--ay)*100vh));
  background:radial-gradient(ellipse closest-side,
  rgb(var(--rgb)/var(--a)) 0%,rgb(var(--rgb)/calc(var(--a)*.88)) 16.7%,
  rgb(var(--rgb)/calc(var(--a)*.61)) 33.3%,rgb(var(--rgb)/calc(var(--a)*.32)) 50%,
- rgb(var(--rgb)/calc(var(--a)*.135)) 66.7%,rgb(var(--rgb)/calc(var(--a)*.044)) 83.3%,rgb(var(--rgb)/0) 100%);
+ rgb(var(--rgb)/calc(var(--a)*.135)) 66.7%,rgb(var(--rgb)/calc(var(--a)*.044)) 83.3%,
+ rgb(var(--rgb)/0) 100%);
+}
+body.app .sky .cloud{
+ --cloud-t:0deg;
+ animation:
+  cloud-orbit var(--orbit,28s) linear infinite,
+  cloud-drift var(--drift,25s) cubic-bezier(.45,0,.55,1) infinite alternate,
+  cloud-breathe var(--breathe,20s) ease-in-out infinite alternate;
+ will-change:transform,translate,scale;
 }
 .sky-grid{position:absolute;inset:0;background-image:linear-gradient(rgb(0 0 0/.013) 1px,transparent 1px),linear-gradient(90deg,rgb(0 0 0/.013) 1px,transparent 1px);background-size:3.3333vw 3.3333vw}
 .sky-grain{position:absolute;inset:-20%;opacity:.5;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:sky-grain .67s steps(1) infinite;pointer-events:none}
 
-@media(prefers-reduced-motion:reduce){.sky{animation:none}.cloud,.sky-grain{animation:none}}
+@media(prefers-reduced-motion:reduce){
+ body.app .sky .cloud{animation:none!important;translate:0 0;scale:1;will-change:auto}
+ .sky-grain{animation:none}
+}
 
 
+/* Cloud display is terminal-only; landing hero continues to use its original film. */
 /* Show the uploaded cloud background only in the terminal/app view. Landing hero remains on its original film. */
 .sky{display:none!important}
 body.app .sky{display:block!important}
@@ -476,12 +501,15 @@ body.app .hero-film{display:none!important}
   <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
 </video>
 <div class="sky" aria-hidden="true">
-  <div class="cloud" style="--x:.18; --y:.17; --sx:.115; --sy:.20; --rgb:72 122 186; --a:.97; --ax:.045; --ay:.06; --k:1; --ph:0rad"></div>
-  <div class="cloud" style="--x:.82; --y:.74; --sx:.110; --sy:.19; --rgb:160 197 230; --a:.80; --ax:.05; --ay:.05; --k:1; --ph:1.7rad"></div>
-  <div class="cloud" style="--x:.76; --y:.10; --sx:.150; --sy:.20; --rgb:188 211 234; --a:.65; --ax:.06; --ay:.05; --k:2; --ph:.8rad"></div>
-  <div class="cloud" style="--x:.06; --y:.58; --sx:.110; --sy:.20; --rgb:214 228 240; --a:.45; --ax:.04; --ay:.06; --k:1; --ph:2.6rad"></div>
-  <div class="cloud" style="--x:.58; --y:.95; --sx:.150; --sy:.14; --rgb:205 224 240; --a:.22; --ax:.07; --ay:.04; --k:2; --ph:4rad"></div>
-  <div class="cloud" style="--x:.48; --y:.42; --sx:.100; --sy:.17; --rgb:125 168 212; --a:.28; --ax:.22; --ay:.10; --k:1; --ph:3.3rad"></div>
+  <div class="cloud" style="--x:.18; --y:.17; --sx:.115; --sy:.20; --rgb:72 122 186; --a:.97; --ax:.045; --ay:.06; --k:1; --ph:0rad; --orbit:27s; --drift:22s; --breathe:18s; --dx1:1.6vw; --dy1:-.7vh; --dx2:-1.2vw; --dy2:1.1vh; --dx3:.8vw; --dy3:.5vh"></div>
+  <div class="cloud" style="--x:.82; --y:.74; --sx:.110; --sy:.19; --rgb:160 197 230; --a:.80; --ax:.05; --ay:.05; --k:1; --ph:1.7rad; --orbit:35s; --drift:29s; --breathe:24s; --dx1:-1.8vw; --dy1:.9vh; --dx2:1.1vw; --dy2:-1.2vh; --dx3:-.6vw; --dy3:-.5vh"></div>
+  <div class="cloud" style="--x:.76; --y:.10; --sx:.150; --sy:.20; --rgb:188 211 234; --a:.65; --ax:.06; --ay:.05; --k:2; --ph:.8rad; --orbit:22s; --drift:26s; --breathe:17s; --dx1:1.3vw; --dy1:1.0vh; --dx2:-1.7vw; --dy2:-.5vh; --dx3:.5vw; --dy3:-1.0vh"></div>
+  <div class="cloud" style="--x:.06; --y:.58; --sx:.110; --sy:.20; --rgb:214 228 240; --a:.45; --ax:.04; --ay:.06; --k:1; --ph:2.6rad; --orbit:41s; --drift:34s; --breathe:27s; --dx1:-1.1vw; --dy1:-.8vh; --dx2:1.9vw; --dy2:.7vh; --dx3:-.4vw; --dy3:1.0vh"></div>
+  <div class="cloud" style="--x:.58; --y:.95; --sx:.150; --sy:.14; --rgb:205 224 240; --a:.22; --ax:.07; --ay:.04; --k:2; --ph:4rad; --orbit:31s; --drift:24s; --breathe:21s; --dx1:1.7vw; --dy1:-.5vh; --dx2:-.8vw; --dy2:-1.1vh; --dx3:-1.5vw; --dy3:.4vh"></div>
+  <div class="cloud" style="--x:.48; --y:.42; --sx:.100; --sy:.17; --rgb:125 168 212; --a:.28; --ax:.22; --ay:.10; --k:1; --ph:3.3rad; --orbit:24s; --drift:18s; --breathe:16s; --dx1:-2.2vw; --dy1:1.2vh; --dx2:1.4vw; --dy2:.6vh; --dx3:1.0vw; --dy3:-1.3vh"></div>
+  <div class="cloud" style="--x:.34; --y:.34; --sx:.085; --sy:.135; --rgb:91 143 198; --a:.34; --ax:.095; --ay:.075; --k:1.5; --ph:2.2rad; --orbit:38s; --drift:32s; --breathe:23s; --dx1:1.2vw; --dy1:.6vh; --dx2:-1.5vw; --dy2:-.9vh; --dx3:.5vw; --dy3:1.1vh"></div>
+  <div class="cloud" style="--x:.91; --y:.43; --sx:.095; --sy:.145; --rgb:176 203 229; --a:.38; --ax:.085; --ay:.065; --k:1.25; --ph:5.1rad; --orbit:29s; --drift:37s; --breathe:26s; --dx1:-1.4vw; --dy1:-.7vh; --dx2:.9vw; --dy2:1.0vh; --dx3:1.2vw; --dy3:-.3vh"></div>
+  <div class="cloud" style="--x:.28; --y:.87; --sx:.125; --sy:.12; --rgb:131 174 211; --a:.25; --ax:.12; --ay:.05; --k:.8; --ph:4.7rad; --orbit:46s; --drift:28s; --breathe:22s; --dx1:-1.8vw; --dy1:.5vh; --dx2:1.3vw; --dy2:-.7vh; --dx3:-.7vw; --dy3:-.9vh"></div>
   <div class="sky-grid"></div>
   <div class="sky-grain"></div>
 </div>
