@@ -545,6 +545,84 @@ body.app .sky .cloud{
 .sky{display:none!important}
 body.app .sky{display:block!important}
 body.app .hero-film{display:none!important}
+
+/* Readability pass: News Feed + Coin Tracker */
+#t2 .news-panel-title{font-size:10px}
+#t2 .news-index-label{font-size:10px}
+#t2tabs button{font-size:12px;line-height:1.4;padding:8px 7px}
+#t2tabs button::after{font-size:10px}
+#t2 .news-rail-foot{font-size:10px;line-height:1.9}
+#t2 .news-path{font-size:10px}
+#t2 .news-search{font-size:10px;padding:6px 7px}
+#t2 .news-output-head{font-size:10px}
+#t2 .news-item{gap:6px;padding:12px 4px 13px}
+#t2 .news-item-index{font-size:10px;gap:9px}
+#t2 .news-item-title{font-size:13px;line-height:1.55;font-weight:600}
+#t2 .news-item p{font-size:11px;line-height:1.6;margin-left:17px}
+#t2 .news-item-tags{margin-left:17px;gap:5px}
+#t2 .news-tag{font-size:9px;line-height:1.4;padding:3px 5px}
+#t2 .news-status{font-size:9px;line-height:1.5;padding-top:9px}
+#t2 .news-empty{font-size:12px;line-height:1.65}
+
+/* Trending / Coin Tracker */
+#t1tabs button{font-size:12px;padding:7px 12px;min-height:31px}
+#t1tabs .narrative-j7{font-size:12px;min-height:31px}
+#t1 .narrative-group summary{font-size:14px;gap:12px;padding:13px 0}
+#t1 .narrative-name{font-size:14px}
+#t1 .narrative-kind{font-size:9px;padding:3px 5px}
+#t1 .narrative-state{font-size:11px}
+#t1 .narrative-group summary>.narrative-change{font-size:13px;min-width:60px}
+#t1 .narrative-stats{font-size:12px;padding-bottom:9px}
+#t1 .narrative-token{grid-template-columns:30px minmax(0,1fr) minmax(94px,.38fr) 64px;gap:10px;padding:8px 0;min-height:36px}
+#t1 .narrative-token .pump-logo{width:23px;height:23px;font-size:15px}
+#t1 .narrative-token .pump-token{gap:5px}
+#t1 .narrative-token-heading{gap:8px}
+#t1 .narrative-token .pump-token b{font-size:13px}
+#t1 .narrative-token .pump-token small{font-size:11px}
+#t1 .narrative-tag{font-size:9px;padding:2px 5px}
+#t1 .narrative-match-reason{font-size:9px;line-height:1.4}
+#t1 .narrative-liq{font-size:11px}
+#t1 .narrative-change{font-size:12px}
+#t1 .narrative-empty{font-size:12px;line-height:1.6}
+#t1n{font-size:11px;line-height:1.5}
+
+/* Coin detail chart, trades and stats */
+#t1 .cvh{min-height:48px;gap:14px}
+#t1 .cvh b{font-size:17px}
+#t1 .coin-ca{font-size:11px}
+#t1 .so{font-size:12px;gap:12px}
+#t1 .feed-chip{font-size:10px;padding:5px 8px}
+#t1 .stg{gap:8px 24px;padding:10px 0}
+#t1 .stg small{font-size:11px}
+#t1 .stg b{font-size:15px}
+#t1 .tabs button{font-size:12px;padding:7px 11px}
+#t1 .tabs #chk{font-size:12px}
+#t1 .lg{font-size:12px;line-height:1.6}
+#t1 .trd{font-size:13px;gap:9px;padding:8px 0}
+#t1 .trd.h{font-size:11px}
+#t1 #chn{font-size:11px;line-height:1.5}
+
+@media(max-width:650px){
+ #t2 .news-shell{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ #t2tabs button{font-size:10px;padding:6px 7px}
+ #t2 .news-item-title{font-size:12px}
+ #t2 .news-item p{font-size:10px}
+ #t1tabs button{font-size:11px;padding:6px 8px}
+ #t1 .narrative-group summary{gap:7px;font-size:12px}
+ #t1 .narrative-name{font-size:12px}
+ #t1 .narrative-state{font-size:10px}
+ #t1 .narrative-token{grid-template-columns:24px minmax(0,1fr) 72px 52px;gap:6px;padding:7px 0}
+ #t1 .narrative-token .pump-logo{width:20px;height:20px}
+ #t1 .narrative-token .pump-token b{font-size:12px}
+ #t1 .narrative-token .pump-token small{font-size:10px}
+ #t1 .narrative-liq,#t1 .narrative-change{font-size:10px}
+ #t1 .narrative-match-reason{font-size:8px}
+ #t1 .stg{gap:7px 14px}
+ #t1 .stg b{font-size:13px}
+ #t1 .cvh{gap:7px}
+ #t1 .coin-ca{font-size:9px}
+ #t1 .trd{font-size:11px;gap:5px}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Admin login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
