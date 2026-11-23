@@ -725,7 +725,7 @@ const pct=n=>(n>0?'+':'')+Number(n||0).toFixed(1)+'%';
 const tokenCategory=token=>{
  const text=[token.symbol,token.name,token.poolName].filter(Boolean).join(' ');
  const rule=NARRATIVE_RULES.find(x=>x.re.test(text));
- return rule?rule.name:'';
+ return rule?rule.name:'Other / Unclassified';
 };
 const tokenPct=stats=>{
  if(stats?.priceChange==null)return null;
