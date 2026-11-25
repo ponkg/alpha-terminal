@@ -32,19 +32,17 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const source = fs.readFileSync('server.js', 'utf8');
-          const accessRoutes = [
-            /app\\.get\\("\/api\/token-meta",\\s*tokenMetaLimiter,\\s*requireAccess/,
-            /app\\.get\\("\/api\/gecko",\\s*geckoLimiter,\\s*requireAccess/,
-            /app\\.get\\("\/api\/jupiter\/trending",\\s*jupiterLimiter,\\s*requireAccess/,
-            /app\\.get\\("\/api\/narrative-news",\\s*narrativeNewsLimiter,\\s*requireAccess/
+          const requiredRoutes = [
+            'app.get("/api/token-meta", tokenMetaLimiter, requireAccess',
+            'app.get("/api/gecko", geckoLimiter, requireAccess',
+            'app.get("/api/jupiter/trending", jupiterLimiter, requireAccess',
+            'app.get("/api/narrative-news", narrativeNewsLimiter, requireAccess',
+            'app.get("/api/admin/waitlist", requireAdmin',
+            'app.post("/api/admin/waitlist/:id/invite", requireAdmin',
+            'app.patch("/api/admin/waitlist/:id/access", requireAdmin'
           ];
-          const adminRoutes = [
-            /app\\.get\\("\/api\/admin\/waitlist",\\s*requireAdmin/,
-            /app\\.post\\("\/api\/admin\/waitlist\/:id\/invite",\\s*requireAdmin/,
-            /app\\.patch\\("\/api\/admin\/waitlist\/:id\/access",\\s*requireAdmin/
-          ];
-          for (const pattern of [...accessRoutes, ...adminRoutes]) {
-            if (!pattern.test(source)) throw new Error('Missing protected route or access middleware: ' + pattern);
+          for (const route of requiredRoutes) {
+            if (!source.includes(route)) throw new Error('Missing protected route or access middleware: ' + route);
           }
           console.log('Protected API routes and admin gates verified.');
           NODE
