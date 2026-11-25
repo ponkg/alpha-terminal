@@ -1154,9 +1154,144 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 #wm .wm-state{color:var(--ac);font-size:9px;text-transform:uppercase}
 #wm .wm-state.revoked{color:#d36b6b}
 @media(max-width:700px){#wm{width:96vw!important;height:84vh!important}#wm .wm-row{grid-template-columns:1fr 1fr;gap:7px}#wm .wm-row>div:first-child{grid-column:1/-1}#wm .wm-row input{grid-column:1/-1}#wm .wm-row button{width:100%}}
+
+/* === Alpha public product site: editorial depth, original atmosphere === */
+html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+html.terminal-mode,html.terminal-mode body{height:100%;overflow:hidden}
+body:not(.app){background:#09131f;color:#eaf3fb}
+body:not(.app) .bbar{display:none!important}
+body:not(.app) .marketing-site{display:block;position:relative;isolation:isolate;overflow:hidden;color:#eaf3fb;background:
+ radial-gradient(ellipse 55% 34% at 8% 4%,rgba(62,125,184,.20),transparent 78%),
+ radial-gradient(ellipse 48% 38% at 92% 32%,rgba(64,132,195,.13),transparent 78%),
+ radial-gradient(ellipse 48% 42% at 42% 88%,rgba(38,92,149,.16),transparent 82%),
+ linear-gradient(180deg,#0a1521 0%,#0b1724 48%,#09131f 100%)}
+body:not(.app) .marketing-site:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.24;background-image:linear-gradient(rgba(160,195,225,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(160,195,225,.045) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,transparent,#000 12%,#000 88%,transparent)}
+body.app .marketing-site{display:none!important}
+body:not(.app) #nv .nbar{max-width:1180px}
+body:not(.app) #nv .blk.ws{gap:3px}
+body:not(.app) #nv .ws a{font-size:10px;letter-spacing:.06em;padding:6px 9px}
+body:not(.app) #nv .ws a b{font-size:9px;opacity:.72}
+body:not(.app) #nv .blk.cta{background:#eaf3fb;color:#0b1724}
+body:not(.app) #nv .blk.cta:hover{background:#3f8fd0;color:#fff}
+.marketing-site *{box-sizing:border-box}
+.marketing-site .m-wrap{width:min(1180px,100%);margin:0 auto;padding:0 clamp(20px,4vw,52px)}
+.marketing-site .m-section{position:relative;padding:clamp(76px,10vw,132px) 0;border-top:1px solid rgba(159,190,219,.13);scroll-margin-top:88px}
+.marketing-site .m-section:first-child{border-top:0}
+.marketing-site .m-kicker{display:flex;align-items:center;gap:10px;color:#7fb9e9;font:500 10px/1.5 var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.marketing-site .m-kicker:before{content:"";width:22px;height:1px;background:#579dd7}
+.marketing-site .m-title{max-width:850px;margin:18px 0 18px;color:#f2f7fc;font:500 clamp(34px,5.4vw,68px)/1.04 var(--mono);letter-spacing:-.065em}
+.marketing-site .m-title .m-blue{color:#79b8ec}
+.marketing-site .m-lead{max-width:670px;color:#9db2c8;font:400 clamp(14px,1.5vw,17px)/1.85 var(--mono)}
+.marketing-site .m-meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:24px;color:#7890a7;font:10px/1.6 var(--mono);letter-spacing:.07em}
+.marketing-site .m-meta span:before{content:"+";margin-right:7px;color:#71b4e9}
+.marketing-site .m-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;margin-top:42px}
+.marketing-site .m-panel{min-width:0;border:1px solid rgba(154,190,222,.23);background:linear-gradient(145deg,rgba(17,32,47,.88),rgba(8,18,29,.92));box-shadow:0 24px 70px rgba(0,0,0,.16)}
+.marketing-site .m-panel-pad{padding:clamp(18px,2.4vw,30px)}
+.marketing-site .m-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid rgba(154,190,222,.18);color:#9eb4c9;font:10px/1.4 var(--mono);letter-spacing:.1em}
+.marketing-site .m-panel-head b{color:#73b7ed;font-weight:500}
+.marketing-site .m-index{color:#68839d;font:10px/1.5 var(--mono);letter-spacing:.14em}
+.marketing-site .m-panel h3{margin:12px 0 9px;color:#edf5fc;font:500 clamp(21px,2.5vw,30px)/1.2 var(--mono);letter-spacing:-.05em}
+.marketing-site .m-panel p{color:#9bb0c5;font:11px/1.8 var(--mono)}
+.marketing-site .m-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 7px;border:1px solid rgba(115,183,237,.32);color:#82bee9;font:9px/1.4 var(--mono);letter-spacing:.06em}
+.marketing-site .m-tag:before{content:"";width:5px;height:5px;background:#6dafdf}
+.marketing-site .m-terminal{overflow:hidden;border:1px solid rgba(123,174,214,.36);background:rgba(4,11,19,.92);box-shadow:0 34px 100px rgba(0,0,0,.34)}
+.marketing-site .m-term-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 15px;border-bottom:1px solid rgba(154,190,222,.18);color:#8da6bd;font:10px/1.4 var(--mono);letter-spacing:.09em}
+.marketing-site .m-lamps{display:flex;gap:5px}.marketing-site .m-lamps i{display:block;width:6px;height:6px;border:1px solid #6b8aa6}
+.marketing-site .m-term-body{padding:clamp(14px,2vw,24px)}
+.marketing-site .m-term-path{display:flex;flex-wrap:wrap;gap:7px;color:#6f8da8;font:10px/1.5 var(--mono);letter-spacing:.04em}
+.marketing-site .m-term-path b{color:#7db9e8;font-weight:500}
+.marketing-site .m-token-head,.marketing-site .m-token{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(70px,.7fr) minmax(70px,.7fr) minmax(65px,.55fr);gap:10px;align-items:center}
+.marketing-site .m-token-head{margin-top:18px;padding:9px 4px;border-top:1px solid rgba(154,190,222,.2);border-bottom:1px solid rgba(154,190,222,.2);color:#6f879e;font:9px/1.4 var(--mono);letter-spacing:.09em}
+.marketing-site .m-token{padding:13px 4px;border-bottom:1px solid rgba(154,190,222,.12);color:#dce9f5;font:10px/1.5 var(--mono)}
+.marketing-site .m-token span:not(:first-child){text-align:right;color:#96adc2}
+.marketing-site .m-token b{color:#8fc9f3;font-weight:500}
+.marketing-site .m-token .m-up{color:#8ed7a7!important}
+.marketing-site .m-terminal-foot{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-top:1px solid rgba(154,190,222,.18);color:#6f879e;font:9px/1.5 var(--mono);letter-spacing:.05em}
+.marketing-site .m-feature-copy{display:flex;flex-direction:column;justify-content:center}
+.marketing-site .m-feature-copy .m-title{font-size:clamp(30px,4vw,48px);max-width:580px}
+.marketing-site .m-feature-copy .m-lead{font-size:13px}
+.marketing-site .m-feature-copy ul{display:grid;gap:10px;margin:22px 0 0;padding:0;list-style:none}
+.marketing-site .m-feature-copy li{display:flex;gap:10px;color:#b0c2d4;font:11px/1.6 var(--mono)}
+.marketing-site .m-feature-copy li:before{content:"›";color:#79b8ec}
+.marketing-site .m-feature-copy .m-index{margin-bottom:6px}
+.marketing-site .m-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:48px;border:1px solid rgba(154,190,222,.22)}
+.marketing-site .m-step{position:relative;min-height:220px;padding:24px 20px;border-right:1px solid rgba(154,190,222,.18);background:rgba(8,18,29,.55)}
+.marketing-site .m-step:last-child{border-right:0}
+.marketing-site .m-step-no{color:#75b7e9;font:10px/1.4 var(--mono);letter-spacing:.14em}
+.marketing-site .m-step h3{margin:32px 0 10px;color:#edf5fc;font:500 18px/1.3 var(--mono)}
+.marketing-site .m-step p{color:#91a8bf;font:10px/1.8 var(--mono)}
+.marketing-site .m-step:after{content:"↗";position:absolute;right:18px;top:20px;color:#6486a5;font:15px var(--mono)}
+.marketing-site .m-side-note{margin-top:18px;color:#718ba4;font:10px/1.7 var(--mono)}
+.marketing-site .m-mini-list{display:grid;gap:0;margin-top:14px}
+.marketing-site .m-mini-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;padding:10px 0;border-bottom:1px solid rgba(154,190,222,.14);color:#a9bdd0;font:10px/1.5 var(--mono)}
+.marketing-site .m-mini-row b{color:#dceaf6;font-weight:500}
+.marketing-site .m-bars{display:grid;gap:12px;margin-top:20px}
+.marketing-site .m-bar{display:grid;grid-template-columns:92px minmax(0,1fr) 34px;gap:9px;align-items:center;color:#8fa8bf;font:9px var(--mono)}
+.marketing-site .m-bar i{display:block;height:4px;background:#162a3c;overflow:hidden}
+.marketing-site .m-bar i:after{content:"";display:block;height:100%;width:var(--w);background:#4b9bd6}
+.marketing-site .m-code{padding:16px;border:1px solid rgba(129,180,220,.2);background:#07111c;color:#8ebde1;font:10px/1.85 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
+.marketing-site .m-source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:38px;border:1px solid rgba(154,190,222,.2)}
+.marketing-site .m-source{padding:22px;border-right:1px solid rgba(154,190,222,.18);border-bottom:1px solid rgba(154,190,222,.18)}
+.marketing-site .m-source:nth-child(3n){border-right:0}
+.marketing-site .m-source:nth-last-child(-n+3){border-bottom:0}
+.marketing-site .m-source b{display:block;margin:11px 0 7px;color:#e9f3fc;font:500 14px var(--mono)}
+.marketing-site .m-source p{color:#91a8bf;font:10px/1.75 var(--mono)}
+.marketing-site .m-doc-link{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:42px;padding:23px 25px;border:1px solid rgba(119,181,227,.35);background:linear-gradient(100deg,rgba(49,105,153,.18),rgba(8,18,29,.7));color:#eaf4fc}
+.marketing-site .m-doc-link strong{display:block;font:500 17px var(--mono)}
+.marketing-site .m-doc-link small{display:block;margin-top:7px;color:#8da8c1;font:10px/1.5 var(--mono)}
+.marketing-site .m-doc-link em{font:normal 22px var(--mono);color:#7bb9e9}
+.marketing-site .m-faq{max-width:880px;margin-top:34px}
+.marketing-site .m-faq details{padding:17px 0;border-bottom:1px solid rgba(154,190,222,.18)}
+.marketing-site .m-faq summary{color:#e6f0fa;font:500 12px/1.6 var(--mono)}
+.marketing-site .m-faq details p{max-width:760px;color:#91a8bf;font:10px/1.8 var(--mono)}
+.marketing-site .m-cta{padding:clamp(58px,8vw,100px) 0;border-top:1px solid rgba(154,190,222,.15);background:radial-gradient(ellipse 55% 90% at 50% 100%,rgba(59,122,180,.24),transparent 75%)}
+.marketing-site .m-cta-box{position:relative;overflow:hidden;padding:clamp(26px,5vw,60px);border:1px solid rgba(135,190,232,.36);background:linear-gradient(130deg,rgba(21,42,61,.86),rgba(6,16,27,.94))}
+.marketing-site .m-cta-box:after{content:"";position:absolute;right:-90px;top:-170px;width:380px;height:380px;border:1px solid rgba(123,182,226,.18);border-radius:50%;box-shadow:0 0 0 35px rgba(123,182,226,.035),0 0 0 75px rgba(123,182,226,.025)}
+.marketing-site .m-cta-box .m-title{position:relative;z-index:1;font-size:clamp(32px,5vw,58px)}
+.marketing-site .m-cta-box .m-lead,.marketing-site .m-cta-box .m-cta-actions{position:relative;z-index:1}
+.marketing-site .m-cta-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.marketing-site .m-button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 15px;border:1px solid #74b7ea;background:#74b7ea;color:#07131f;font:600 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.marketing-site .m-button:hover{background:#9bcdf1;border-color:#9bcdf1}
+.marketing-site .m-button.alt{background:transparent;color:#dcebf8;border-color:rgba(154,190,222,.35)}
+.marketing-site .m-footer{padding:28px 0 40px;border-top:1px solid rgba(154,190,222,.18);color:#829bb2}
+.marketing-site .m-footer-row{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.marketing-site .m-footer-links{display:flex;gap:18px;flex-wrap:wrap;font:10px/1.7 var(--mono)}
+.marketing-site .m-footer a:hover{color:#b8dcf7}
+.marketing-site .m-disclaimer{margin-top:18px;color:#66819b;font:9px/1.7 var(--mono)}
+.marketing-site .m-reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.marketing-site .m-reveal.v{opacity:1;transform:none}
+.marketing-site a:focus-visible,.marketing-site button:focus-visible{outline:1px solid #8bc8f1;outline-offset:3px}
+@media(max-width:900px){
+ .marketing-site .m-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .marketing-site .m-step:nth-child(2){border-right:0}
+ .marketing-site .m-step:nth-child(-n+2){border-bottom:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .marketing-site .m-source:nth-child(3n){border-right:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-source:nth-child(2n){border-right:0}
+ .marketing-site .m-source:nth-last-child(-n+3){border-bottom:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-source:nth-last-child(-n+1){border-bottom:0}
+}
+@media(max-width:650px){
+ .marketing-site .m-section{padding:72px 0}
+ .marketing-site .m-title{font-size:clamp(32px,9vw,48px)}
+ .marketing-site .m-grid{gap:10px;margin-top:26px}
+ .marketing-site .m-steps{grid-template-columns:1fr}
+ .marketing-site .m-step{min-height:0;padding:20px;border-right:0;border-bottom:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-step:last-child{border-bottom:0}
+ .marketing-site .m-step h3{margin:18px 0 7px}
+ .marketing-site .m-source-grid{grid-template-columns:1fr}
+ .marketing-site .m-source,.marketing-site .m-source:nth-child(3n){border-right:0;border-bottom:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-source:last-child{border-bottom:0}
+ .marketing-site .m-doc-link{align-items:flex-start;padding:18px}
+ .marketing-site .m-token-head,.marketing-site .m-token{grid-template-columns:minmax(0,1.3fr) minmax(60px,.7fr) minmax(60px,.7fr);gap:7px}
+ .marketing-site .m-token-head span:nth-child(4),.marketing-site .m-token span:nth-child(4){display:none}
+ .marketing-site .m-term-top{font-size:9px}
+ .marketing-site .m-bar{grid-template-columns:75px minmax(0,1fr) 28px}
+}
+@media(prefers-reduced-motion:reduce){.marketing-site .m-reveal{opacity:1;transform:none;transition:none}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
-<nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a></div></nav>
+<nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws" aria-label="Site navigation"><a href="#product"><b>01</b>Product</a><a href="#workflow"><b>02</b>Workflow</a><a href="#data"><b>03</b>Data</a><a href="/docs/"><b>04</b>Field manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#product">01 / Product</a><a class="blk" href="#workflow">02 / Workflow</a><a class="blk" href="#data">03 / Data &amp; methodology</a><a class="blk" href="/docs/">04 / Alpha Field Manual ↗</a></div></nav>
 
 <header class="hero" id="top">
 <video class="hero-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
@@ -1218,11 +1353,231 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="row"><span class="mut">X handle</span><b id="sh"></b></div><div class="row"><span class="mut">Successful referrals</span><b id="sr">0</b></div><div class="row"><span class="mut">Status</span><b id="ss">On the waitlist</b></div>
 <div class="lk"><input id="sl" readonly aria-label="Your invite link"></div>
 <div class="bt"><button class="btn" id="cb">Copy invite link</button><button class="btn o" id="xb">Share on X</button><button class="btn o" id="nb" hidden>Share…</button></div>
-<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div><p class="k" style="margin-top:12px">THE ALPHA VISION</p><div class="it"><b></b><span>Monitor market-wide narrative activity, identify clusters of related tokens, observe shifts in attention and track narratives through their lifecycle.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div><p class="k" style="margin-top:12px">PRODUCT PREVIEW — ILLUSTRATIVE DATA, NOT LIVE</p></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><p class="k" style="margin-top:12px">PRODUCT VISION — NOT YET RELEASED</p></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details><details><summary>Does alpha guarantee profitable trades?</summary><p>No. alpha provides market information and research tools. It does not guarantee trading outcomes.</p></details><details><summary>Not financial advice (NFA)</summary><p>Nothing on alpha is financial advice. Memecoins are volatile and can go to zero.</p></details><details><summary>Do your own research (DYOR)</summary><p>Verify every token, contract and claim yourself before acting.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><button class="blk appo" id="wm-toggle" hidden>WAITLIST</button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><a href="#" class="blk" data-open="w-legal">Privacy &amp; terms</a><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X / Twitter</a><button class="blk appo" id="thm">◐ Light</button></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
+<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div><p class="k" style="margin-top:12px">THE ALPHA VISION</p><div class="it"><b></b><span>Monitor market-wide narrative activity, identify clusters of related tokens, observe shifts in attention and track narratives through their lifecycle.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div><p class="k" style="margin-top:12px">PRODUCT PREVIEW — ILLUSTRATIVE DATA, NOT LIVE</p></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><p class="k" style="margin-top:12px">PRODUCT VISION — NOT YET RELEASED</p></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details><details><summary>Does alpha guarantee profitable trades?</summary><p>No. alpha provides market information and research tools. It does not guarantee trading outcomes.</p></details><details><summary>Not financial advice (NFA)</summary><p>Nothing on alpha is financial advice. Memecoins are volatile and can go to zero.</p></details><details><summary>Do your own research (DYOR)</summary><p>Verify every token, contract and claim yourself before acting.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header>
+<main class="marketing-site" id="site">
+  <section class="m-section" id="product">
+    <div class="m-wrap">
+      <div class="m-kicker">ALPHA / SOLANA NARRATIVE INTELLIGENCE</div>
+      <h2 class="m-title m-reveal">The market moves in <span class="m-blue">narratives.</span><br>Not just tickers.</h2>
+      <p class="m-lead m-reveal">Alpha brings market discovery, event context, token investigation and a keyboard-first workflow into one focused research terminal.</p>
+      <div class="m-meta m-reveal"><span>MARKET DISCOVERY</span><span>EVENT CONTEXT</span><span>TOKEN RESEARCH</span><span>KEYBOARD FIRST</span></div>
+      <div class="m-grid">
+        <div class="m-terminal m-reveal" style="grid-column:span 8">
+          <div class="m-term-top"><span>ALPHA / MARKET INDEX</span><span class="m-lamps"><i></i><i></i><i></i></span><span>STATIC PRODUCT PREVIEW</span></div>
+          <div class="m-term-body">
+            <div class="m-term-path"><span>alpha@terminal</span><span>:</span><b>/markets</b><span>$</span><span>ALL NARRATIVES</span></div>
+            <div class="m-token-head"><span>ASSET / NARRATIVE</span><span>VOLUME</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+            <div class="m-token"><span><b>AI &amp; SEMICONDUCTORS</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-token"><span><b>POLITICAL FIGURES</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-token"><span><b>ANIMAL MEMES</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-token"><span><b>INTERNET CULTURE</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-terminal-foot"><span>CATEGORIES / DETECTED ENTITIES</span><span>ILLUSTRATIVE LAYOUT</span></div>
+          </div>
+        </div>
+        <div class="m-panel m-panel-pad m-reveal" style="grid-column:span 4">
+          <div class="m-index">01 / THE PRINCIPLE</div>
+          <h3>Find the theme behind the move.</h3>
+          <p>Explore tokens through configured market categories and detected entities. Inspect why a token was matched instead of treating every label as an unexplained signal.</p>
+          <div class="m-mini-list">
+            <div class="m-mini-row"><span>Market categories</span><b>01—</b></div>
+            <div class="m-mini-row"><span>Detected entities</span><b>02—</b></div>
+            <div class="m-mini-row"><span>Token directory</span><b>03—</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-section" id="workflow">
+    <div class="m-wrap">
+      <div class="m-kicker">02 / RESEARCH WORKFLOW</div>
+      <h2 class="m-title m-reveal">From discovery to <span class="m-blue">investigation.</span></h2>
+      <p class="m-lead m-reveal">Four connected stages. One place to build context around what the market is paying attention to.</p>
+      <div class="m-steps m-reveal">
+        <article class="m-step"><div class="m-step-no">01 / DISCOVER</div><h3>Read the market.</h3><p>Browse narrative categories, detected entities and token listings across supported timeframes.</p></article>
+        <article class="m-step"><div class="m-step-no">02 / UNDERSTAND</div><h3>Follow the events.</h3><p>Review categorized news, publication sources and entity tags to add context to market attention.</p></article>
+        <article class="m-step"><div class="m-step-no">03 / INVESTIGATE</div><h3>Inspect the token.</h3><p>Check available liquidity, pool, holder, authority, activity and profile signals before making your own assessment.</p></article>
+        <article class="m-step"><div class="m-step-no">04 / MONITOR</div><h3>Stay in your flow.</h3><p>Move between terminal windows and navigate lists with keyboard controls and configurable bindings.</p></article>
+      </div>
+      <p class="m-side-note">ALPHA ORGANIZES RESEARCH. IT DOES NOT EXECUTE TRADES OR GUARANTEE OUTCOMES.</p>
+    </div>
+  </section>
+
+  <section class="m-section" id="tracker">
+    <div class="m-wrap">
+      <div class="m-grid" style="align-items:center">
+        <div class="m-feature-copy m-reveal" style="grid-column:span 5">
+          <div class="m-index">03 / 01 — TRACKER</div>
+          <h2 class="m-title">Read the market by <span class="m-blue">narrative.</span></h2>
+          <p class="m-lead">Move beyond a flat list of trending tickers. Browse configured categories, inspect detected entities and explore the tokens grouped under each market theme.</p>
+          <ul><li>Market categories and entity directories</li><li>Search by ticker, name or mint address</li><li>Multiple market timeframes</li><li>Inspectable category-match explanations</li></ul>
+        </div>
+        <div class="m-terminal m-reveal" style="grid-column:span 7">
+          <div class="m-term-top"><span>01 / MARKET INDEX</span><span>TRACKER</span><span>PREVIEW</span></div>
+          <div class="m-term-body">
+            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/markets/ai-semiconductors</span><span>$</span></div>
+            <div class="m-token-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
+            <div class="m-terminal-foot"><span>SELECT CATEGORY → TOKEN DIRECTORY</span><span>ILLUSTRATIVE</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-section" id="news">
+    <div class="m-wrap">
+      <div class="m-grid" style="align-items:center">
+        <div class="m-terminal m-reveal" style="grid-column:span 7">
+          <div class="m-term-top"><span>02 / FEED INDEX</span><span>NEWS TERMINAL</span><span>PREVIEW</span></div>
+          <div class="m-term-body">
+            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/news</span><span>$</span><span>RECENT DISPATCHES</span></div>
+            <div class="m-mini-list">
+              <div class="m-mini-row"><span>01 / SOURCE</span><b>NEWS CATEGORY</b></div>
+              <div class="m-mini-row"><span>› Headline from a selected publisher</span><b>ENTITY TAG</b></div>
+              <div class="m-mini-row"><span>02 / SOURCE</span><b>NEWS CATEGORY</b></div>
+              <div class="m-mini-row"><span>› Another publisher headline</span><b>ENTITY TAG</b></div>
+              <div class="m-mini-row"><span>03 / SOURCE</span><b>NEWS CATEGORY</b></div>
+              <div class="m-mini-row"><span>› A third article headline</span><b>ENTITY TAG</b></div>
+            </div>
+          </div>
+          <div class="m-terminal-foot"><span>RSS / HTTP</span><span>STATIC PRODUCT PREVIEW · NOT LIVE NEWS</span></div>
+        </div>
+        <div class="m-feature-copy m-reveal" style="grid-column:span 5">
+          <div class="m-index">03 / 02 — NEWS FEED</div>
+          <h2 class="m-title">Understand what drives <span class="m-blue">attention.</span></h2>
+          <p class="m-lead">Bring selected news sources into a categorized feed. See publishers, headlines and detected entities in the same research environment.</p>
+          <ul><li>News categories and text search</li><li>Publisher and publication metadata</li><li>Entity tags from article text</li><li>Links to original reporting</li></ul>
+          <p class="m-side-note">The current feed uses selected RSS sources. It is not an X/Twitter firehose.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-section" id="scanner">
+    <div class="m-wrap">
+      <div class="m-grid" style="align-items:center">
+        <div class="m-feature-copy m-reveal" style="grid-column:span 5">
+          <div class="m-index">03 / 03 — COIN SCANNER</div>
+          <h2 class="m-title">Look beyond the <span class="m-blue">ticker.</span></h2>
+          <p class="m-lead">Inspect the available public signals around a token and its pool. The Scanner helps organize checks; it cannot certify that a token is safe.</p>
+          <ul><li>Liquidity and pool age</li><li>Holder distribution and concentration</li><li>Mint and freeze authority checks</li><li>Trading activity and profile information</li></ul>
+          <p class="m-side-note">Missing information should be treated as unknown, not proof of safety.</p>
+        </div>
+        <div class="m-terminal m-reveal" style="grid-column:span 7">
+          <div class="m-term-top"><span>03 / TOKEN DIAGNOSTICS</span><span>SCANNER</span><span>PREVIEW</span></div>
+          <div class="m-term-body">
+            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/scan</span><span>$</span><span>CHECK RESULTS</span></div>
+            <div class="m-mini-list">
+              <div class="m-mini-row"><span>LIQUIDITY</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>POOL AGE</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>HOLDERS</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>AUTHORITIES</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>ACTIVITY</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>PROFILE</span><b>CHECK AVAILABLE DATA</b></div>
+            </div>
+          </div>
+          <div class="m-terminal-foot"><span>SIGNALS, NOT A GUARANTEE</span><span>ILLUSTRATIVE LAYOUT</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-section" id="hotkeys">
+    <div class="m-wrap">
+      <div class="m-grid" style="align-items:center">
+        <div class="m-terminal m-reveal" style="grid-column:span 6">
+          <div class="m-term-top"><span>04 / WORKSPACE CONTROL</span><span>HOTKEY MAP</span><span>PREVIEW</span></div>
+          <div class="m-term-body">
+            <div class="m-code">ALT + 1   OPEN TRACKER
+ALT + 2   OPEN NEWS FEED
+ALT + 3   OPEN SCANNER
+ALT + 4   OPEN HOTKEYS
+
+↑  ↓      MOVE SELECTION
+ENTER     SELECT / ACTIVATE
+ESC       BACK / CLOSE</div>
+          </div>
+          <div class="m-terminal-foot"><span>LOCAL KEYBINDINGS</span><span>EDITABLE</span></div>
+        </div>
+        <div class="m-feature-copy m-reveal" style="grid-column:span 6">
+          <div class="m-index">03 / 04 — KEYBOARD WORKFLOW</div>
+          <h2 class="m-title">Your market. Your <span class="m-blue">workflow.</span></h2>
+          <p class="m-lead">Move between the four terminal windows, navigate lists and configure keybindings without relying on a mouse for every action.</p>
+          <ul><li>Alt+1 through Alt+4 to switch windows</li><li>Arrow-key navigation inside supported panels</li><li>Configurable keyboard bindings</li><li>A focused terminal-first workflow</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-section" id="data">
+    <div class="m-wrap">
+      <div class="m-kicker">04 / DATA &amp; METHODOLOGY</div>
+      <h2 class="m-title m-reveal">Know what powers the <span class="m-blue">screen.</span></h2>
+      <p class="m-lead m-reveal">Alpha combines third-party market and publication data. The interface is a research layer over those sources—not an exchange, oracle or execution venue.</p>
+      <div class="m-source-grid m-reveal">
+        <article class="m-source"><div class="m-index">MARKET DISCOVERY</div><b>Jupiter Tokens V2</b><p>Used for the trending-token feed and native ranking intervals supported by the provider.</p></article>
+        <article class="m-source"><div class="m-index">POOL &amp; PRICE HISTORY</div><b>GeckoTerminal</b><p>Used for pool discovery, token/pool details and historical market data where available.</p></article>
+        <article class="m-source"><div class="m-index">NEWS</div><b>Selected RSS feeds</b><p>Publisher feeds are fetched, normalized, categorized and linked back to their original articles.</p></article>
+      </div>
+      <div class="m-grid">
+        <article class="m-panel m-panel-pad m-reveal" style="grid-column:span 6">
+          <div class="m-index">DATA FRESHNESS</div><h3>Provider data can be cached.</h3>
+          <p>External APIs can rate-limit, return incomplete responses or become temporarily unavailable. A cached result is not the same as a live stream. Check the displayed source and status before relying on a reading.</p>
+        </article>
+        <article class="m-panel m-panel-pad m-reveal" style="grid-column:span 6">
+          <div class="m-index">DERIVED TIMEFRAMES</div><h3>Some intervals are calculated.</h3>
+          <p>Jupiter's native trending intervals are used where available. The 10-minute and 30-minute changes are derived from sampled 5-minute-feed prices collected by Alpha. They require sufficient collected history and can reset when the service restarts.</p>
+        </article>
+      </div>
+      <div class="m-doc-link m-reveal"><span><strong>ALPHA / FIELD MANUAL</strong><small>Read how each tool works, understand the data and learn the keyboard controls.</small></span><a href="/docs/" aria-label="Open Alpha Field Manual"><em>↗</em></a></div>
+    </div>
+  </section>
+
+  <section class="m-section" id="faq">
+    <div class="m-wrap">
+      <div class="m-kicker">05 / QUESTIONS &amp; ACCESS</div>
+      <h2 class="m-title m-reveal">Before you enter the <span class="m-blue">terminal.</span></h2>
+      <div class="m-faq m-reveal">
+        <details><summary>What is Alpha?</summary><p>Alpha is a Solana narrative intelligence terminal for market discovery, news context and token investigation.</p></details>
+        <details><summary>Is Alpha a trading bot?</summary><p>No. Alpha is a research interface. It does not execute trades or guarantee trading outcomes.</p></details>
+        <details><summary>Does Alpha use X/Twitter data?</summary><p>The current News Feed uses selected RSS sources. It does not provide a live X/Twitter feed.</p></details>
+        <details><summary>Do I need to connect a wallet to join the waitlist?</summary><p>No. The public waitlist currently asks for an X handle. Beta access is granted separately through an invitation to an email address.</p></details>
+        <details><summary>Are all timeframe measurements native provider data?</summary><p>No. The 10-minute and 30-minute changes are derived from sampled prices collected by Alpha, and require sufficient history.</p></details>
+        <details><summary>Does Alpha guarantee that a token is safe?</summary><p>No. Scanner results are public-data signals and can be incomplete. They are not a security audit or a guarantee.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="m-cta" id="join">
+    <div class="m-wrap">
+      <div class="m-cta-box m-reveal">
+        <div class="m-kicker">ALPHA / PRIVATE BETA</div>
+        <h2 class="m-title">See the meta before it <span class="m-blue">moves.</span></h2>
+        <p class="m-lead">Explore the market through narratives. Build context. Investigate the signals.</p>
+        <div class="m-cta-actions"><a class="m-button" href="#join" data-open="reg">REQUEST EARLY ACCESS ↗</a><a class="m-button alt" href="/docs/">READ THE FIELD MANUAL</a></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="m-footer">
+    <div class="m-wrap">
+      <div class="m-footer-row"><a href="#top" style="font:700 19px var(--mono);color:#eaf3fb">[alpha]</a><div class="m-footer-links"><a href="#product">PRODUCT</a><a href="#workflow">WORKFLOW</a><a href="/docs/">FIELD MANUAL</a><a href="#" data-open="w-legal">PRIVACY &amp; TERMS</a><a href="https://x.com/aterminalsol" target="_blank" rel="noopener noreferrer">X / TWITTER ↗</a></div></div>
+      <p class="m-disclaimer">ALPHA IS A MARKET RESEARCH TOOL. DATA MAY BE DELAYED, INCOMPLETE OR UNAVAILABLE. NOTHING ON THIS WEBSITE IS FINANCIAL ADVICE. MEMECOINS ARE HIGH RISK AND CAN GO TO ZERO.</p>
+      <p class="m-disclaimer">© <span id="site-year">2026</span> ALPHA / SEE THE META BEFORE IT MOVES.</p>
+    </div>
+  </footer>
+</main>
+<div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><button class="blk appo" id="wm-toggle" hidden>WAITLIST</button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><a href="#" class="blk" data-open="w-legal">Privacy &amp; terms</a><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X / Twitter</a><button class="blk appo" id="thm">◐ Light</button></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
 const $=s=>document.querySelector(s),nv=$('#nv');
 addEventListener('scroll',()=>nv.classList.toggle('s',scrollY>10),{passive:true});
 $('#mb').onclick=()=>$('#mm').classList.toggle('o');document.querySelectorAll('#mm a').forEach(a=>a.onclick=()=>$('#mm').classList.remove('o'));
 const io=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('v');io.unobserve(x.target)}}),{threshold:.1});document.querySelectorAll('.rv').forEach(e=>io.observe(e));
+const siteIO=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('v');siteIO.unobserve(entry.target)}}),{threshold:.12});
+document.querySelectorAll('.marketing-site .m-reveal').forEach(el=>siteIO.observe(el));
+const year=$('#site-year');if(year)year.textContent=String(new Date().getFullYear());
 // waitlist (talks to the local server)
 const link=c=>location.origin+location.pathname+'#ref-'+c;
 const q=(location.hash.match(/^#ref-([a-z0-9]+)$/i)||[])[1];try{if(q&&/^[a-z0-9]{6,12}$/.test(q)&&!localStorage.getItem('alpha_ref'))localStorage.setItem('alpha_ref',q)}catch(e){}
@@ -1268,7 +1623,7 @@ const upd=(box,st,html)=>{const op=new Set([...box.querySelectorAll('details[ope
 const sync=()=>document.querySelectorAll('[data-open]').forEach(a=>{a.classList.toggle('on',!['reg','auth'].includes(a.dataset.open)&&!W[a.dataset.open].hidden)});
 const open=id=>{const w=W[id];w.hidden=false;const m=hero.clientWidth<700,p=P[id];w.style.left=(m?(hero.clientWidth-w.offsetWidth)/2:hero.clientWidth*p[0])+'px';w.style.top=(m?70+Object.keys(P).indexOf(id)*14:hero.clientHeight*p[1])+'px';clamp(w);front(w);sync();w.querySelectorAll('.tbar>span').forEach(scr)};
 document.addEventListener('click',e=>{const a=e.target.closest('[data-open]');if(!a)return;e.preventDefault();const id=a.dataset.open,w=W[id];
-if(id==='reg'||id==='auth'){if(w.hidden)open(id);else front(w);const i=$(id==='auth'?'#au':'#h');if(i&&(id==='auth'||!$('#fv').hidden))i.focus({preventScroll:true})}else if(w.hidden)open(id);else hide(w)});
+if(id==='reg'||id==='auth'){if(!b.classList.contains('app'))window.scrollTo({top:0,behavior:'instant'});if(w.hidden)open(id);else front(w);const i=$(id==='auth'?'#au':'#h');if(i&&(id==='auth'||!$('#fv').hidden))i.focus({preventScroll:true})}else if(w.hidden)open(id);else hide(w)});
 document.querySelectorAll('.x').forEach(b=>b.addEventListener('click',()=>hide(b.closest('.win'))));
 document.querySelectorAll('.win').forEach(w=>{w.addEventListener('pointerdown',()=>front(w));const t=w.querySelector('.tbar');
 t.addEventListener('pointerdown',e=>{if(e.target.closest('.x')||document.body.classList.contains('app'))return;const sx=e.clientX,sy=e.clientY,l=parseFloat(w.style.left)||0,tp=parseFloat(w.style.top)||0;t.setPointerCapture(e.pointerId);w.classList.add('drag');moved=true;
@@ -2547,8 +2902,8 @@ try{U.addr=await conn();showU()}catch(e){ub.textContent=/not found/.test(e.messa
 // auth + app mode
 
 const hint=()=>{const h=$('#hint');h.hidden=false;h.style.opacity='.6';setTimeout(()=>{h.style.opacity='0';setTimeout(()=>h.hidden=true,1100)},6000)};
-const enter=()=>{b.classList.add('app');showU();$('#wm-toggle').hidden=U.role!=='admin';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();if(location.hash!=='#terminal')location.hash='terminal';hint()};
-const exit=()=>{const wasApp=b.classList.contains('app');b.classList.remove('app');$('#wm-toggle').hidden=true;$('#wm').hidden=true;if(wasApp&&authClient)authClient.auth.signOut({scope:'local'}).catch(()=>{});U.name='';U.addr='';U.role='';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();try{history.replaceState(null,'',location.pathname+location.search)}catch(x){location.hash=''}};
+const enter=()=>{document.documentElement.classList.add('terminal-mode');b.classList.add('app');showU();$('#wm-toggle').hidden=U.role!=='admin';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();if(location.hash!=='#terminal')location.hash='terminal';hint()};
+const exit=()=>{document.documentElement.classList.remove('terminal-mode');const wasApp=b.classList.contains('app');b.classList.remove('app');$('#wm-toggle').hidden=true;$('#wm').hidden=true;if(wasApp&&authClient)authClient.auth.signOut({scope:'local'}).catch(()=>{});U.name='';U.addr='';U.role='';Object.values(A.W).forEach(w=>w.hidden=true);A.sync();try{history.replaceState(null,'',location.pathname+location.search)}catch(x){location.hash=''}};
 const verifyAccess=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/access/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify Alpha access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account does not have beta access.');return result};
 $('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured yet. Add the Supabase project URL and publishable key to Render.';return}
  const button=$('#af').querySelector('button[type=submit]');button.disabled=true;button.textContent='Signing in…';
