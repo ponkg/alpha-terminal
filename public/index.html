@@ -1676,6 +1676,73 @@ body:not(.app) .marketing-site{overflow:visible}
  .m-mark-final,.m-cta-box.v .m-mark-final{opacity:1;transform:none;animation:none}
 }
 
+
+/* Landing page refinements: a soft, grain-edged divider appears after scroll. */
+body:not(.app) #nv{isolation:isolate;padding-bottom:20px}
+body:not(.app) #nv::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(7,17,28,.86),rgba(7,17,28,.34));backdrop-filter:blur(16px) saturate(1.15);-webkit-backdrop-filter:blur(16px) saturate(1.15);transition:opacity .28s ease}
+body:not(.app) #nv.s::before{opacity:1}
+body:not(.app) #nv.s{background:transparent;border-bottom:0}
+body:not(.app) #nv::after{content:"";position:absolute;left:max(22px,calc((100vw - 1240px)/2));right:max(22px,calc((100vw - 1240px)/2));bottom:5px;height:11px;pointer-events:none;opacity:0;transform:translateY(-5px);transition:opacity .35s ease,transform .35s ease;border-top:1px solid rgba(154,190,222,.3);background:linear-gradient(180deg,rgba(115,177,222,.1),rgba(115,177,222,0)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='12'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .72 0 0 0 0 .9 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");background-size:100% 100%,140px 12px;filter:blur(.55px);mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent)}
+body:not(.app) #nv.s::after{opacity:1;transform:none}
+body:not(.app) .m-mark-final{inset:4px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;color:#eaf4fc;font:700 35px/1 Inter,Arial,sans-serif;letter-spacing:-.14em;text-shadow:0 5px 18px rgba(70,145,205,.32)}
+body:not(.app) .m-mark-final b{color:#78b9ed;font-weight:700}
+@media(max-width:860px){body:not(.app) #nv{padding-bottom:16px}body:not(.app) #nv::after{left:18px;right:18px;bottom:4px}}
+
+
+/* Closing CTA mirrors the opening hero: full-bleed Alpha film, simple centered action. */
+body:not(.app) .marketing-site .m-cta-video{
+  position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;
+  min-height:100svh;padding:100px 0 88px;border-top:0;background:#d9e6f2;
+}
+body:not(.app) .marketing-site .m-cta-film{
+  position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;
+  object-fit:cover;object-position:50% 50%;pointer-events:none;
+}
+body:not(.app) .marketing-site .m-cta-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,15,27,.08),rgba(5,15,27,.12) 42%,rgba(5,15,27,.62)),
+    radial-gradient(ellipse 66% 72% at 50% 56%,rgba(6,20,34,.12),rgba(6,20,34,.36));
+}
+body:not(.app) .marketing-site .m-cta-video .m-wrap{
+  position:relative;z-index:2;display:flex;justify-content:center;
+}
+body:not(.app) .marketing-site .m-cta-video .m-cta-box{
+  width:min(760px,100%);padding:clamp(24px,4vw,46px);
+  border:1px solid rgba(225,241,253,.34);
+  background:linear-gradient(145deg,rgba(8,23,38,.52),rgba(8,23,38,.27));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 28px 90px rgba(4,16,29,.2);text-align:center;
+}
+body:not(.app) .marketing-site .m-cta-video .m-mark-assemble{margin:0 auto 18px}
+body:not(.app) .marketing-site .m-cta-video .m-kicker{justify-content:center;color:#c1e2fa}
+body:not(.app) .marketing-site .m-cta-video .m-kicker:before{background:#a2d2f3}
+body:not(.app) .marketing-site .m-cta-video .m-title{
+  max-width:650px;margin:17px auto 12px;color:#f5faff;
+  font-size:clamp(34px,5.2vw,64px);text-wrap:balance;
+  text-shadow:0 3px 24px rgba(2,14,26,.36);
+}
+body:not(.app) .marketing-site .m-cta-video .m-title .m-blue{color:#a5d6f8}
+body:not(.app) .marketing-site .m-cta-video .m-lead{
+  max-width:520px;margin:0 auto;color:#e2eff9;font-size:13px;
+  text-shadow:0 2px 15px rgba(2,14,26,.35);
+}
+body:not(.app) .marketing-site .m-cta-video .m-cta-actions{justify-content:center;margin-top:24px}
+body:not(.app) .marketing-site .m-cta-video .m-button{
+  min-height:46px;padding:0 18px;box-shadow:0 8px 24px rgba(2,14,26,.16)
+}
+body:not(.app) .marketing-site .m-cta-video .m-button.alt{
+  background:rgba(7,22,36,.38);color:#eff8ff;border-color:rgba(220,239,252,.56)
+}
+body:not(.app) .marketing-site .m-cta-video .m-button.alt:hover{background:rgba(7,22,36,.68)}
+@media(max-width:760px){
+  body:not(.app) .marketing-site .m-cta-video{min-height:88svh;padding:80px 0 68px}
+  body:not(.app) .marketing-site .m-cta-video .m-cta-box{padding:24px 18px}
+  body:not(.app) .marketing-site .m-cta-video .m-cta-actions{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  body:not(.app) .marketing-site .m-cta-film{display:none}
+  body:not(.app) .marketing-site .m-cta-video{background:linear-gradient(145deg,#193b56,#0b1724)}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws" aria-label="Site navigation"><a href="#product"><b>01</b>Product</a><a href="#workflow"><b>02</b>Workflow</a><a href="#data"><b>03</b>Data</a><a href="/docs/"><b>04</b>Field manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#product">01 / Product</a><a class="blk" href="#workflow">02 / Workflow</a><a class="blk" href="#data">03 / Data &amp; methodology</a><a class="blk" href="/docs/">04 / Alpha Field Manual ↗</a></div></nav>
@@ -1746,25 +1813,25 @@ body:not(.app) .marketing-site{overflow:visible}
     <div class="m-wrap">
       <div class="m-kicker">ALPHA / SOLANA NARRATIVE INTELLIGENCE</div>
       <h2 class="m-title m-reveal">The market moves in <span class="m-blue">narratives.</span><br>Not just tickers.</h2>
-      <p class="m-lead m-reveal">Alpha brings market discovery, event context, token investigation and a keyboard-first workflow into one focused research terminal.</p>
+      <p class="m-lead m-reveal">Find tokens by theme. Read the headlines. Check the details.</p>
       <div class="m-meta m-reveal"><span>MARKET DISCOVERY</span><span>EVENT CONTEXT</span><span>TOKEN RESEARCH</span><span>KEYBOARD FIRST</span></div>
       <div class="m-grid">
         <div class="m-terminal m-reveal" style="grid-column:span 8">
-          <div class="m-term-top"><span>ALPHA / MARKET INDEX</span><span class="m-lamps"><i></i><i></i><i></i></span><span>STATIC PRODUCT PREVIEW</span></div>
+          <div class="m-term-top"><span>ALPHA / MARKET INDEX</span><span class="m-lamps"><i></i><i></i><i></i></span><span>SAMPLE DATA · NOT LIVE</span></div>
           <div class="m-term-body">
             <div class="m-term-path"><span>alpha@terminal</span><span>:</span><b>/markets</b><span>$</span><span>ALL NARRATIVES</span></div>
-            <div class="m-token-head"><span>ASSET / NARRATIVE</span><span>VOLUME</span><span>LIQUIDITY</span><span>CHANGE</span></div>
-            <div class="m-token"><span><b>AI &amp; SEMICONDUCTORS</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-token"><span><b>POLITICAL FIGURES</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-token"><span><b>ANIMAL MEMES</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-token"><span><b>INTERNET CULTURE</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-terminal-foot"><span>CATEGORIES / DETECTED ENTITIES</span><span>ILLUSTRATIVE LAYOUT</span></div>
+            <div class="m-token-head"><span>TOKEN / THEME</span><span>VOL 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+            <div class="m-token"><span><b>NOVA</b> <small>AI &amp; COMPUTE</small></span><span>$82.4K</span><span>$31.8K</span><span>+18.6%</span></div>
+            <div class="m-token"><span><b>MOSS</b> <small>ANIMAL MEMES</small></span><span>$46.2K</span><span>$12.5K</span><span>+7.3%</span></div>
+            <div class="m-token"><span><b>LOOP</b> <small>INTERNET CULTURE</small></span><span>$105K</span><span>$42.0K</span><span>-2.4%</span></div>
+            <div class="m-token"><span><b>VOTE</b> <small>POLITICS</small></span><span>$28.6K</span><span>$9.1K</span><span>+4.8%</span></div>
+            <div class="m-terminal-foot"><span>MARKET CATEGORIES / TOKEN DIRECTORY</span><span>FICTIONAL EXAMPLE</span></div>
           </div>
         </div>
         <div class="m-panel m-panel-pad m-reveal" style="grid-column:span 4">
           <div class="m-index">01 / THE PRINCIPLE</div>
           <h3>Find the theme behind the move.</h3>
-          <p>Explore tokens through configured market categories and detected entities. Inspect why a token was matched instead of treating every label as an unexplained signal.</p>
+          <p>Browse by theme. See why each token was grouped there.</p>
           <div class="m-mini-list">
             <div class="m-mini-row"><span>Market categories</span><b>01—</b></div>
             <div class="m-mini-row"><span>Detected entities</span><b>02—</b></div>
@@ -1889,18 +1956,18 @@ body:not(.app) .marketing-site{overflow:visible}
         <div class="m-feature-copy m-reveal" style="grid-column:span 5">
           <div class="m-index">03 / 01 — TRACKER</div>
           <h2 class="m-title">Read the market by <span class="m-blue">narrative.</span></h2>
-          <p class="m-lead">Move beyond a flat list of trending tickers. Browse configured categories, inspect detected entities and explore the tokens grouped under each market theme.</p>
+          <p class="m-lead">Browse tokens by theme. Search by ticker, name or mint, and see why each match was made.</p>
           <ul><li>Market categories and entity directories</li><li>Search by ticker, name or mint address</li><li>Multiple market timeframes</li><li>Inspectable category-match explanations</li></ul>
         </div>
         <div class="m-terminal m-reveal" style="grid-column:span 7">
-          <div class="m-term-top"><span>01 / MARKET INDEX</span><span>TRACKER</span><span>PREVIEW</span></div>
+          <div class="m-term-top"><span>01 / MARKET INDEX</span><span>TRACKER</span><span>SAMPLE DATA · NOT LIVE</span></div>
           <div class="m-term-body">
-            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/markets/ai-semiconductors</span><span>$</span></div>
-            <div class="m-token-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
-            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-token"><span><b>◎ TOKEN / MINT</b></span><span>—</span><span>—</span><span>—</span></div>
-            <div class="m-terminal-foot"><span>SELECT CATEGORY → TOKEN DIRECTORY</span><span>ILLUSTRATIVE</span></div>
+            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/markets/ai-compute</span><span>$</span></div>
+            <div class="m-token-head"><span>ASSET</span><span>VOL 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+            <div class="m-token"><span><b>NOVA</b> <small>AI &amp; COMPUTE</small></span><span>$82.4K</span><span>$31.8K</span><span>+18.6%</span></div>
+            <div class="m-token"><span><b>BYTE</b> <small>AI &amp; COMPUTE</small></span><span>$57.9K</span><span>$18.2K</span><span>+9.1%</span></div>
+            <div class="m-token"><span><b>PIXEL</b> <small>AI &amp; COMPUTE</small></span><span>$22.1K</span><span>$7.4K</span><span>-1.8%</span></div>
+            <div class="m-terminal-foot"><span>SELECT A CATEGORY → TOKEN LIST</span><span>FICTIONAL EXAMPLE</span></div>
           </div>
         </div>
       </div>
@@ -1911,24 +1978,24 @@ body:not(.app) .marketing-site{overflow:visible}
     <div class="m-wrap">
       <div class="m-grid" style="align-items:center">
         <div class="m-terminal m-reveal" style="grid-column:span 7">
-          <div class="m-term-top"><span>02 / FEED INDEX</span><span>NEWS TERMINAL</span><span>PREVIEW</span></div>
+          <div class="m-term-top"><span>02 / FEED INDEX</span><span>NEWS TERMINAL</span><span>SAMPLE DATA · NOT LIVE</span></div>
           <div class="m-term-body">
             <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/news</span><span>$</span><span>RECENT DISPATCHES</span></div>
             <div class="m-mini-list">
-              <div class="m-mini-row"><span>01 / SOURCE</span><b>NEWS CATEGORY</b></div>
-              <div class="m-mini-row"><span>› Headline from a selected publisher</span><b>ENTITY TAG</b></div>
-              <div class="m-mini-row"><span>02 / SOURCE</span><b>NEWS CATEGORY</b></div>
-              <div class="m-mini-row"><span>› Another publisher headline</span><b>ENTITY TAG</b></div>
-              <div class="m-mini-row"><span>03 / SOURCE</span><b>NEWS CATEGORY</b></div>
-              <div class="m-mini-row"><span>› A third article headline</span><b>ENTITY TAG</b></div>
+              <div class="m-mini-row"><span>09:42 · SAMPLE STORY</span><b>AI &amp; TECH</b></div>
+              <div class="m-mini-row"><span>› Example: New chip project draws attention</span><b>COMPUTE</b></div>
+              <div class="m-mini-row"><span>09:18 · SAMPLE STORY</span><b>MARKETS</b></div>
+              <div class="m-mini-row"><span>› Example: Traders watch a fictional token launch</span><b>NOVA</b></div>
+              <div class="m-mini-row"><span>08:56 · SAMPLE STORY</span><b>WORLD</b></div>
+              <div class="m-mini-row"><span>› Example: Policy update puts tech firms in focus</span><b>POLICY</b></div>
             </div>
           </div>
-          <div class="m-terminal-foot"><span>RSS / HTTP</span><span>STATIC PRODUCT PREVIEW · NOT LIVE NEWS</span></div>
+          <div class="m-terminal-foot"><span>SELECTED RSS SOURCES</span><span>FICTIONAL EXAMPLES</span></div>
         </div>
         <div class="m-feature-copy m-reveal" style="grid-column:span 5">
           <div class="m-index">03 / 02 — NEWS FEED</div>
           <h2 class="m-title">Understand what drives <span class="m-blue">attention.</span></h2>
-          <p class="m-lead">Bring selected news sources into a categorized feed. See publishers, headlines and detected entities in the same research environment.</p>
+          <p class="m-lead">Read selected headlines. Search topics and open the original source.</p>
           <ul><li>News categories and text search</li><li>Publisher and publication metadata</li><li>Entity tags from article text</li><li>Links to original reporting</li></ul>
           <p class="m-side-note">The current feed uses selected RSS sources. It is not an X/Twitter firehose.</p>
         </div>
@@ -1942,24 +2009,24 @@ body:not(.app) .marketing-site{overflow:visible}
         <div class="m-feature-copy m-reveal" style="grid-column:span 5">
           <div class="m-index">03 / 03 — COIN SCANNER</div>
           <h2 class="m-title">Look beyond the <span class="m-blue">ticker.</span></h2>
-          <p class="m-lead">Inspect the available public signals around a token and its pool. The Scanner helps organize checks; it cannot certify that a token is safe.</p>
+          <p class="m-lead">Check liquidity, pool age, holders and token authorities in one place.</p>
           <ul><li>Liquidity and pool age</li><li>Holder distribution and concentration</li><li>Mint and freeze authority checks</li><li>Trading activity and profile information</li></ul>
           <p class="m-side-note">Missing information should be treated as unknown, not proof of safety.</p>
         </div>
         <div class="m-terminal m-reveal" style="grid-column:span 7">
-          <div class="m-term-top"><span>03 / TOKEN DIAGNOSTICS</span><span>SCANNER</span><span>PREVIEW</span></div>
+          <div class="m-term-top"><span>03 / TOKEN DIAGNOSTICS</span><span>SCANNER</span><span>SAMPLE DATA · NOT LIVE</span></div>
           <div class="m-term-body">
-            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/scan</span><span>$</span><span>CHECK RESULTS</span></div>
+            <div class="m-term-path"><b>alpha@terminal</b><span>:</span><span>/scan NOVA</span><span>$</span><span>EXAMPLE CHECKS</span></div>
             <div class="m-mini-list">
-              <div class="m-mini-row"><span>LIQUIDITY</span><b>CHECK AVAILABLE DATA</b></div>
-              <div class="m-mini-row"><span>POOL AGE</span><b>CHECK AVAILABLE DATA</b></div>
-              <div class="m-mini-row"><span>HOLDERS</span><b>CHECK AVAILABLE DATA</b></div>
-              <div class="m-mini-row"><span>AUTHORITIES</span><b>CHECK AVAILABLE DATA</b></div>
-              <div class="m-mini-row"><span>ACTIVITY</span><b>CHECK AVAILABLE DATA</b></div>
-              <div class="m-mini-row"><span>PROFILE</span><b>CHECK AVAILABLE DATA</b></div>
+              <div class="m-mini-row"><span>LIQUIDITY</span><b>$31.8K</b></div>
+              <div class="m-mini-row"><span>POOL AGE</span><b>14H 22M</b></div>
+              <div class="m-mini-row"><span>HOLDERS</span><b>842</b></div>
+              <div class="m-mini-row"><span>MINT AUTHORITY</span><b>REVOKED</b></div>
+              <div class="m-mini-row"><span>FREEZE AUTHORITY</span><b>REVOKED</b></div>
+              <div class="m-mini-row"><span>24H ACTIVITY</span><b>7.2K TX</b></div>
             </div>
           </div>
-          <div class="m-terminal-foot"><span>SIGNALS, NOT A GUARANTEE</span><span>ILLUSTRATIVE LAYOUT</span></div>
+          <div class="m-terminal-foot"><span>CHECKS CAN BE INCOMPLETE</span><span>FICTIONAL EXAMPLE</span></div>
         </div>
       </div>
     </div>
@@ -2057,7 +2124,11 @@ ESC       BACK / CLOSE</div>
     </div>
   </section>
 
-  <section class="m-cta" id="join">
+  <section class="m-cta m-cta-video" id="join">
+    <video class="m-cta-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+      <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
+    </video>
+    <div class="m-cta-shade" aria-hidden="true"></div>
     <div class="m-wrap">
       <div class="m-cta-box m-reveal">
         <div class="m-mark-assemble" aria-hidden="true">
@@ -2073,7 +2144,7 @@ ESC       BACK / CLOSE</div>
           <span class="m-mark-shard" style="--sx:2px;--sy:66px;--rot:-28deg"></span>
           <span class="m-mark-shard" style="--sx:75px;--sy:46px;--rot:34deg"></span>
           <span class="m-mark-shard" style="--sx:-76px;--sy:-39px;--rot:-18deg"></span>
-          <svg class="m-mark-final" viewBox="0 0 24 24"><use href="#lg"></use></svg>
+          <span class="m-mark-final" aria-hidden="true">[<b>a</b>]</span>
         </div>
         <div class="m-kicker">ALPHA / PRIVATE BETA</div>
         <h2 class="m-title">See the meta before it <span class="m-blue">moves.</span></h2>
