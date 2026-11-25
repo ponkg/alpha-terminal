@@ -1688,6 +1688,61 @@ body:not(.app) .m-mark-final{inset:4px;width:56px;height:56px;display:flex;align
 body:not(.app) .m-mark-final b{color:#78b9ed;font-weight:700}
 @media(max-width:860px){body:not(.app) #nv{padding-bottom:16px}body:not(.app) #nv::after{left:18px;right:18px;bottom:4px}}
 
+
+/* Closing CTA mirrors the opening hero: full-bleed Alpha film, simple centered action. */
+body:not(.app) .marketing-site .m-cta-video{
+  position:relative;isolation:isolate;overflow:hidden;display:flex;align-items:center;
+  min-height:100svh;padding:100px 0 88px;border-top:0;background:#d9e6f2;
+}
+body:not(.app) .marketing-site .m-cta-film{
+  position:absolute;inset:0;z-index:0;display:block;width:100%;height:100%;
+  object-fit:cover;object-position:50% 50%;pointer-events:none;
+}
+body:not(.app) .marketing-site .m-cta-shade{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(5,15,27,.08),rgba(5,15,27,.12) 42%,rgba(5,15,27,.62)),
+    radial-gradient(ellipse 66% 72% at 50% 56%,rgba(6,20,34,.12),rgba(6,20,34,.36));
+}
+body:not(.app) .marketing-site .m-cta-video .m-wrap{
+  position:relative;z-index:2;display:flex;justify-content:center;
+}
+body:not(.app) .marketing-site .m-cta-video .m-cta-box{
+  width:min(760px,100%);padding:clamp(24px,4vw,46px);
+  border:1px solid rgba(225,241,253,.34);
+  background:linear-gradient(145deg,rgba(8,23,38,.52),rgba(8,23,38,.27));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 28px 90px rgba(4,16,29,.2);text-align:center;
+}
+body:not(.app) .marketing-site .m-cta-video .m-mark-assemble{margin:0 auto 18px}
+body:not(.app) .marketing-site .m-cta-video .m-kicker{justify-content:center;color:#c1e2fa}
+body:not(.app) .marketing-site .m-cta-video .m-kicker:before{background:#a2d2f3}
+body:not(.app) .marketing-site .m-cta-video .m-title{
+  max-width:650px;margin:17px auto 12px;color:#f5faff;
+  font-size:clamp(34px,5.2vw,64px);text-wrap:balance;
+  text-shadow:0 3px 24px rgba(2,14,26,.36);
+}
+body:not(.app) .marketing-site .m-cta-video .m-title .m-blue{color:#a5d6f8}
+body:not(.app) .marketing-site .m-cta-video .m-lead{
+  max-width:520px;margin:0 auto;color:#e2eff9;font-size:13px;
+  text-shadow:0 2px 15px rgba(2,14,26,.35);
+}
+body:not(.app) .marketing-site .m-cta-video .m-cta-actions{justify-content:center;margin-top:24px}
+body:not(.app) .marketing-site .m-cta-video .m-button{
+  min-height:46px;padding:0 18px;box-shadow:0 8px 24px rgba(2,14,26,.16)
+}
+body:not(.app) .marketing-site .m-cta-video .m-button.alt{
+  background:rgba(7,22,36,.38);color:#eff8ff;border-color:rgba(220,239,252,.56)
+}
+body:not(.app) .marketing-site .m-cta-video .m-button.alt:hover{background:rgba(7,22,36,.68)}
+@media(max-width:760px){
+  body:not(.app) .marketing-site .m-cta-video{min-height:88svh;padding:80px 0 68px}
+  body:not(.app) .marketing-site .m-cta-video .m-cta-box{padding:24px 18px}
+  body:not(.app) .marketing-site .m-cta-video .m-cta-actions{gap:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  body:not(.app) .marketing-site .m-cta-film{display:none}
+  body:not(.app) .marketing-site .m-cta-video{background:linear-gradient(145deg,#193b56,#0b1724)}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws" aria-label="Site navigation"><a href="#product"><b>01</b>Product</a><a href="#workflow"><b>02</b>Workflow</a><a href="#data"><b>03</b>Data</a><a href="/docs/"><b>04</b>Field manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#product">01 / Product</a><a class="blk" href="#workflow">02 / Workflow</a><a class="blk" href="#data">03 / Data &amp; methodology</a><a class="blk" href="/docs/">04 / Alpha Field Manual ↗</a></div></nav>
@@ -2069,7 +2124,11 @@ ESC       BACK / CLOSE</div>
     </div>
   </section>
 
-  <section class="m-cta" id="join">
+  <section class="m-cta m-cta-video" id="join">
+    <video class="m-cta-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+      <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
+    </video>
+    <div class="m-cta-shade" aria-hidden="true"></div>
     <div class="m-wrap">
       <div class="m-cta-box m-reveal">
         <div class="m-mark-assemble" aria-hidden="true">
