@@ -3,182 +3,207 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#09131f">
-<title>Alpha Field Manual — See the meta before it moves</title>
-<meta name="description" content="The Alpha Field Manual: learn the terminal, market tracker, news feed, scanner, keyboard controls and data methodology.">
+<meta name="theme-color" content="#0b1724">
+<title>Alpha Docs — Overview</title>
+<meta name="description" content="Quick guides to the Alpha Solana research terminal, its tools and data.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#09131f;--panel:#0d1a28;--panel2:#102235;--fg:#eaf3fb;--mut:#94abc1;--dim:#69839d;--blue:#75b8ec;--line:rgba(154,190,222,.2);--mono:"JetBrains Mono",ui-monospace,monospace}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:radial-gradient(ellipse 46% 26% at 8% 0%,rgba(65,129,188,.22),transparent 80%),radial-gradient(ellipse 50% 34% at 90% 18%,rgba(54,111,170,.14),transparent 80%),linear-gradient(180deg,#0b1724,#09131f 65%);color:var(--fg);font:13px/1.75 var(--mono);min-height:100vh}
-a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}button{font:inherit}
-.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(7,17,28,.82);backdrop-filter:blur(18px)}
-.topin{width:min(1320px,100%);margin:auto;padding:0 28px;height:62px;display:flex;align-items:center;gap:28px}
-.brand{font-size:18px;font-weight:700;letter-spacing:-.06em;white-space:nowrap}.brand span{color:var(--blue)}
-.toplabel{color:var(--dim);font-size:10px;letter-spacing:.14em}
-.toplinks{display:flex;align-items:center;gap:18px;margin-left:auto;color:var(--mut);font-size:10px}
-.toplinks a:last-child{border:1px solid rgba(117,184,236,.42);padding:7px 10px;color:var(--blue)}
-.layout{width:min(1320px,100%);margin:auto;padding:44px 28px 90px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:62px}
-aside{position:sticky;top:94px;align-self:start;max-height:calc(100vh - 115px);overflow:auto;padding-right:8px}
-.side-label{margin:0 0 12px;color:var(--dim);font-size:9px;letter-spacing:.16em}
-.side-group{margin:22px 0 0}.side-group a{display:block;padding:6px 9px;border-left:1px solid transparent;color:#8fa7bd;font-size:10px}
-.side-group a:hover,.side-group a.active{border-left-color:var(--blue);background:rgba(89,153,207,.09);color:#eaf3fb}
-.side-group b{display:block;padding:0 9px 7px;color:var(--blue);font-size:9px;font-weight:500;letter-spacing:.12em}
-main{min-width:0}.eyebrow{color:var(--blue);font-size:10px;letter-spacing:.17em}
-h1{max-width:850px;margin:17px 0 18px;font-size:clamp(34px,5vw,62px);line-height:1.05;letter-spacing:-.075em;font-weight:500}
-h2{margin:0 0 14px;font-size:clamp(22px,3vw,31px);line-height:1.2;letter-spacing:-.06em;font-weight:500}
-h3{margin:24px 0 8px;font-size:15px;color:#dceaf6;font-weight:600}
-p{max-width:820px;margin:10px 0;color:var(--mut)}
-.lead{max-width:740px;font-size:14px;color:#a8bdd0;line-height:1.9}
-.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin:25px 0 34px;color:var(--dim);font-size:9px;letter-spacing:.1em}.meta span:before{content:"+";color:var(--blue);margin-right:7px}
-.callout{margin:26px 0;padding:17px 19px;border:1px solid rgba(117,184,236,.3);background:linear-gradient(100deg,rgba(55,109,158,.15),rgba(9,19,31,.65));color:#a9c4dc;font-size:11px}
-section{padding:48px 0;border-top:1px solid var(--line);scroll-margin-top:88px}
-section:first-of-type{border-top:0}
-.section-no{color:var(--blue);font-size:9px;letter-spacing:.16em;margin-bottom:12px}
-ul,ol{padding-left:21px;color:var(--mut)}li{padding:4px 0}
-code,kbd{font-family:var(--mono);font-size:.92em;color:#9ed0f5}
-code{padding:2px 5px;background:rgba(117,184,236,.09);border:1px solid rgba(117,184,236,.16)}
-kbd{display:inline-block;padding:2px 7px;border:1px solid rgba(154,190,222,.36);background:#0b1927;box-shadow:0 2px 0 rgba(0,0,0,.3)}
-table{width:100%;border-collapse:collapse;margin:18px 0;font-size:10px}
-th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-th{color:var(--blue);font-weight:500;letter-spacing:.08em}
-td{color:var(--mut)}td:first-child{color:#dceaf6;white-space:nowrap}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}
-.card{padding:18px;border:1px solid var(--line);background:rgba(13,26,40,.75)}
-.card small{color:var(--blue);font-size:9px;letter-spacing:.13em}.card h3{margin:10px 0 6px}.card p{font-size:10px;line-height:1.8}
-pre{overflow:auto;padding:17px;border:1px solid var(--line);background:#06111c;color:#9ac8ed;font:10px/1.9 var(--mono)}
-details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointer;color:#dceaf6;font-size:11px}details p{font-size:10px}
-.footer{padding-top:28px;border-top:1px solid var(--line);color:var(--dim);font-size:9px}
-@media(max-width:900px){.layout{grid-template-columns:190px minmax(0,1fr);gap:32px}.toplabel{display:none}}
-@media(max-width:680px){.topin{height:56px;padding:0 16px}.toplinks{gap:12px}.toplinks a:not(:last-child){display:none}.layout{display:block;padding:28px 18px 64px}aside{position:static;max-height:none;display:flex;gap:8px;overflow:auto;padding:0 0 13px;border-bottom:1px solid var(--line);margin-bottom:30px}.side-label,.side-group b{display:none}.side-group{display:flex;gap:5px;margin:0;white-space:nowrap}.side-group a{border:1px solid var(--line);padding:6px 9px}.cards{grid-template-columns:1fr}table{font-size:9px}td:first-child{white-space:normal}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+:root{color-scheme:dark;--bg:#0b1724;--bg2:#0e1d2c;--panel:rgba(13,29,44,.82);--panel2:rgba(18,40,59,.72);--fg:#edf5fc;--mut:#a3b7ca;--dim:#718ba3;--blue:#80bee9;--blue2:#4c99d2;--line:rgba(150,190,222,.18);--soft:rgba(111,177,224,.1);--mono:"JetBrains Mono",ui-monospace,monospace;--sans:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:132px}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse 42% 26% at 8% 0%,rgba(73,143,197,.22),transparent 80%),radial-gradient(ellipse 45% 34% at 92% 20%,rgba(60,123,177,.17),transparent 82%),linear-gradient(180deg,#0b1724,#091521 75%);color:var(--fg);font:14px/1.6 var(--sans)}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(160,195,225,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(160,195,225,.045) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(180deg,transparent,#000 10%,#000 85%,transparent)}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+.header-shell{position:sticky;top:0;z-index:30;background:rgba(7,17,28,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.topbar{height:52px;border-bottom:1px solid rgba(150,190,222,.11)}
+.topin{width:min(1420px,100%);height:100%;margin:auto;padding:0 28px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:22px}
+.brand{font:700 18px var(--mono);letter-spacing:-.12em;white-space:nowrap}.brand b{color:var(--blue);font-weight:700}
+.primary{display:flex;gap:6px;align-items:center;color:var(--mut);font-size:13px}
+.primary a{padding:7px 12px;border-radius:7px;transition:background .18s,color .18s}
+.primary a:hover,.primary a.active{background:rgba(130,190,232,.13);color:var(--fg)}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:10px}
+.search{width:min(210px,24vw);display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:7px;color:var(--dim);background:rgba(5,14,23,.42)}
+.search span{font-size:13px}.search input{min-width:0;width:100%;padding:0;border:0;outline:0;background:transparent;color:var(--fg);font-size:11px}
+.icon-button{width:34px;height:34px;border:1px solid var(--line);border-radius:7px;background:transparent;color:var(--mut);cursor:pointer}
+.launch{padding:8px 12px;border-radius:6px;background:#eaf4fc;color:#102131;font-size:11px;font-weight:700;white-space:nowrap}
+.launch:hover{background:#9fd0f2}
+.sectionbar{height:42px;display:flex;justify-content:center;align-items:center;gap:7px;padding:0 18px;overflow:auto;scrollbar-width:none}
+.sectionbar::-webkit-scrollbar{display:none}
+.sectionbar a{padding:6px 10px;border-radius:6px;color:var(--mut);font-size:11px;white-space:nowrap}
+.sectionbar a:hover,.sectionbar a.active{background:rgba(130,190,232,.13);color:var(--fg)}
+.layout{width:min(1320px,100%);margin:0 auto;padding:38px 28px 90px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:54px}
+aside{position:sticky;top:116px;align-self:start;max-height:calc(100vh - 138px);overflow:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:rgba(130,190,232,.28) transparent}
+.side-label{margin:0 0 11px;padding:0 9px;color:var(--dim);font:600 9px var(--mono);letter-spacing:.12em}
+.side-group{margin:21px 0 0}
+.side-group a{display:block;margin:2px 0;padding:6px 9px;border-left:1px solid transparent;color:#9aafc2;font-size:11px}
+.side-group a:hover,.side-group a.active{border-left-color:var(--blue);background:rgba(101,165,213,.09);color:var(--fg)}
+main{min-width:0}
+.eyebrow{color:var(--blue);font:500 9px var(--mono);letter-spacing:.16em}
+h1{margin:13px 0 8px;font-size:clamp(30px,4vw,43px);line-height:1.15;letter-spacing:-.055em;font-weight:600}
+.lead{max-width:680px;margin:0;color:var(--mut);font-size:13px}
+.quick-link{display:inline-flex;align-items:center;gap:9px;margin-top:10px;color:#dcebf7;font-size:12px;font-weight:600}
+.quick-link:hover{color:var(--blue)}
+.rule{height:1px;margin:27px 0 25px;background:linear-gradient(90deg,var(--line),rgba(150,190,222,.03))}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.doc-card{min-height:148px;display:flex;flex-direction:column;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:9px;background:linear-gradient(145deg,rgba(17,37,55,.75),rgba(9,22,34,.74));transition:border-color .18s,transform .18s,background .18s}
+.doc-card:hover{border-color:rgba(128,190,233,.56);background:linear-gradient(145deg,rgba(22,48,70,.9),rgba(10,25,38,.9));transform:translateY(-2px)}
+.doc-icon{width:36px;height:36px;display:grid;place-items:center;border:1px solid rgba(150,190,222,.24);border-radius:7px;color:var(--blue);font:600 16px var(--mono);background:rgba(4,14,23,.28)}
+.doc-card h2{margin:12px 0 4px;font-size:14px;font-weight:600;letter-spacing:-.02em}
+.doc-card p{margin:0;color:#96aabd;font-size:10px;line-height:1.55}
+.card-meta{margin-top:auto;padding-top:10px;color:var(--dim);font:9px var(--mono);letter-spacing:.08em}
+.doc-section{padding:35px 0 0;margin-top:35px;border-top:1px solid var(--line);scroll-margin-top:132px}
+.section-label{margin-bottom:9px;color:var(--blue);font:500 9px var(--mono);letter-spacing:.14em}
+.doc-section h2{margin:0 0 8px;font-size:22px;letter-spacing:-.045em}
+.doc-section p{max-width:760px;margin:7px 0;color:var(--mut);font-size:12px}
+.doc-section ul,.doc-section ol{padding-left:20px;color:var(--mut);font-size:12px}
+.doc-section li{padding:3px 0}
+.doc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:15px}
+.info{padding:13px;border:1px solid var(--line);border-radius:8px;background:rgba(9,22,34,.55)}
+.info b{display:block;margin-bottom:3px;font-size:12px}.info span{color:var(--mut);font-size:10px}
+kbd{display:inline-block;padding:1px 6px;border:1px solid rgba(150,190,222,.3);border-radius:4px;color:#cde6f8;background:rgba(5,16,26,.6);font:10px var(--mono)}
+.callout{margin:16px 0;padding:12px 14px;border-left:2px solid var(--blue2);background:var(--soft);color:#b7cde0;font-size:11px}
+.footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--dim);font:9px var(--mono);letter-spacing:.07em}
+.no-results{display:none;padding:30px;border:1px dashed var(--line);border-radius:8px;color:var(--mut);font-size:12px}
+:root[data-doc-theme="light"]{color-scheme:light;--bg:#eaf3fa;--fg:#132638;--mut:#536f86;--dim:#7892a7;--line:rgba(54,103,143,.2);--soft:rgba(79,149,202,.1)}
+:root[data-doc-theme="light"] body{background:radial-gradient(ellipse 50% 35% at 10% 0%,rgba(111,176,222,.24),transparent 80%),linear-gradient(180deg,#f5faff,#e8f2fa)}
+:root[data-doc-theme="light"] .header-shell{background:rgba(242,249,254,.9)}
+:root[data-doc-theme="light"] .doc-card{background:rgba(255,255,255,.76)}
+:root[data-doc-theme="light"] .doc-card:hover{background:#fff}
+:root[data-doc-theme="light"] .doc-icon{background:rgba(255,255,255,.6)}
+:root[data-doc-theme="light"] .search{background:rgba(255,255,255,.6)}
+:root[data-doc-theme="light"] .launch{background:#163c58;color:white}
+@media(max-width:1000px){.layout{grid-template-columns:190px minmax(0,1fr);gap:30px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.topin{padding:0 15px;grid-template-columns:1fr auto;gap:10px}.primary{justify-self:end}.actions{display:none}.primary a{padding:7px 8px;font-size:11px}.layout{display:block;padding:25px 17px 70px}.layout aside{position:static;max-height:none;display:flex;gap:10px;overflow:auto;padding:0 0 13px;border-bottom:1px solid var(--line);margin-bottom:27px}.side-label,.side-group strong{display:none}.side-group{display:flex;gap:5px;margin:0;white-space:nowrap}.side-group a{border:1px solid var(--line);border-radius:6px}.cards{grid-template-columns:1fr}.doc-card{min-height:125px}.doc-grid{grid-template-columns:1fr}.sectionbar{justify-content:flex-start}.lead{font-size:12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.doc-card{transition:none}}
 </style>
 </head>
 <body>
-<header class="top"><div class="topin"><a class="brand" href="/">[<span>alpha</span>]</a><span class="toplabel">FIELD MANUAL / DOCUMENTATION</span><nav class="toplinks"><a href="/#product">PRODUCT</a><a href="/#data">DATA</a><a href="https://x.com/aterminalsol" target="_blank" rel="noopener noreferrer">X ↗</a><a href="/">BACK TO ALPHA ↗</a></nav></div></header>
-<div class="layout">
-<aside aria-label="Documentation navigation">
-  <div>
-    <div class="side-label">DOCUMENTATION INDEX</div>
-    <div class="side-group"><b>START HERE</b><a href="#intro">Introduction</a><a href="#access">Access &amp; sign in</a></div>
-    <div class="side-group"><b>TERMINAL TOOLS</b><a href="#tracker">Market Tracker</a><a href="#news">News Feed</a><a href="#scanner">Coin Scanner</a><a href="#hotkeys">Keyboard controls</a></div>
-    <div class="side-group"><b>TRANSPARENCY</b><a href="#data">Data sources</a><a href="#timeframes">Timeframes</a><a href="#limitations">Limitations</a></div>
-    <div class="side-group"><b>REFERENCE</b><a href="#faq">FAQ</a><a href="/#join">Request access ↗</a></div>
-  </div>
-</aside>
-<main>
-  <div class="eyebrow">ALPHA / DOCUMENTATION 01.0</div>
-  <h1>Field Manual<span style="color:var(--blue)">.</span></h1>
-  <p class="lead">A practical guide to Alpha's Solana narrative intelligence terminal: how to explore the market, read the feed, inspect tokens and understand the data behind the interface.</p>
-  <div class="meta"><span>PRODUCT GUIDE</span><span>TERMINAL WORKFLOW</span><span>DATA TRANSPARENCY</span></div>
-  <div class="callout">Alpha is a research interface. It does not execute trades, provide personalized financial advice or guarantee that a token is safe or profitable.</div>
-
-  <section id="intro">
-    <div class="section-no">01 / START HERE</div><h2>What is Alpha?</h2>
-    <p>Alpha organizes parts of the Solana market-research process into one terminal. The current experience combines narrative-oriented token discovery, a categorized news feed, a token scanner and keyboard-first navigation.</p>
-    <div class="cards">
-      <article class="card"><small>01 / DISCOVER</small><h3>Market Tracker</h3><p>Browse tokens grouped into configured market categories and detected entities.</p></article>
-      <article class="card"><small>02 / UNDERSTAND</small><h3>News Feed</h3><p>Review selected publisher feeds, categories, headlines and entity tags.</p></article>
-      <article class="card"><small>03 / INVESTIGATE</small><h3>Coin Scanner</h3><p>Inspect available public token and pool signals, including liquidity, holder and authority information.</p></article>
-      <article class="card"><small>04 / CONTROL</small><h3>Hotkeys</h3><p>Switch terminal windows and navigate supported controls using keyboard shortcuts.</p></article>
+<header class="header-shell">
+  <div class="topbar"><div class="topin">
+    <a class="brand" href="/" aria-label="Alpha home">[<b>a</b>]</a>
+    <nav class="primary" aria-label="Main"><a href="/">Home</a><a class="active" href="/docs/">Docs</a><a href="/docs/use-cases/">Use cases</a></nav>
+    <div class="actions">
+      <label class="search"><span>⌕</span><input id="docSearch" type="search" placeholder="Search docs" aria-label="Search documentation"></label>
+      <button class="icon-button" id="themeToggle" type="button" aria-label="Toggle theme">☼</button>
+      <a class="launch" href="/">Open Alpha</a>
     </div>
-  </section>
+  </div></div>
+  <nav class="sectionbar" aria-label="Documentation areas">
+    <a class="active" href="/docs/">▸ Overview</a><a href="#tracker">▤ Tracker</a><a href="#news">▤ Feed</a><a href="#scanner">⌁ Scanner</a><a href="#hotkeys">⌘ Hotkeys</a><a href="#data">◈ Data</a>
+  </nav>
+</header>
+<div class="layout">
+  <aside aria-label="Documentation navigation">
+    <div class="side-label">DOCUMENTATION</div>
+    <div class="side-group"><strong class="side-label">GET STARTED</strong><a href="#intro">What Alpha is</a><a href="#access">Access and sign in</a><a href="/docs/use-cases/">Use cases</a></div>
+    <div class="side-group"><strong class="side-label">TOOLS</strong><a href="#tracker">Market Tracker</a><a href="#news">News Feed</a><a href="#scanner">Coin Scanner</a><a href="#hotkeys">Keyboard controls</a></div>
+    <div class="side-group"><strong class="side-label">EXPLORE</strong><a href="#data">Data sources</a><a href="#timeframes">Timeframes</a><a href="#limits">Limitations</a></div>
+    <div class="side-group"><strong class="side-label">AVAILABLE ON</strong><a href="/">Desktop browser</a><a href="/">Member terminal</a></div>
+  </aside>
+  <main id="overview">
+    <div class="eyebrow">DOCS / ALPHA</div>
+    <h1>Overview</h1>
+    <p class="lead">The essentials for finding a narrative, checking a token and reading the data.</p>
+    <a class="quick-link" href="#intro">Your first five minutes <span>›</span></a>
+    <div class="rule"></div>
+    <div class="cards" id="docCards">
+      <a class="doc-card" href="#intro" data-search="get started what alpha does first five minutes access"><span class="doc-icon">▶</span><h2>Get started</h2><p>What Alpha does and how to get access.</p><span class="card-meta">2 TOPICS</span></a>
+      <a class="doc-card" href="#tracker" data-search="market tracker categories narratives tokens timeframes search"><span class="doc-icon">▤</span><h2>Market Tracker</h2><p>Browse tokens by theme and inspect matches.</p><span class="card-meta">MARKET DATA</span></a>
+      <a class="doc-card" href="#news" data-search="news feed headlines rss publishers categories"><span class="doc-icon">▦</span><h2>News Feed</h2><p>Read selected headlines by category.</p><span class="card-meta">SELECTED SOURCES</span></a>
+      <a class="doc-card" href="#scanner" data-search="coin scanner liquidity pool age holders authority mint freeze activity"><span class="doc-icon">⌁</span><h2>Coin Scanner</h2><p>Check the available details around a token.</p><span class="card-meta">TOKEN CHECKS</span></a>
+      <a class="doc-card" href="#hotkeys" data-search="keyboard shortcuts hotkeys window layout drag move"><span class="doc-icon">⌘</span><h2>Workspace</h2><p>Move windows and use keyboard controls.</p><span class="card-meta">WINDOWS &amp; HOTKEYS</span></a>
+      <a class="doc-card" href="#data" data-search="data providers jupiter geckoterminal rss metadata timeframes"><span class="doc-icon">◈</span><h2>Data and sources</h2><p>See where the numbers and headlines come from.</p><span class="card-meta">DATA NOTES</span></a>
+      <a class="doc-card" href="#limits" data-search="security limitations unknown missing data wallet safe financial advice"><span class="doc-icon">⬡</span><h2>Security</h2><p>Understand what Alpha checks—and what it cannot.</p><span class="card-meta">SAFETY &amp; LIMITS</span></a>
+      <a class="doc-card" href="/docs/use-cases/" data-search="use cases follow narrative read news inspect token"><span class="doc-icon">↗</span><h2>Use cases</h2><p>Common ways to work through a market question.</p><span class="card-meta">3 WORKFLOWS</span></a>
+    </div>
+    <div class="no-results" id="noResults">No matching topics. Try another search.</div>
 
-  <section id="access">
-    <div class="section-no">02 / ACCESS</div><h2>Waitlist, invitation and sign-in</h2>
-    <p>The public waitlist and the private beta account are separate steps.</p>
-    <ol><li>Submit your X handle through the public waitlist form.</li><li>The Alpha team reviews waitlist entries and may send a beta invitation to an email address.</li><li>Use the invited email address to sign in with the password you set or an available sign-in link.</li><li>Access to member features is checked by Alpha's backend.</li></ol>
-    <p>You do not need to connect a wallet to join the public waitlist. Never share a wallet seed phrase or private key with anyone claiming to represent Alpha.</p>
-  </section>
-
-  <section id="tracker">
-    <div class="section-no">03 / TERMINAL TOOLS</div><h2>Market Tracker</h2>
-    <p>The Tracker combines a market-token directory with configured narrative categories and detected entity groups. Select a category in the left rail to filter the token list. Select <code>ALL TOKENS</code> to return to the full directory.</p>
-    <h3>Explore a category</h3>
-    <ol><li>Open the Tracker using <kbd>Alt</kbd> + <kbd>1</kbd>.</li><li>Choose a folder under Market Categories or Detected Entities.</li><li>Use the search field to filter by ticker, token name or mint address.</li><li>Inspect the token's detection details to see which configured label matched and the available reason.</li><li>Select a token row to open its chart and token details.</li></ol>
-    <h3>How classification works</h3>
-    <p>Current narrative grouping uses configured keyword and entity matching against available token metadata, including symbol, name and pool name. It is a rule-based categorization layer, not an AI judgment about a token's meaning or a guarantee that the token genuinely belongs to a theme.</p>
-    <p>A token can match more than one category. A token with insufficient matching metadata may appear under Other / Unclassified.</p>
-  </section>
-
-  <section id="news">
-    <div class="section-no">04 / TERMINAL TOOLS</div><h2>News Feed</h2>
-    <p>The News Feed aggregates a selected set of RSS sources, normalizes article details and displays them in a categorized terminal layout.</p>
-    <h3>Using the feed</h3>
-    <ul><li>Choose a category in the feed index.</li><li>Search headlines, topics or people using the search input.</li><li>Review the publisher, publication details and available summary.</li><li>Open the headline to read the original article at its publisher.</li></ul>
-    <p>Entity tags are generated from configured name and keyword matching against article text. A matching tag is a contextual clue, not proof that the article caused a token's price movement.</p>
-    <div class="callout">The current News Feed uses selected RSS sources. It is not a live X/Twitter feed and should not be described as one.</div>
-  </section>
-
-  <section id="scanner">
-    <div class="section-no">05 / TERMINAL TOOLS</div><h2>Coin Scanner</h2>
-    <p>The Scanner gathers available public information about a token and its associated pool. Enter a Solana mint address where possible. A ticker can be ambiguous because different tokens can share the same symbol.</p>
-    <h3>Signals shown by the Scanner</h3>
-    <table><thead><tr><th>CHECK</th><th>WHAT IT DESCRIBES</th></tr></thead><tbody>
-      <tr><td>Liquidity</td><td>Reported liquidity for the selected market pool.</td></tr>
-      <tr><td>Pool age</td><td>How long the selected pool has existed, where the data is available.</td></tr>
-      <tr><td>Holders</td><td>Available holder-distribution and concentration information.</td></tr>
-      <tr><td>Authority</td><td>Available mint and freeze authority information.</td></tr>
-      <tr><td>Activity</td><td>Available trading and transaction activity signals.</td></tr>
-      <tr><td>Profile</td><td>Available public token-profile and social metadata.</td></tr>
-    </tbody></table>
-    <p>Check results depend on third-party provider coverage. An unavailable field is unknown; it should not be interpreted as a clean result. A warning is a research signal, not a complete audit.</p>
-  </section>
-
-  <section id="hotkeys">
-    <div class="section-no">06 / TERMINAL TOOLS</div><h2>Keyboard controls</h2>
-    <p>Alpha is designed to make common terminal navigation possible from the keyboard. The Hotkeys window lets members inspect and customize supported bindings locally in the browser.</p>
-    <table><thead><tr><th>SHORTCUT</th><th>ACTION</th></tr></thead><tbody>
-      <tr><td><kbd>Alt</kbd> + <kbd>1</kbd></td><td>Open Tracker</td></tr>
-      <tr><td><kbd>Alt</kbd> + <kbd>2</kbd></td><td>Open News Feed</td></tr>
-      <tr><td><kbd>Alt</kbd> + <kbd>3</kbd></td><td>Open Coin Scanner</td></tr>
-      <tr><td><kbd>Alt</kbd> + <kbd>4</kbd></td><td>Open Hotkeys configuration</td></tr>
-      <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Move through supported rows and controls in the focused window</td></tr>
-      <tr><td><kbd>Enter</kbd></td><td>Select or activate the focused item</td></tr>
-      <tr><td><kbd>Esc</kbd></td><td>Back out of supported subviews or close the active view</td></tr>
-    </tbody></table>
-    <p>Additional pane-navigation and focus shortcuts are displayed in the Hotkeys window. Custom bindings are stored locally in the browser and may not follow you to another device.</p>
-  </section>
-
-  <section id="data">
-    <div class="section-no">07 / TRANSPARENCY</div><h2>Data sources</h2>
-    <table><thead><tr><th>SOURCE</th><th>ROLE IN ALPHA</th><th>IMPORTANT CONTEXT</th></tr></thead><tbody>
-      <tr><td>Jupiter Tokens V2</td><td>Trending-token discovery and ranking intervals.</td><td>Provider-supported intervals are native; some shorter rolling periods are calculated by Alpha.</td></tr>
-      <tr><td>GeckoTerminal</td><td>Pool discovery, OHLCV history and related token/pool data.</td><td>Coverage and freshness depend on provider availability and rate limits.</td></tr>
-      <tr><td>Selected RSS publishers</td><td>News headlines and article links.</td><td>Only configured feeds are included; feed outages can reduce coverage.</td></tr>
-      <tr><td>Token metadata services</td><td>Supplementary token names, symbols, images and profile details.</td><td>Metadata may be incomplete, delayed or inconsistent.</td></tr>
-    </tbody></table>
-  </section>
-
-  <section id="timeframes">
-    <div class="section-no">08 / TRANSPARENCY</div><h2>Timeframes and derived measurements</h2>
-    <p>Alpha uses native provider intervals where they are available. In the current Tracker feed, Jupiter supplies native 5-minute, 1-hour and 24-hour ranking data. The 10-minute and 30-minute changes are derived from price snapshots sampled from the 5-minute feed.</p>
-    <p>These sampled measurements need sufficient history to calculate a comparison. The server keeps a rolling, in-memory history, so a service restart clears the collected samples. An unavailable derived measurement should not be read as zero movement.</p>
-  </section>
-
-  <section id="limitations">
-    <div class="section-no">09 / TRANSPARENCY</div><h2>Known limitations</h2>
-    <ul><li>Third-party market APIs can rate-limit, fail or return incomplete information.</li><li>Cached data may be older than a fresh provider response.</li><li>Token metadata and narrative classifications can be incomplete or incorrect.</li><li>RSS coverage depends on the availability and publication behavior of selected sources.</li><li>Scanner checks cannot prove that a token is safe or identify every malicious behavior.</li><li>Derived timeframes depend on the sample history available to the running service.</li></ul>
-    <p>Always verify the token mint address, pool, liquidity and source data independently. Never trade solely because an item appears in Alpha.</p>
-  </section>
-
-  <section id="faq">
-    <div class="section-no">10 / REFERENCE</div><h2>Frequently asked questions</h2>
-    <details><summary>Does Alpha connect to my wallet?</summary><p>The current research workflow does not require a wallet connection. Do not provide seed phrases or private keys.</p></details>
-    <details><summary>Does Alpha execute trades?</summary><p>No. Alpha is a research terminal and does not execute trades.</p></details>
-    <details><summary>Are narrative matches AI-generated?</summary><p>Current token labels use configured keyword and entity rules. They are not an AI guarantee or a complete semantic classification.</p></details>
-    <details><summary>Why is some data missing?</summary><p>The underlying provider may not supply the field, the selected token or pool may not have coverage, or a provider request may have failed or been rate-limited.</p></details>
-    <details><summary>Does Alpha provide financial advice?</summary><p>No. Alpha provides informational research tools only. All decisions and verification remain the user's responsibility.</p></details>
-  </section>
-  <div class="footer">ALPHA / FIELD MANUAL · SEE THE META BEFORE IT MOVES · <a href="/">RETURN TO ALPHA ↗</a></div>
-</main>
+    <section class="doc-section" id="intro">
+      <div class="section-label">GET STARTED</div><h2>What Alpha is</h2>
+      <p>Alpha is a Solana market-research terminal. It groups tokens by configured themes, brings selected news feeds together and shows public token and pool details.</p>
+      <div class="doc-grid">
+        <div class="info"><b>Find a theme</b><span>Browse categories and detected entities in the Tracker.</span></div>
+        <div class="info"><b>Read the context</b><span>Search headlines from selected RSS publishers.</span></div>
+        <div class="info"><b>Check the token</b><span>Review available pool, holder and authority details.</span></div>
+        <div class="info"><b>Keep your place</b><span>Use draggable windows and keyboard shortcuts.</span></div>
+      </div>
+    </section>
+    <section class="doc-section" id="access">
+      <div class="section-label">GET STARTED</div><h2>Access and sign in</h2>
+      <ol><li>Submit your X handle through the public waitlist.</li><li>When invited, use the email address supplied to you.</li><li>Sign in to open the member terminal.</li></ol>
+      <p>Joining the waitlist does not require a wallet connection. Never share a seed phrase or private key.</p>
+    </section>
+    <section class="doc-section" id="tracker">
+      <div class="section-label">TOOLS / 01</div><h2>Market Tracker</h2>
+      <p>Choose a category to filter the token list. Search by ticker, name or mint address. Select a row to open its chart and token details.</p>
+      <p>Categories use configured keyword and entity matches from available token metadata. A token can match more than one category; unmatched tokens may appear under Other / Unclassified.</p>
+    </section>
+    <section class="doc-section" id="news">
+      <div class="section-label">TOOLS / 02</div><h2>News Feed</h2>
+      <p>Filter selected RSS stories by category, search headlines and open the original publisher link.</p>
+      <p>Entity tags are matched from article text. A tag gives context; it does not show that a story caused a token's price move. The Feed is not an X/Twitter feed.</p>
+    </section>
+    <section class="doc-section" id="scanner">
+      <div class="section-label">TOOLS / 03</div><h2>Coin Scanner</h2>
+      <p>Enter a Solana mint address to inspect available token and pool details.</p>
+      <ul><li>Liquidity and pool age</li><li>Holder distribution and concentration</li><li>Mint and freeze authority status</li><li>Trading activity and profile details</li></ul>
+      <p>Provider coverage varies. Missing data means unknown, not safe.</p>
+    </section>
+    <section class="doc-section" id="hotkeys">
+      <div class="section-label">WORKSPACE</div><h2>Windows and keyboard controls</h2>
+      <p>Drag a window by its title bar to arrange your workspace. Use the Hotkeys window to review or change supported shortcuts.</p>
+      <div class="doc-grid">
+        <div class="info"><b><kbd>Alt</kbd> + <kbd>1</kbd>–<kbd>4</kbd></b><span>Open Tracker, Feed, Scanner or Hotkeys.</span></div>
+        <div class="info"><b><kbd>↑</kbd> <kbd>↓</kbd></b><span>Move through supported rows and controls.</span></div>
+        <div class="info"><b><kbd>Enter</kbd></b><span>Select the focused item.</span></div>
+        <div class="info"><b><kbd>Esc</kbd></b><span>Back out or close the active view.</span></div>
+      </div>
+      <p>Custom key bindings are stored in the current browser.</p>
+    </section>
+    <section class="doc-section" id="data">
+      <div class="section-label">DATA</div><h2>Data sources</h2>
+      <div class="doc-grid">
+        <div class="info"><b>Jupiter Tokens V2</b><span>Trending-token discovery and ranking intervals.</span></div>
+        <div class="info"><b>GeckoTerminal</b><span>Pool discovery, chart history and token data.</span></div>
+        <div class="info"><b>Selected RSS publishers</b><span>Headlines and links in the News Feed.</span></div>
+        <div class="info"><b>Token metadata services</b><span>Names, symbols, images and profile details.</span></div>
+      </div>
+      <p>Jupiter provides native 5-minute, 1-hour and 24-hour intervals. The 10-minute and 30-minute changes are sampled estimates based on recent 5-minute data.</p>
+    </section>
+    <section class="doc-section" id="timeframes">
+      <div class="section-label">DATA</div><h2>Timeframes</h2>
+      <p>Derived 10-minute and 30-minute changes need enough samples. The rolling sample history resets when the service restarts, so a value may be unavailable until new samples arrive.</p>
+    </section>
+    <section class="doc-section" id="limits">
+      <div class="section-label">REFERENCE</div><h2>Limits and security</h2>
+      <p>Market providers can be delayed, rate-limited or incomplete. Token labels can be wrong, and Scanner checks are not a full audit.</p>
+      <div class="callout">Alpha is a research tool. It does not execute trades or certify that a token is safe. Verify token addresses and data independently.</div>
+      <p>Alpha does not need your seed phrase or private key. Do not send either to anyone claiming to represent Alpha.</p>
+    </section>
+    <div class="footer">ALPHA DOCS · SEE THE META BEFORE IT MOVES · <a href="/">BACK TO ALPHA ↗</a></div>
+  </main>
 </div>
 <script>
-const links=[...document.querySelectorAll('aside a[href^="#"]')];
-const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));}}),{rootMargin:'-18% 0px -72% 0px'});
-sections.forEach(section=>observer.observe(section));
+const search=document.getElementById('docSearch');
+const cards=[...document.querySelectorAll('.doc-card')];
+const noResults=document.getElementById('noResults');
+search?.addEventListener('input',()=>{
+ const q=search.value.trim().toLowerCase();let count=0;
+ cards.forEach(card=>{const show=!q||(card.dataset.search+' '+card.innerText).toLowerCase().includes(q);card.hidden=!show;if(show)count++});
+ if(noResults)noResults.style.display=count?'none':'block';
+});
+document.getElementById('themeToggle')?.addEventListener('click',()=>{
+ const root=document.documentElement;const light=root.getAttribute('data-doc-theme')!=='light';
+ root.setAttribute('data-doc-theme',light?'light':'dark');
+ try{localStorage.setItem('alpha-doc-theme',light?'light':'dark')}catch(e){}
+});
+try{const saved=localStorage.getItem('alpha-doc-theme');if(saved==='light')document.documentElement.setAttribute('data-doc-theme','light')}catch(e){}
+const sideLinks=[...document.querySelectorAll('aside a[href^="#"]')];
+const targets=sideLinks.map(link=>document.querySelector(link.getAttribute('href'))).filter(Boolean);
+if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)sideLinks.forEach(link=>link.classList.toggle('active',link.hash==='#'+entry.target.id))}),{rootMargin:'-18% 0px -70% 0px'});targets.forEach(target=>observer.observe(target))}
 </script>
 </body>
 </html>
