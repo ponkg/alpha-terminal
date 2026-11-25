@@ -1679,10 +1679,10 @@ body:not(.app) .marketing-site{overflow:visible}
 
 /* Landing page refinements: a soft, grain-edged divider appears after scroll. */
 body:not(.app) #nv{isolation:isolate;padding-bottom:20px}
-body:not(.app) #nv::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(7,17,28,.86),rgba(7,17,28,.34));backdrop-filter:blur(16px) saturate(1.15);-webkit-backdrop-filter:blur(16px) saturate(1.15);transition:opacity .28s ease}
+body:not(.app) #nv::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:0;background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(248,252,255,.68));backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);transition:opacity .28s ease}
 body:not(.app) #nv.s::before{opacity:1}
 body:not(.app) #nv.s{background:transparent;border-bottom:0}
-body:not(.app) #nv::after{content:"";position:absolute;left:max(22px,calc((100vw - 1240px)/2));right:max(22px,calc((100vw - 1240px)/2));bottom:5px;height:11px;pointer-events:none;opacity:0;transform:translateY(-5px);transition:opacity .35s ease,transform .35s ease;border-top:1px solid rgba(154,190,222,.3);background:linear-gradient(180deg,rgba(115,177,222,.1),rgba(115,177,222,0)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='12'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .72 0 0 0 0 .9 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");background-size:100% 100%,140px 12px;filter:blur(.55px);mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent)}
+body:not(.app) #nv::after{content:"";position:absolute;left:max(22px,calc((100vw - 1240px)/2));right:max(22px,calc((100vw - 1240px)/2));bottom:5px;height:11px;pointer-events:none;opacity:0;transform:translateY(-5px);transition:opacity .35s ease,transform .35s ease;border-top:1px solid rgba(255,255,255,.92);background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='12'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .28 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)'/%3E%3C/svg%3E");background-size:100% 100%,140px 12px;filter:blur(.7px);mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 5%,black 95%,transparent)}
 body:not(.app) #nv.s::after{opacity:1;transform:none}
 body:not(.app) .m-mark-final{inset:4px;width:56px;height:56px;display:flex;align-items:center;justify-content:center;color:#eaf4fc;font:700 35px/1 Inter,Arial,sans-serif;letter-spacing:-.14em;text-shadow:0 5px 18px rgba(70,145,205,.32)}
 body:not(.app) .m-mark-final b{color:#78b9ed;font-weight:700}
@@ -2124,34 +2124,10 @@ ESC       BACK / CLOSE</div>
     </div>
   </section>
 
-  <section class="m-cta m-cta-video" id="join">
+  <section class="m-cta m-cta-video" id="join" aria-label="Alpha background film">
     <video class="m-cta-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
       <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
     </video>
-    <div class="m-cta-shade" aria-hidden="true"></div>
-    <div class="m-wrap">
-      <div class="m-cta-box m-reveal">
-        <div class="m-mark-assemble" aria-hidden="true">
-          <span class="m-mark-shard" style="--sx:-58px;--sy:-18px;--rot:22deg"></span>
-          <span class="m-mark-shard" style="--sx:42px;--sy:-45px;--rot:-34deg"></span>
-          <span class="m-mark-shard" style="--sx:64px;--sy:19px;--rot:48deg"></span>
-          <span class="m-mark-shard" style="--sx:20px;--sy:55px;--rot:-12deg"></span>
-          <span class="m-mark-shard" style="--sx:-42px;--sy:48px;--rot:38deg"></span>
-          <span class="m-mark-shard" style="--sx:-70px;--sy:15px;--rot:-44deg"></span>
-          <span class="m-mark-shard" style="--sx:-12px;--sy:-65px;--rot:60deg"></span>
-          <span class="m-mark-shard" style="--sx:56px;--sy:-4px;--rot:-55deg"></span>
-          <span class="m-mark-shard" style="--sx:-32px;--sy:-52px;--rot:18deg"></span>
-          <span class="m-mark-shard" style="--sx:2px;--sy:66px;--rot:-28deg"></span>
-          <span class="m-mark-shard" style="--sx:75px;--sy:46px;--rot:34deg"></span>
-          <span class="m-mark-shard" style="--sx:-76px;--sy:-39px;--rot:-18deg"></span>
-          <span class="m-mark-final" aria-hidden="true">[<b>a</b>]</span>
-        </div>
-        <div class="m-kicker">ALPHA / PRIVATE BETA</div>
-        <h2 class="m-title">See the meta before it <span class="m-blue">moves.</span></h2>
-        <p class="m-lead">Explore the market through narratives. Build context. Investigate the signals.</p>
-        <div class="m-cta-actions"><a class="m-button" href="#join" data-open="reg">REQUEST EARLY ACCESS ↗</a><a class="m-button alt" href="/docs/">READ THE FIELD MANUAL</a></div>
-      </div>
-    </div>
   </section>
 
   <footer class="m-footer">
