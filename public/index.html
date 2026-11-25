@@ -1274,7 +1274,8 @@ body:not(.app) #nv .blk.cta:hover{background:#3f8fd0;color:#fff}
 @media(max-width:650px){
  .marketing-site .m-section{padding:72px 0}
  .marketing-site .m-title{font-size:clamp(32px,9vw,48px)}
- .marketing-site .m-grid{gap:10px;margin-top:26px}
+ .marketing-site .m-grid{grid-template-columns:1fr;gap:10px;margin-top:26px}
+ .marketing-site .m-grid>*{grid-column:1/-1!important}
  .marketing-site .m-steps{grid-template-columns:1fr}
  .marketing-site .m-step{min-height:0;padding:20px;border-right:0;border-bottom:1px solid rgba(154,190,222,.18)}
  .marketing-site .m-step:last-child{border-bottom:0}
@@ -1564,7 +1565,7 @@ ESC       BACK / CLOSE</div>
 
   <footer class="m-footer">
     <div class="m-wrap">
-      <div class="m-footer-row"><a href="#top" style="font:700 19px var(--mono);color:#eaf3fb">[alpha]</a><div class="m-footer-links"><a href="#product">PRODUCT</a><a href="#workflow">WORKFLOW</a><a href="/docs/">FIELD MANUAL</a><a href="#" data-open="w-legal">PRIVACY &amp; TERMS</a><a href="https://x.com/aterminalsol" target="_blank" rel="noopener noreferrer">X / TWITTER ↗</a></div></div>
+      <div class="m-footer-row"><a href="#top" style="font:700 19px var(--mono);color:#eaf3fb">[alpha]</a><div class="m-footer-links"><a href="#product">PRODUCT</a><a href="#workflow">WORKFLOW</a><a href="/docs/">FIELD MANUAL</a><a href="/docs/#limitations">DATA &amp; DISCLAIMERS</a><a href="https://x.com/aterminalsol" target="_blank" rel="noopener noreferrer">X / TWITTER ↗</a></div></div>
       <p class="m-disclaimer">ALPHA IS A MARKET RESEARCH TOOL. DATA MAY BE DELAYED, INCOMPLETE OR UNAVAILABLE. NOTHING ON THIS WEBSITE IS FINANCIAL ADVICE. MEMECOINS ARE HIGH RISK AND CAN GO TO ZERO.</p>
       <p class="m-disclaimer">© <span id="site-year">2026</span> ALPHA / SEE THE META BEFORE IT MOVES.</p>
     </div>
@@ -1623,7 +1624,7 @@ const upd=(box,st,html)=>{const op=new Set([...box.querySelectorAll('details[ope
 const sync=()=>document.querySelectorAll('[data-open]').forEach(a=>{a.classList.toggle('on',!['reg','auth'].includes(a.dataset.open)&&!W[a.dataset.open].hidden)});
 const open=id=>{const w=W[id];w.hidden=false;const m=hero.clientWidth<700,p=P[id];w.style.left=(m?(hero.clientWidth-w.offsetWidth)/2:hero.clientWidth*p[0])+'px';w.style.top=(m?70+Object.keys(P).indexOf(id)*14:hero.clientHeight*p[1])+'px';clamp(w);front(w);sync();w.querySelectorAll('.tbar>span').forEach(scr)};
 document.addEventListener('click',e=>{const a=e.target.closest('[data-open]');if(!a)return;e.preventDefault();const id=a.dataset.open,w=W[id];
-if(id==='reg'||id==='auth'){if(!b.classList.contains('app'))window.scrollTo({top:0,behavior:'instant'});if(w.hidden)open(id);else front(w);const i=$(id==='auth'?'#au':'#h');if(i&&(id==='auth'||!$('#fv').hidden))i.focus({preventScroll:true})}else if(w.hidden)open(id);else hide(w)});
+if(id==='reg'||id==='auth'){if(!b.classList.contains('app'))window.scrollTo(0,0);if(w.hidden)open(id);else front(w);const i=$(id==='auth'?'#au':'#h');if(i&&(id==='auth'||!$('#fv').hidden))i.focus({preventScroll:true})}else if(w.hidden)open(id);else hide(w)});
 document.querySelectorAll('.x').forEach(b=>b.addEventListener('click',()=>hide(b.closest('.win'))));
 document.querySelectorAll('.win').forEach(w=>{w.addEventListener('pointerdown',()=>front(w));const t=w.querySelector('.tbar');
 t.addEventListener('pointerdown',e=>{if(e.target.closest('.x')||document.body.classList.contains('app'))return;const sx=e.clientX,sy=e.clientY,l=parseFloat(w.style.left)||0,tp=parseFloat(w.style.top)||0;t.setPointerCapture(e.pointerId);w.classList.add('drag');moved=true;
