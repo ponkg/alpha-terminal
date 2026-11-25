@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#09131f">
+<title>Alpha Field Manual — See the meta before it moves</title>
+<meta name="description" content="The Alpha Field Manual: learn the terminal, market tracker, news feed, scanner, keyboard controls and data methodology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#09131f;--panel:#0d1a28;--panel2:#102235;--fg:#eaf3fb;--mut:#94abc1;--dim:#69839d;--blue:#75b8ec;--line:rgba(154,190,222,.2);--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:90px}body{margin:0;background:radial-gradient(ellipse 46% 26% at 8% 0%,rgba(65,129,188,.22),transparent 80%),radial-gradient(ellipse 50% 34% at 90% 18%,rgba(54,111,170,.14),transparent 80%),linear-gradient(180deg,#0b1724,#09131f 65%);color:var(--fg);font:13px/1.75 var(--mono);min-height:100vh}
+a{color:inherit;text-decoration:none}a:hover{color:var(--blue)}button{font:inherit}
+.top{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(7,17,28,.82);backdrop-filter:blur(18px)}
+.topin{width:min(1320px,100%);margin:auto;padding:0 28px;height:62px;display:flex;align-items:center;gap:28px}
+.brand{font-size:18px;font-weight:700;letter-spacing:-.06em;white-space:nowrap}.brand span{color:var(--blue)}
+.toplabel{color:var(--dim);font-size:10px;letter-spacing:.14em}
+.toplinks{display:flex;align-items:center;gap:18px;margin-left:auto;color:var(--mut);font-size:10px}
+.toplinks a:last-child{border:1px solid rgba(117,184,236,.42);padding:7px 10px;color:var(--blue)}
+.layout{width:min(1320px,100%);margin:auto;padding:44px 28px 90px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:62px}
+aside{position:sticky;top:94px;align-self:start;max-height:calc(100vh - 115px);overflow:auto;padding-right:8px}
+.side-label{margin:0 0 12px;color:var(--dim);font-size:9px;letter-spacing:.16em}
+.side-group{margin:22px 0 0}.side-group a{display:block;padding:6px 9px;border-left:1px solid transparent;color:#8fa7bd;font-size:10px}
+.side-group a:hover,.side-group a.active{border-left-color:var(--blue);background:rgba(89,153,207,.09);color:#eaf3fb}
+.side-group b{display:block;padding:0 9px 7px;color:var(--blue);font-size:9px;font-weight:500;letter-spacing:.12em}
+main{min-width:0}.eyebrow{color:var(--blue);font-size:10px;letter-spacing:.17em}
+h1{max-width:850px;margin:17px 0 18px;font-size:clamp(34px,5vw, sixty);font-size:clamp(34px,5vw,62px);line-height:1.05;letter-spacing:-.075em;font-weight:500}
+h2{margin:0 0 14px;font-size:clamp(22px,3vw,31px);line-height:1.2;letter-spacing:-.06em;font-weight:500}
+h3{margin:24px 0 8px;font-size:15px;color:#dceaf6;font-weight:600}
+p{max-width:820px;margin:10px 0;color:var(--mut)}
+.lead{max-width:740px;font-size:14px;color:#a8bdd0;line-height:1.9}
+.meta{display:flex;flex-wrap:wrap;gap:8px 20px;margin:25px 0 34px;color:var(--dim);font-size:9px;letter-spacing:.1em}.meta span:before{content:"+";color:var(--blue);margin-right:7px}
+.callout{margin:26px 0;padding:17px 19px;border:1px solid rgba(117,184,236,.3);background:linear-gradient(100deg,rgba(55,109,158,.15),rgba(9,19,31,.65));color:#a9c4dc;font-size:11px}
+section{padding:48px 0;border-top:1px solid var(--line);scroll-margin-top:88px}
+section:first-of-type{border-top:0}
+.section-no{color:var(--blue);font-size:9px;letter-spacing:.16em;margin-bottom:12px}
+ul,ol{padding-left:21px;color:var(--mut)}li{padding:4px 0}
+code,kbd{font-family:var(--mono);font-size:.92em;color:#9ed0f5}
+code{padding:2px 5px;background:rgba(117,184,236,.09);border:1px solid rgba(117,184,236,.16)}
+kbd{display:inline-block;padding:2px 7px;border:1px solid rgba(154,190,222,.36);background:#0b1927;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:10px}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--blue);font-weight:500;letter-spacing:.08em}
+td{color:var(--mut)}td:first-child{color:#dceaf6;white-space:nowrap}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:20px 0}
+.card{padding:18px;border:1px solid var(--line);background:rgba(13,26,40,.75)}
+.card small{color:var(--blue);font-size:9px;letter-spacing:.13em}.card h3{margin:10px 0 6px}.card p{font-size:10px;line-height:1.8}
+pre{overflow:auto;padding:17px;border:1px solid var(--line);background:#06111c;color:#9ac8ed;font:10px/1.9 var(--mono)}
+details{border-bottom:1px solid var(--line);padding:14px 0}summary{cursor:pointer;color:#dceaf6;font-size:11px}details p{font-size:10px}
+.footer{padding-top:28px;border-top:1px solid var(--line);color:var(--dim);font-size:9px}
+@media(max-width:900px){.layout{grid-template-columns:190px minmax(0,1fr);gap:32px}.toplabel{display:none}}
+@media(max-width:680px){.topin{height:56px;padding:0 16px}.toplinks{gap:12px}.toplinks a:not(:last-child){display:none}.layout{display:block;padding:28px 18px 64px}aside{position:static;max-height:none;display:flex;gap:8px;overflow:auto;padding:0 0 13px;border-bottom:1px solid var(--line);margin-bottom:30px}.side-label,.side-group b{display:none}.side-group{display:flex;gap:5px;margin:0;white-space:nowrap}.side-group a{border:1px solid var(--line);padding:6px 9px}.cards{grid-template-columns:1fr}table{font-size:9px}td:first-child{white-space:normal}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><a class="brand" href="/">[<span>alpha</span>]</a><span class="toplabel">FIELD MANUAL / DOCUMENTATION</span><nav class="toplinks"><a href="/#product">PRODUCT</a><a href="/#data">DATA</a><a href="https://x.com/aterminalsol" target="_blank" rel="noopener noreferrer">X ↗</a><a href="/">BACK TO ALPHA ↗</a></nav></div></header>
+<div class="layout">
+<aside aria-label="Documentation navigation">
+  <div>
+    <div class="side-label">DOCUMENTATION INDEX</div>
+    <div class="side-group"><b>START HERE</b><a href="#intro">Introduction</a><a href="#access">Access &amp; sign in</a></div>
+    <div class="side-group"><b>TERMINAL TOOLS</b><a href="#tracker">Market Tracker</a><a href="#news">News Feed</a><a href="#scanner">Coin Scanner</a><a href="#hotkeys">Keyboard controls</a></div>
+    <div class="side-group"><b>TRANSPARENCY</b><a href="#data">Data sources</a><a href="#timeframes">Timeframes</a><a href="#limitations">Limitations</a></div>
+    <div class="side-group"><b>REFERENCE</b><a href="#faq">FAQ</a><a href="/#join">Request access ↗</a></div>
+  </div>
+</aside>
+<main>
+  <div class="eyebrow">ALPHA / DOCUMENTATION 01.0</div>
+  <h1>Field Manual<span style="color:var(--blue)">.</span></h1>
+  <p class="lead">A practical guide to Alpha's Solana narrative intelligence terminal: how to explore the market, read the feed, inspect tokens and understand the data behind the interface.</p>
+  <div class="meta"><span>PRODUCT GUIDE</span><span>TERMINAL WORKFLOW</span><span>DATA TRANSPARENCY</span></div>
+  <div class="callout">Alpha is a research interface. It does not execute trades, provide personalized financial advice or guarantee that a token is safe or profitable.</div>
+
+  <section id="intro">
+    <div class="section-no">01 / START HERE</div><h2>What is Alpha?</h2>
+    <p>Alpha organizes parts of the Solana market-research process into one terminal. The current experience combines narrative-oriented token discovery, a categorized news feed, a token scanner and keyboard-first navigation.</p>
+    <div class="cards">
+      <article class="card"><small>01 / DISCOVER</small><h3>Market Tracker</h3><p>Browse tokens grouped into configured market categories and detected entities.</p></article>
+      <article class="card"><small>02 / UNDERSTAND</small><h3>News Feed</h3><p>Review selected publisher feeds, categories, headlines and entity tags.</p></article>
+      <article class="card"><small>03 / INVESTIGATE</small><h3>Coin Scanner</h3><p>Inspect available public token and pool signals, including liquidity, holder and authority information.</p></article>
+      <article class="card"><small>04 / CONTROL</small><h3>Hotkeys</h3><p>Switch terminal windows and navigate supported controls using keyboard shortcuts.</p></article>
+    </div>
+  </section>
+
+  <section id="access">
+    <div class="section-no">02 / ACCESS</div><h2>Waitlist, invitation and sign-in</h2>
+    <p>The public waitlist and the private beta account are separate steps.</p>
+    <ol><li>Submit your X handle through the public waitlist form.</li><li>The Alpha team reviews waitlist entries and may send a beta invitation to an email address.</li><li>Use the invited email address to sign in with the password you set or an available sign-in link.</li><li>Access to member features is checked by Alpha's backend.</li></ol>
+    <p>You do not need to connect a wallet to join the public waitlist. Never share a wallet seed phrase or private key with anyone claiming to represent Alpha.</p>
+  </section>
+
+  <section id="tracker">
+    <div class="section-no">03 / TERMINAL TOOLS</div><h2>Market Tracker</h2>
+    <p>The Tracker combines a market-token directory with configured narrative categories and detected entity groups. Select a category in the left rail to filter the token list. Select <code>ALL TOKENS</code> to return to the full directory.</p>
+    <h3>Explore a category</h3>
+    <ol><li>Open the Tracker using <kbd>Alt</kbd> + <kbd>1</kbd>.</li><li>Choose a folder under Market Categories or Detected Entities.</li><li>Use the search field to filter by ticker, token name or mint address.</li><li>Inspect the token's detection details to see which configured label matched and the available reason.</li><li>Select a token row to open its chart and token details.</li></ol>
+    <h3>How classification works</h3>
+    <p>Current narrative grouping uses configured keyword and entity matching against available token metadata, including symbol, name and pool name. It is a rule-based categorization layer, not an AI judgment about a token's meaning or a guarantee that the token genuinely belongs to a theme.</p>
+    <p>A token can match more than one category. A token with insufficient matching metadata may appear under Other / Unclassified.</p>
+  </section>
+
+  <section id="news">
+    <div class="section-no">04 / TERMINAL TOOLS</div><h2>News Feed</h2>
+    <p>The News Feed aggregates a selected set of RSS sources, normalizes article details and displays them in a categorized terminal layout.</p>
+    <h3>Using the feed</h3>
+    <ul><li>Choose a category in the feed index.</li><li>Search headlines, topics or people using the search input.</li><li>Review the publisher, publication details and available summary.</li><li>Open the headline to read the original article at its publisher.</li></ul>
+    <p>Entity tags are generated from configured name and keyword matching against article text. A matching tag is a contextual clue, not proof that the article caused a token's price movement.</p>
+    <div class="callout">The current News Feed uses selected RSS sources. It is not a live X/Twitter feed and should not be described as one.</div>
+  </section>
+
+  <section id="scanner">
+    <div class="section-no">05 / TERMINAL TOOLS</div><h2>Coin Scanner</h2>
+    <p>The Scanner gathers available public information about a token and its associated pool. Enter a Solana mint address where possible. A ticker can be ambiguous because different tokens can share the same symbol.</p>
+    <h3>Signals shown by the Scanner</h3>
+    <table><thead><tr><th>CHECK</th><th>WHAT IT DESCRIBES</th></tr></thead><tbody>
+      <tr><td>Liquidity</td><td>Reported liquidity for the selected market pool.</td></tr>
+      <tr><td>Pool age</td><td>How long the selected pool has existed, where the data is available.</td></tr>
+      <tr><td>Holders</td><td>Available holder-distribution and concentration information.</td></tr>
+      <tr><td>Authority</td><td>Available mint and freeze authority information.</td></tr>
+      <tr><td>Activity</td><td>Available trading and transaction activity signals.</td></tr>
+      <tr><td>Profile</td><td>Available public token-profile and social metadata.</td></tr>
+    </tbody></table>
+    <p>Check results depend on third-party provider coverage. An unavailable field is unknown; it should not be interpreted as a clean result. A warning is a research signal, not a complete audit.</p>
+  </section>
+
+  <section id="hotkeys">
+    <div class="section-no">06 / TERMINAL TOOLS</div><h2>Keyboard controls</h2>
+    <p>Alpha is designed to make common terminal navigation possible from the keyboard. The Hotkeys window lets members inspect and customize supported bindings locally in the browser.</p>
+    <table><thead><tr><th>SHORTCUT</th><th>ACTION</th></tr></thead><tbody>
+      <tr><td><kbd>Alt</kbd> + <kbd>1</kbd></td><td>Open Tracker</td></tr>
+      <tr><td><kbd>Alt</kbd> + <kbd>2</kbd></td><td>Open News Feed</td></tr>
+      <tr><td><kbd>Alt</kbd> + <kbd>3</kbd></td><td>Open Coin Scanner</td></tr>
+      <tr><td><kbd>Alt</kbd> + <kbd>4</kbd></td><td>Open Hotkeys configuration</td></tr>
+      <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>Move through supported rows and controls in the focused window</td></tr>
+      <tr><td><kbd>Enter</kbd></td><td>Select or activate the focused item</td></tr>
+      <tr><td><kbd>Esc</kbd></td><td>Back out of supported subviews or close the active view</td></tr>
+    </tbody></table>
+    <p>Additional pane-navigation and focus shortcuts are displayed in the Hotkeys window. Custom bindings are stored locally in the browser and may not follow you to another device.</p>
+  </section>
+
+  <section id="data">
+    <div class="section-no">07 / TRANSPARENCY</div><h2>Data sources</h2>
+    <table><thead><tr><th>SOURCE</th><th>ROLE IN ALPHA</th><th>IMPORTANT CONTEXT</th></tr></thead><tbody>
+      <tr><td>Jupiter Tokens V2</td><td>Trending-token discovery and ranking intervals.</td><td>Provider-supported intervals are native; some shorter rolling periods are calculated by Alpha.</td></tr>
+      <tr><td>GeckoTerminal</td><td>Pool discovery, OHLCV history and related token/pool data.</td><td>Coverage and freshness depend on provider availability and rate limits.</td></tr>
+      <tr><td>Selected RSS publishers</td><td>News headlines and article links.</td><td>Only configured feeds are included; feed outages can reduce coverage.</td></tr>
+      <tr><td>Token metadata services</td><td>Supplementary token names, symbols, images and profile details.</td><td>Metadata may be incomplete, delayed or inconsistent.</td></tr>
+    </tbody></table>
+  </section>
+
+  <section id="timeframes">
+    <div class="section-no">08 / TRANSPARENCY</div><h2>Timeframes and derived measurements</h2>
+    <p>Alpha uses native provider intervals where they are available. In the current Tracker feed, Jupiter supplies native 5-minute, 1-hour and 24-hour ranking data. The 10-minute and 30-minute changes are derived from price snapshots sampled from the 5-minute feed.</p>
+    <p>These sampled measurements need sufficient history to calculate a comparison. The server keeps a rolling, in-memory history, so a service restart clears the collected samples. An unavailable derived measurement should not be read as zero movement.</p>
+  </section>
+
+  <section id="limitations">
+    <div class="section-no">09 / TRANSPARENCY</div><h2>Known limitations</h2>
+    <ul><li>Third-party market APIs can rate-limit, fail or return incomplete information.</li><li>Cached data may be older than a fresh provider response.</li><li>Token metadata and narrative classifications can be incomplete or incorrect.</li><li>RSS coverage depends on the availability and publication behavior of selected sources.</li><li>Scanner checks cannot prove that a token is safe or identify every malicious behavior.</li><li>Derived timeframes depend on the sample history available to the running service.</li></ul>
+    <p>Always verify the token mint address, pool, liquidity and source data independently. Never trade solely because an item appears in Alpha.</p>
+  </section>
+
+  <section id="faq">
+    <div class="section-no">10 / REFERENCE</div><h2>Frequently asked questions</h2>
+    <details><summary>Does Alpha connect to my wallet?</summary><p>The current research workflow does not require a wallet connection. Do not provide seed phrases or private keys.</p></details>
+    <details><summary>Does Alpha execute trades?</summary><p>No. Alpha is a research terminal and does not execute trades.</p></details>
+    <details><summary>Are narrative matches AI-generated?</summary><p>Current token labels use configured keyword and entity rules. They are not an AI guarantee or a complete semantic classification.</p></details>
+    <details><summary>Why is some data missing?</summary><p>The underlying provider may not supply the field, the selected token or pool may not have coverage, or a provider request may have failed or been rate-limited.</p></details>
+    <details><summary>Does Alpha provide financial advice?</summary><p>No. Alpha provides informational research tools only. All decisions and verification remain the user's responsibility.</p></details>
+  </section>
+  <div class="footer">ALPHA / FIELD MANUAL · SEE THE META BEFORE IT MOVES · <a href="/">RETURN TO ALPHA ↗</a></div>
+</main>
+</div>
+<script>
+const links=[...document.querySelectorAll('aside a[href^="#"]')];
+const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+entry.target.id));}}),{rootMargin:'-18% 0px -72% 0px'});
+sections.forEach(section=>observer.observe(section));
+</script>
+</body>
+</html>
