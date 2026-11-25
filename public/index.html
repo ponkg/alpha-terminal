@@ -1590,10 +1590,10 @@ body:not(.app) .marketing-site{overflow:visible}
 .m-faq-intro{position:sticky;top:112px}
 .m-faq-intro .m-title{font-size:clamp(34px,4.6vw,60px)}
 .m-faq-intro .m-lead{font-size:12px}
-.m-faq{max-width:none;margin-top:0}
-.m-faq details{padding:21px 0}
+.m-faq{max-width:none;margin-top:0;counter-reset:m-faq-item}
+.m-faq details{padding:21px 0;counter-increment:m-faq-item}
 .m-faq summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px}
-.m-faq summary:before{content:counter(list-item,decimal-leading-zero);color:#6d88a0;font:9px var(--mono)}
+.m-faq summary:before{content:counter(m-faq-item,decimal-leading-zero);color:#6d88a0;font:9px var(--mono)}
 .m-faq summary:after{content:"+";margin-left:auto;color:#477da9;font:16px var(--mono)}
 .m-faq details[open] summary:after{content:"−"}
 .m-faq details p{padding:10px 0 0 28px}
@@ -1604,6 +1604,17 @@ body:not(.app) .marketing-site{overflow:visible}
 .m-cta-box.v .m-mark-shard{animation:alpha-mark-assemble 1.05s cubic-bezier(.16,.75,.2,1) calc(var(--shard-delay,0ms)) both}
 .m-mark-shard:nth-child(2n){background:#9bc7e5}
 .m-mark-shard:nth-child(3n){background:#2f6d9f}
+.m-mark-shard:nth-child(2){--shard-delay:70ms}
+.m-mark-shard:nth-child(3){--shard-delay:130ms}
+.m-mark-shard:nth-child(4){--shard-delay:190ms}
+.m-mark-shard:nth-child(5){--shard-delay:90ms}
+.m-mark-shard:nth-child(6){--shard-delay:160ms}
+.m-mark-shard:nth-child(7){--shard-delay:220ms}
+.m-mark-shard:nth-child(8){--shard-delay:110ms}
+.m-mark-shard:nth-child(9){--shard-delay:180ms}
+.m-mark-shard:nth-child(10){--shard-delay:240ms}
+.m-mark-shard:nth-child(11){--shard-delay:140ms}
+.m-mark-shard:nth-child(12){--shard-delay:210ms}
 .m-mark-final{color:#2e6fa7}
 .m-cta-box.v .m-mark-final{animation:alpha-mark-reveal .55s ease-out .82s both}
 @keyframes alpha-mark-assemble{
@@ -2095,6 +2106,8 @@ const workflowPanels=[...document.querySelectorAll('[data-workflow-panel]')];
 const valueScene=document.querySelector('[data-values-scene]');
 const valueWords=[...document.querySelectorAll('[data-value-step]')];
 const statementScene=document.querySelector('[data-statement-scene]');
+const manualWorkflowMode=()=>matchMedia('(max-width: 760px)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches;
+let manualWorkflowChoice=0;
 const statementLines=[...document.querySelectorAll('[data-statement-line]')];
 const setSceneProgress=(scene,count,callback)=>{
   if(!scene||!count)return;
@@ -2118,7 +2131,7 @@ const updateCinematicScenes=()=>{
     if(count)count.textContent=String(active+1).padStart(2,'0')+' / '+String(statementLines.length).padStart(2,'0');
   });
   setSceneProgress(workflowScene,workflowSteps.length,progress=>{
-    const active=Math.min(workflowSteps.length-1,Math.floor(progress*workflowSteps.length));
+    const active=manualWorkflowMode()?manualWorkflowChoice:Math.min(workflowSteps.length-1,Math.floor(progress*workflowSteps.length));
     workflowSteps.forEach((button,index)=>{
       const selected=index===active;
       button.classList.toggle('is-active',selected);
@@ -2148,6 +2161,11 @@ const updateCinematicScenes=()=>{
 workflowSteps.forEach(button=>button.addEventListener('click',()=>{
   if(!workflowScene)return;
   const index=Number(button.dataset.workflowStepControl);
+  if(manualWorkflowMode()){
+    manualWorkflowChoice=index;
+    updateCinematicScenes();
+    return;
+  }
   const range=Math.max(1,workflowScene.offsetHeight-innerHeight);
   const fraction=(index+.45)/Math.max(1,workflowSteps.length);
   const target=window.scrollY+workflowScene.getBoundingClientRect().top+range*fraction;
