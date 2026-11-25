@@ -1230,10 +1230,10 @@ body:not(.app) #nv .blk.cta:hover{background:#3f8fd0;color:#fff}
 .marketing-site .m-bar i{display:block;height:4px;background:#162a3c;overflow:hidden}
 .marketing-site .m-bar i:after{content:"";display:block;height:100%;width:var(--w);background:#4b9bd6}
 .marketing-site .m-code{padding:16px;border:1px solid rgba(129,180,220,.2);background:#07111c;color:#8ebde1;font:10px/1.85 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere}
-.marketing-site .m-source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:38px;border:1px solid rgba(154,190,222,.2)}
+.marketing-site .m-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin-top:38px;border:1px solid rgba(154,190,222,.2)}
 .marketing-site .m-source{padding:22px;border-right:1px solid rgba(154,190,222,.18);border-bottom:1px solid rgba(154,190,222,.18)}
-.marketing-site .m-source:nth-child(3n){border-right:0}
-.marketing-site .m-source:nth-last-child(-n+3){border-bottom:0}
+.marketing-site .m-source:nth-child(2n){border-right:0}
+.marketing-site .m-source:nth-last-child(-n+2){border-bottom:0}
 .marketing-site .m-source b{display:block;margin:11px 0 7px;color:#e9f3fc;font:500 14px var(--mono)}
 .marketing-site .m-source p{color:#91a8bf;font:10px/1.75 var(--mono)}
 .marketing-site .m-doc-link{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:42px;padding:23px 25px;border:1px solid rgba(119,181,227,.35);background:linear-gradient(100deg,rgba(49,105,153,.18),rgba(8,18,29,.7));color:#eaf4fc}
@@ -1266,10 +1266,8 @@ body:not(.app) #nv .blk.cta:hover{background:#3f8fd0;color:#fff}
  .marketing-site .m-step:nth-child(2){border-right:0}
  .marketing-site .m-step:nth-child(-n+2){border-bottom:1px solid rgba(154,190,222,.18)}
  .marketing-site .m-source-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .marketing-site .m-source:nth-child(3n){border-right:1px solid rgba(154,190,222,.18)}
  .marketing-site .m-source:nth-child(2n){border-right:0}
- .marketing-site .m-source:nth-last-child(-n+3){border-bottom:1px solid rgba(154,190,222,.18)}
- .marketing-site .m-source:nth-last-child(-n+1){border-bottom:0}
+ .marketing-site .m-source:nth-last-child(-n+2){border-bottom:0}
 }
 @media(max-width:650px){
  .marketing-site .m-section{padding:72px 0}
@@ -1281,7 +1279,7 @@ body:not(.app) #nv .blk.cta:hover{background:#3f8fd0;color:#fff}
  .marketing-site .m-step:last-child{border-bottom:0}
  .marketing-site .m-step h3{margin:18px 0 7px}
  .marketing-site .m-source-grid{grid-template-columns:1fr}
- .marketing-site .m-source,.marketing-site .m-source:nth-child(3n){border-right:0;border-bottom:1px solid rgba(154,190,222,.18)}
+ .marketing-site .m-source,.marketing-site .m-source:nth-child(2n){border-right:0;border-bottom:1px solid rgba(154,190,222,.18)}
  .marketing-site .m-source:last-child{border-bottom:0}
  .marketing-site .m-doc-link{align-items:flex-start;padding:18px}
  .marketing-site .m-token-head,.marketing-site .m-token{grid-template-columns:minmax(0,1.3fr) minmax(60px,.7fr) minmax(60px,.7fr);gap:7px}
@@ -1522,6 +1520,7 @@ ESC       BACK / CLOSE</div>
         <article class="m-source"><div class="m-index">MARKET DISCOVERY</div><b>Jupiter Tokens V2</b><p>Used for the trending-token feed and native ranking intervals supported by the provider.</p></article>
         <article class="m-source"><div class="m-index">POOL &amp; PRICE HISTORY</div><b>GeckoTerminal</b><p>Used for pool discovery, token/pool details and historical market data where available.</p></article>
         <article class="m-source"><div class="m-index">NEWS</div><b>Selected RSS feeds</b><p>Publisher feeds are fetched, normalized, categorized and linked back to their original articles.</p></article>
+        <article class="m-source"><div class="m-index">TOKEN METADATA</div><b>DexScreener / PumpPortal</b><p>Supplementary token names, symbols, images and launch metadata where available. Metadata may be incomplete or inconsistent.</p></article>
       </div>
       <div class="m-grid">
         <article class="m-panel m-panel-pad m-reveal" style="grid-column:span 6">
