@@ -1156,7 +1156,8 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 @media(max-width:700px){#wm{width:96vw!important;height:84vh!important}#wm .wm-row{grid-template-columns:1fr 1fr;gap:7px}#wm .wm-row>div:first-child{grid-column:1/-1}#wm .wm-row input{grid-column:1/-1}#wm .wm-row button{width:100%}}
 
 /* === Alpha public product site: editorial depth, original atmosphere === */
-html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+html{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+body{height:auto;min-height:100%;overflow-x:clip;overflow-y:visible}
 html.terminal-mode,html.terminal-mode body{height:100%;overflow:hidden}
 body:not(.app){background:#09131f;color:#eaf3fb}
 body:not(.app) .bbar{display:none!important}
