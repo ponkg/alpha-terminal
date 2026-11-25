@@ -639,6 +639,7 @@ app.get("/api/jupiter/trending", jupiterLimiter, requireAccess, async (req, res)
 // Free RSS aggregation for narrative event matching.
 // Feed requests are server-side, coalesced, time-limited and cached for all visitors.
 const NARRATIVE_NEWS_FEEDS = [
+  // General headlines retained for cross-market context.
   { name: "TechCrunch", url: "https://techcrunch.com/feed/" },
   { name: "BBC Technology", url: "https://feeds.bbci.co.uk/news/technology/rss.xml" },
   { name: "BBC Business", url: "https://feeds.bbci.co.uk/news/business/rss.xml" },
@@ -648,6 +649,38 @@ const NARRATIVE_NEWS_FEEDS = [
     name: "Google News · Entity Search",
     url: "https://news.google.com/rss/search?q=" +
       encodeURIComponent('(NVIDIA OR "Jensen Huang" OR NVDA OR Blackwell OR Elon Musk OR Tesla OR xAI OR SpaceX OR OpenAI OR Anthropic OR DeepSeek OR "Sam Altman" OR Trump OR Biden OR Putin OR Zelensky) when:3d') +
+      "&hl=en-US&gl=US&ceid=US:en"
+  },
+
+  // Crypto-native publishers catch security incidents, exchange news and on-chain stories.
+  { name: "CoinDesk", url: "https://www.coindesk.com/arc/outboundfeeds/rss/?outputType=xml" },
+  { name: "Cointelegraph", url: "https://cointelegraph.com/rss" },
+  { name: "Decrypt", url: "https://decrypt.co/feed/" },
+  { name: "The Block", url: "https://www.theblock.co/rss.xml" },
+
+  // Search feeds widen coverage beyond the headlines selected by any one publisher.
+  {
+    name: "Google News · Crypto",
+    url: "https://news.google.com/rss/search?q=" +
+      encodeURIComponent('(cryptocurrency OR bitcoin OR BTC OR crypto exchange OR DeFi OR stablecoin OR blockchain OR "crypto hack" OR "wallet drain" OR exploit) when:3d') +
+      "&hl=en-US&gl=US&ceid=US:en"
+  },
+  {
+    name: "Google News · Altcoins",
+    url: "https://news.google.com/rss/search?q=" +
+      encodeURIComponent('(altcoin OR altcoins OR Ethereum OR Solana OR XRP OR Ripple OR BNB OR Cardano OR Avalanche OR Sui OR Toncoin OR Aptos OR "Layer 2") when:3d') +
+      "&hl=en-US&gl=US&ceid=US:en"
+  },
+  {
+    name: "Google News · Memecoins",
+    url: "https://news.google.com/rss/search?q=" +
+      encodeURIComponent('("memecoin" OR "meme coin" OR "meme token" OR "Pump.fun" OR PumpSwap OR "creator coin" OR "Solana meme") when:3d') +
+      "&hl=en-US&gl=US&ceid=US:en"
+  },
+  {
+    name: "Google News · Viral Animals",
+    url: "https://news.google.com/rss/search?q=" +
+      encodeURIComponent('(zoo OR wildlife OR "viral animal" OR "famous animal" OR "internet-famous animal" OR "animal rescue" OR hippo OR hippopotamus OR capybara OR penguin OR monkey OR "baby animal") when:3d') +
       "&hl=en-US&gl=US&ceid=US:en"
   }
 ];
