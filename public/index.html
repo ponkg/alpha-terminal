@@ -1456,6 +1456,214 @@ body:not(.app) .hero.modal-active #auth.win .wb p{color:#536f88}
 body:not(.app) .hero.modal-active #reg.win input,
 body:not(.app) .hero.modal-active #auth.win input{color:#173653}
 
+ 
+/* Scroll choreography adapted from the supplied reference: pinned statements, sequential workflow panels and a changing value stack. */
+body:not(.app) .marketing-site{overflow:visible}
+.m-statement-scene,.m-workflow-scene,.m-values-scene{position:relative;isolation:isolate}
+.m-statement-scene{
+  height:300svh;
+  border-top:1px solid rgba(55,104,151,.16);
+  border-bottom:1px solid rgba(55,104,151,.16);
+  background:
+    radial-gradient(ellipse 56% 42% at 16% 22%,rgba(255,255,255,.84),transparent 78%),
+    radial-gradient(ellipse 50% 38% at 88% 74%,rgba(125,172,211,.23),transparent 82%),
+    linear-gradient(180deg,rgba(226,238,248,.5),rgba(245,249,252,.86),rgba(220,234,247,.52));
+}
+.m-statement-stage{position:sticky;top:0;height:100svh;min-height:600px;display:flex;align-items:center;overflow:hidden}
+.m-statement-stage .m-wrap{width:min(1180px,100%);padding-top:78px;padding-bottom:44px}
+.m-statement-copy{max-width:1120px;margin:clamp(26px,6vh,66px) auto}
+.m-statement-line{
+  margin:0 0 clamp(8px,1.5vh,18px);
+  color:#173a5a;font:500 clamp(34px,6.2vw,82px)/1.12 var(--mono);
+  letter-spacing:-.075em;will-change:opacity,transform
+}
+.m-statement-line span{color:#3b78ad}
+.m-statement-foot{display:flex;justify-content:space-between;gap:20px;color:#567792;font:10px/1.5 var(--mono);letter-spacing:.12em}
+.m-statement-foot span:last-child{color:#2f6fa8}
+.m-statement-track{height:200svh;position:relative;pointer-events:none}
+.m-statement-track i{display:block;height:50%}
+
+.m-workflow-scene{
+  min-height:400svh;
+  border-bottom:1px solid rgba(55,104,151,.16);
+  background:
+    radial-gradient(ellipse 52% 40% at 82% 17%,rgba(255,255,255,.88),transparent 80%),
+    radial-gradient(ellipse 45% 36% at 9% 88%,rgba(129,176,213,.2),transparent 82%),
+    linear-gradient(180deg,#e6f0f8 0%,#f3f7fb 48%,#e2eef8 100%);
+}
+.m-workflow-sticky{position:sticky;top:0;height:100svh;min-height:620px;display:flex;align-items:center;padding:80px 0 30px;overflow:hidden}
+.m-workflow-grid{display:grid;grid-template-columns:minmax(0,.84fr) minmax(0,1.16fr);gap:clamp(30px,5vw,74px);align-items:center}
+.m-workflow-copy{min-width:0}
+.m-workflow-copy .m-title{font-size:clamp(32px,4.3vw,56px);margin:18px 0}
+.m-workflow-copy .m-lead{font-size:12px;line-height:1.75}
+.m-workflow-step-list{display:grid;margin-top:26px;border-top:1px solid rgba(57,106,151,.2)}
+.m-workflow-step{
+  display:grid;grid-template-columns:34px minmax(0,1fr) 16px;gap:12px;align-items:start;
+  width:100%;padding:15px 10px;border:0;border-bottom:1px solid rgba(57,106,151,.2);
+  text-align:left;background:transparent;color:#71889d;cursor:pointer;
+  transition:background .35s ease,color .35s ease,padding .35s ease
+}
+.m-workflow-step:hover{background:rgba(255,255,255,.46);color:#244f75}
+.m-workflow-step.is-active{padding-left:15px;background:rgba(255,255,255,.78);color:#173a5a;box-shadow:inset 3px 0 #4d86b7}
+.m-workflow-step-no{padding-top:2px;color:#6c8aa5;font:10px/1.5 var(--mono)}
+.m-workflow-step b{display:block;margin-bottom:3px;color:inherit;font:600 14px/1.4 var(--mono);text-transform:uppercase}
+.m-workflow-step small{display:block;color:#627b93;font:10px/1.6 var(--mono)}
+.m-workflow-arrow{padding-top:2px;color:#4d83b3;opacity:0;transform:translate(-5px,5px);transition:opacity .3s,transform .3s}
+.m-workflow-step.is-active .m-workflow-arrow{opacity:1;transform:none}
+.m-workflow-copy .m-side-note{font-size:9px;margin-top:14px}
+.m-workflow-display{
+  min-width:0;padding:10px;border:1px solid rgba(61,111,157,.27);
+  background:rgba(250,253,255,.78);box-shadow:0 34px 88px rgba(54,91,128,.16);
+  backdrop-filter:blur(12px)
+}
+.m-workflow-display-head,.m-workflow-display-foot{
+  display:flex;justify-content:space-between;gap:12px;padding:9px 10px;
+  color:#55738e;font:9px/1.45 var(--mono);letter-spacing:.09em
+}
+.m-workflow-display-head{border-bottom:1px solid rgba(61,111,157,.18)}
+.m-workflow-display-head span:last-child,.m-workflow-display-foot span:last-child{color:#3979ad}
+.m-workflow-panels{position:relative;min-height:390px;overflow:hidden}
+.m-workflow-panel{
+  position:absolute;inset:0;padding:clamp(16px,2.2vw,26px);
+  opacity:0;visibility:hidden;transform:translateY(22px) scale(.99);
+  transition:opacity .65s ease,transform .65s cubic-bezier(.2,.7,.15,1),visibility .65s;
+  background:linear-gradient(145deg,rgba(231,242,251,.78),rgba(255,255,255,.92))
+}
+.m-workflow-panel.is-active{position:relative;opacity:1;visibility:visible;transform:none}
+.m-workflow-panel-title{display:flex;justify-content:space-between;gap:12px;color:#3c6d98;font:10px/1.5 var(--mono);letter-spacing:.09em}
+.m-workflow-panel-title span{color:#7a91a6}
+.m-workflow-path{margin:24px 0 18px;color:#718aa0;font:10px/1.6 var(--mono)}
+.m-workflow-path b{color:#2d6ea9;font-weight:600}
+.m-workflow-table-head,.m-workflow-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(70px,.7fr) minmax(78px,.75fr);gap:8px;align-items:center}
+.m-workflow-table-head{padding:9px 5px;border-top:1px solid rgba(61,111,157,.2);border-bottom:1px solid rgba(61,111,157,.2);color:#6e879d;font:9px/1.5 var(--mono)}
+.m-workflow-row{padding:16px 5px;border-bottom:1px solid rgba(61,111,157,.14);color:#607b94;font:9px/1.5 var(--mono)}
+.m-workflow-row b{color:#244e72;font-weight:500}
+.m-workflow-row em{color:#3c7bac;font-style:normal;text-align:right}
+.m-workflow-panel-foot{margin-top:22px;padding-top:10px;border-top:1px solid rgba(61,111,157,.16);color:#718ba3;font:8px/1.6 var(--mono);letter-spacing:.08em}
+.m-workflow-feed{display:grid;gap:0;border-top:1px solid rgba(61,111,157,.18)}
+.m-workflow-feed>div{display:grid;gap:6px;padding:16px 4px;border-bottom:1px solid rgba(61,111,157,.16)}
+.m-workflow-feed small,.m-workflow-signal-grid small{color:#5680a4;font:9px/1.4 var(--mono);letter-spacing:.08em}
+.m-workflow-feed b{color:#254f73;font:500 12px/1.5 var(--mono)}
+.m-workflow-feed span{color:#71899f;font:9px/1.5 var(--mono)}
+.m-workflow-signal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.m-workflow-signal-grid>div{min-height:102px;padding:14px;border:1px solid rgba(61,111,157,.18);background:rgba(255,255,255,.54);display:flex;flex-direction:column;gap:7px}
+.m-workflow-signal-grid b{color:#234d71;font:600 24px/1.2 var(--mono)}
+.m-workflow-signal-grid span{color:#7790a6;font:8px/1.5 var(--mono)}
+.m-workflow-hotkeys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.m-workflow-hotkeys>div{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px;border:1px solid rgba(61,111,157,.17);background:rgba(255,255,255,.52)}
+.m-workflow-hotkeys kbd{min-width:66px;padding:5px 6px;border:1px solid rgba(61,111,157,.3);color:#2c679a;background:#f8fbfe;text-align:center;font:9px/1.3 var(--mono)}
+.m-workflow-hotkeys b{color:#486986;font:9px/1.5 var(--mono)}
+.m-workflow-track{height:300svh;position:relative;pointer-events:none}
+.m-workflow-track i{display:block;height:33.333%}
+.m-workflow-display-foot{border-top:1px solid rgba(61,111,157,.17)}
+
+.m-values-scene{
+  min-height:400svh;
+  border-top:1px solid rgba(55,104,151,.17);
+  border-bottom:1px solid rgba(55,104,151,.17);
+  background:
+    radial-gradient(ellipse 52% 45% at 14% 25%,rgba(255,255,255,.9),transparent 80%),
+    radial-gradient(ellipse 50% 42% at 90% 78%,rgba(121,169,207,.3),transparent 82%),
+    linear-gradient(140deg,#d8e9f7 0%,#edf4fa 52%,#dceaf8 100%)
+}
+.m-values-sticky{position:sticky;top:0;height:100svh;min-height:620px;display:flex;align-items:center;padding:82px 0 38px;overflow:hidden}
+.m-values-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(35px,7vw,100px);align-items:center}
+.m-values-copy .m-title{font-size:clamp(32px,4vw,52px);margin:18px 0}
+.m-values-copy .m-lead{font-size:12px}
+.m-values-counter{display:flex;align-items:center;gap:16px;margin-top:34px;color:#3c719e;font:10px/1.4 var(--mono);letter-spacing:.1em}
+.m-values-counter span{display:block;width:110px;height:2px;background:rgba(61,111,157,.19);overflow:hidden}
+.m-values-counter i{display:block;width:100%;height:100%;background:#4d86b7;transform:scaleX(.25);transform-origin:left;transition:transform .4s ease}
+.m-values-list{display:grid;gap:10px}
+.m-value-word{
+  padding:13px 0 15px 18px;border-left:1px solid rgba(61,111,157,.18);
+  opacity:.27;transform:translateX(20px);transition:opacity .5s ease,transform .5s ease,border-color .5s ease;
+}
+.m-value-word.is-active{opacity:1;transform:none;border-left:3px solid #4d86b7}
+.m-value-word small{color:#6986a0;font:9px/1.5 var(--mono);letter-spacing:.13em}
+.m-value-word h3{margin:3px 0;color:#7d95a9;font:500 clamp(30px,4.2vw,58px)/1.12 var(--mono);letter-spacing:-.065em;transition:color .45s ease}
+.m-value-word.is-active h3{color:#183d60}
+.m-value-word p{margin:0;color:#698198;font:10px/1.55 var(--mono)}
+.m-values-track{height:300svh;position:relative;pointer-events:none}
+.m-values-track i{display:block;height:33.333%}
+
+.m-faq-layout{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,6vw,90px);align-items:start}
+.m-faq-intro{position:sticky;top:112px}
+.m-faq-intro .m-title{font-size:clamp(34px,4.6vw,60px)}
+.m-faq-intro .m-lead{font-size:12px}
+.m-faq{max-width:none;margin-top:0}
+.m-faq details{padding:21px 0}
+.m-faq summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:14px}
+.m-faq summary:before{content:counter(list-item,decimal-leading-zero);color:#6d88a0;font:9px var(--mono)}
+.m-faq summary:after{content:"+";margin-left:auto;color:#477da9;font:16px var(--mono)}
+.m-faq details[open] summary:after{content:"−"}
+.m-faq details p{padding:10px 0 0 28px}
+
+.m-mark-assemble{position:relative;width:64px;height:64px;margin-bottom:24px}
+.m-mark-final{position:absolute;inset:7px;width:50px;height:50px;color:#2e6fa7;opacity:0;transform:scale(.55)}
+.m-mark-shard{position:absolute;left:50%;top:50%;width:7px;height:7px;background:#4d86b7;opacity:0;transform:translate(var(--sx),var(--sy)) rotate(var(--rot));clip-path:polygon(50% 0,100% 62%,38% 100%,0 34%)}
+.m-cta-box.v .m-mark-shard{animation:alpha-mark-assemble 1.05s cubic-bezier(.16,.75,.2,1) calc(var(--shard-delay,0ms)) both}
+.m-mark-shard:nth-child(2n){background:#9bc7e5}
+.m-mark-shard:nth-child(3n){background:#2f6d9f}
+.m-mark-final{color:#2e6fa7}
+.m-cta-box.v .m-mark-final{animation:alpha-mark-reveal .55s ease-out .82s both}
+@keyframes alpha-mark-assemble{
+  0%{opacity:0;transform:translate(var(--sx),var(--sy)) rotate(var(--rot)) scale(1.2)}
+  28%{opacity:1}
+  100%{opacity:0;transform:translate(0,0) rotate(0) scale(.12)}
+}
+@keyframes alpha-mark-reveal{to{opacity:1;transform:scale(1)}}
+
+@media(max-width:900px){
+ .m-workflow-grid,.m-values-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:22px}
+ .m-workflow-step{padding:11px 7px}
+ .m-workflow-step small{font-size:9px}
+ .m-workflow-panels{min-height:360px}
+ .m-workflow-hotkeys{grid-template-columns:1fr}
+ .m-faq-layout{gap:32px}
+}
+@media(max-width:760px){
+ .m-statement-scene,.m-values-scene{height:auto;min-height:0}
+ .m-statement-stage,.m-values-sticky{position:relative;top:auto;height:auto;min-height:72svh;padding:110px 0 80px}
+ .m-statement-track,.m-values-track,.m-workflow-track{display:none}
+ .m-workflow-scene{min-height:0}
+ .m-workflow-sticky{position:relative;top:auto;height:auto;min-height:0;padding:100px 0 72px;overflow:visible}
+ .m-workflow-grid,.m-values-grid{grid-template-columns:1fr}
+ .m-workflow-step-list{margin-top:20px}
+ .m-workflow-display{margin-top:22px}
+ .m-workflow-panels{display:grid;min-height:0;gap:12px;overflow:visible}
+ .m-workflow-panel,.m-workflow-panel.is-active{position:relative;inset:auto;display:block;opacity:1;visibility:visible;transform:none;min-height:0}
+ .m-workflow-panel:not(.is-active){display:none}
+ .m-values-list{gap:2px;margin-top:28px}
+ .m-value-word,.m-value-word.is-active{opacity:1;transform:none}
+ .m-faq-layout{grid-template-columns:1fr}
+ .m-faq-intro{position:relative;top:auto}
+ .m-faq{margin-top:14px}
+ .m-mark-assemble{margin-bottom:18px}
+}
+@media(max-width:520px){
+ .m-workflow-display{padding:6px}
+ .m-workflow-panel{padding:13px}
+ .m-workflow-table-head,.m-workflow-row{grid-template-columns:minmax(0,1fr) minmax(56px,.65fr)}
+ .m-workflow-table-head span:nth-child(3),.m-workflow-row em{display:none}
+ .m-workflow-row span{text-align:right}
+ .m-workflow-hotkeys{grid-template-columns:1fr}
+ .m-faq details{padding:17px 0}
+ .m-statement-line{font-size:clamp(31px,9vw,50px)}
+ .m-statement-foot{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .m-statement-stage,.m-workflow-sticky,.m-values-sticky{position:relative;top:auto}
+ .m-statement-scene,.m-workflow-scene,.m-values-scene{height:auto;min-height:0}
+ .m-statement-track,.m-workflow-track,.m-values-track{display:none}
+ .m-statement-line{opacity:1!important;transform:none!important}
+ .m-workflow-panels{display:grid;gap:12px}
+ .m-workflow-panel,.m-workflow-panel.is-active{position:relative;display:block;opacity:1;visibility:visible;transform:none}
+ .m-workflow-panel:not(.is-active){display:none}
+ .m-value-word{opacity:1;transform:none}
+ .m-mark-shard,.m-cta-box.v .m-mark-shard{display:none;animation:none}
+ .m-mark-final,.m-cta-box.v .m-mark-final{opacity:1;transform:none;animation:none}
+}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws" aria-label="Site navigation"><a href="#product"><b>01</b>Product</a><a href="#workflow"><b>02</b>Workflow</a><a href="#data"><b>03</b>Data</a><a href="/docs/"><b>04</b>Field manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#product">01 / Product</a><a class="blk" href="#workflow">02 / Workflow</a><a class="blk" href="#data">03 / Data &amp; methodology</a><a class="blk" href="/docs/">04 / Alpha Field Manual ↗</a></div></nav>
@@ -1555,7 +1763,100 @@ body:not(.app) .hero.modal-active #auth.win input{color:#173653}
     </div>
   </section>
 
-  <section class="m-section" id="workflow">
+  <section class="m-statement-scene" data-statement-scene aria-label="The Alpha approach">
+    <div class="m-statement-stage">
+      <div class="m-wrap">
+        <div class="m-kicker">01 / THE SIGNAL</div>
+        <div class="m-statement-copy">
+          <p class="m-statement-line" data-statement-line>Every ticker tells you <span>what moved.</span></p>
+          <p class="m-statement-line" data-statement-line>Every narrative gives you <span>context.</span></p>
+          <p class="m-statement-line" data-statement-line>Alpha helps you <span>investigate why.</span></p>
+        </div>
+        <div class="m-statement-foot"><span>READ THE STORY BEHIND THE MOVE</span><span data-statement-count>01 / 03</span></div>
+      </div>
+    </div>
+    <div class="m-statement-track" aria-hidden="true"><i></i><i></i></div>
+  </section>
+
+  <section class="m-workflow-scene" id="workflow" data-workflow-scene>
+    <div class="m-workflow-sticky">
+      <div class="m-wrap">
+        <div class="m-workflow-grid">
+          <div class="m-workflow-copy">
+            <div class="m-kicker">02 / HOW IT WORKS</div>
+            <h2 class="m-title">From first signal<br>to <span class="m-blue">clearer context.</span></h2>
+            <p class="m-lead">Move through one connected research flow. Each step adds context without pretending missing data is a signal.</p>
+            <div class="m-workflow-step-list">
+              <button class="m-workflow-step is-active" type="button" data-workflow-step-control="0" aria-pressed="true">
+                <span class="m-workflow-step-no">01</span><span><b>Discover</b><small>Find narratives, entities and tokens worth a closer look.</small></span><span class="m-workflow-arrow">↗</span>
+              </button>
+              <button class="m-workflow-step" type="button" data-workflow-step-control="1" aria-pressed="false">
+                <span class="m-workflow-step-no">02</span><span><b>Understand</b><small>Connect market attention with selected news and sources.</small></span><span class="m-workflow-arrow">↗</span>
+              </button>
+              <button class="m-workflow-step" type="button" data-workflow-step-control="2" aria-pressed="false">
+                <span class="m-workflow-step-no">03</span><span><b>Investigate</b><small>Inspect the pool, liquidity, holder and activity signals available.</small></span><span class="m-workflow-arrow">↗</span>
+              </button>
+              <button class="m-workflow-step" type="button" data-workflow-step-control="3" aria-pressed="false">
+                <span class="m-workflow-step-no">04</span><span><b>Stay in flow</b><small>Navigate the research terminal with configurable hotkeys.</small></span><span class="m-workflow-arrow">↗</span>
+              </button>
+            </div>
+            <p class="m-side-note">ALPHA ORGANIZES RESEARCH. IT DOES NOT EXECUTE TRADES OR GUARANTEE OUTCOMES.</p>
+          </div>
+          <div class="m-workflow-display">
+            <div class="m-workflow-display-head"><span>ALPHA / RESEARCH FLOW</span><span>STATIC INTERFACE EXAMPLES</span></div>
+            <div class="m-workflow-panels">
+              <article class="m-workflow-panel is-active" data-workflow-panel="0" aria-hidden="false">
+                <div class="m-workflow-panel-title"><b>01 / MARKET INDEX</b><span>NARRATIVE DISCOVERY</span></div>
+                <div class="m-workflow-path">alpha@terminal : <b>/markets</b> $ ALL NARRATIVES</div>
+                <div class="m-workflow-table-head"><span>CATEGORY / ENTITY</span><span>TIMEFRAME</span><span>STATE</span></div>
+                <div class="m-workflow-row"><b>AI &amp; SEMICONDUCTORS</b><span>5M / 1H</span><em>EXPLORE ↗</em></div>
+                <div class="m-workflow-row"><b>POLITICAL FIGURES</b><span>5M / 1H</span><em>EXPLORE ↗</em></div>
+                <div class="m-workflow-row"><b>ANIMAL MEMES</b><span>5M / 1H</span><em>EXPLORE ↗</em></div>
+                <div class="m-workflow-row"><b>INTERNET CULTURE</b><span>5M / 1H</span><em>EXPLORE ↗</em></div>
+                <div class="m-workflow-panel-foot">CATEGORY → DETECTED ENTITY → TOKEN DIRECTORY</div>
+              </article>
+              <article class="m-workflow-panel" data-workflow-panel="1" aria-hidden="true">
+                <div class="m-workflow-panel-title"><b>02 / NEWS FEED</b><span>EVENT CONTEXT</span></div>
+                <div class="m-workflow-path">alpha@terminal : <b>/news</b> $ SELECTED SOURCES</div>
+                <div class="m-workflow-feed">
+                  <div><small>01 / TECHNOLOGY</small><b>Publisher and headline context</b><span>Entity tags · Source · Published time</span></div>
+                  <div><small>02 / BUSINESS</small><b>Market-moving developments</b><span>Publisher and topic classification</span></div>
+                  <div><small>03 / POLICY</small><b>Events to investigate further</b><span>Source links · Related entities</span></div>
+                </div>
+                <div class="m-workflow-panel-foot">SELECTED RSS SOURCES · NOT AN X/TWITTER FIREHOSE</div>
+              </article>
+              <article class="m-workflow-panel" data-workflow-panel="2" aria-hidden="true">
+                <div class="m-workflow-panel-title"><b>03 / TOKEN SCANNER</b><span>PUBLIC-DATA CHECKS</span></div>
+                <div class="m-workflow-path">alpha@terminal : <b>/scan</b> $ CHECK AVAILABLE DATA</div>
+                <div class="m-workflow-signal-grid">
+                  <div><small>POOL / LIQUIDITY</small><b>—</b><span>CHECK AVAILABLE DATA</span></div>
+                  <div><small>HOLDERS / DISTRIBUTION</small><b>—</b><span>CHECK AVAILABLE DATA</span></div>
+                  <div><small>AUTHORITY / PROFILE</small><b>—</b><span>CHECK AVAILABLE DATA</span></div>
+                  <div><small>ACTIVITY / VOLUME</small><b>—</b><span>CHECK AVAILABLE DATA</span></div>
+                </div>
+                <div class="m-workflow-panel-foot">UNKNOWN DATA IS NOT PROOF OF SAFETY</div>
+              </article>
+              <article class="m-workflow-panel" data-workflow-panel="3" aria-hidden="true">
+                <div class="m-workflow-panel-title"><b>04 / WORKSPACE</b><span>KEYBOARD FIRST</span></div>
+                <div class="m-workflow-path">alpha@terminal : <b>/controls</b> $ NAVIGATE</div>
+                <div class="m-workflow-hotkeys">
+                  <div><kbd>ALT + 1</kbd><b>OPEN TRACKER</b></div>
+                  <div><kbd>ALT + 2</kbd><b>OPEN NEWS FEED</b></div>
+                  <div><kbd>ALT + 3</kbd><b>OPEN SCANNER</b></div>
+                  <div><kbd>ALT + 4</kbd><b>EDIT HOTKEYS</b></div>
+                  <div><kbd>↑ ↓</kbd><b>MOVE THROUGH RESULTS</b></div>
+                  <div><kbd>ENTER</kbd><b>OPEN SELECTION</b></div>
+                </div>
+                <div class="m-workflow-panel-foot">CONFIGURABLE KEYBINDINGS · LOCAL WORKSPACE</div>
+              </article>
+            </div>
+            <div class="m-workflow-display-foot"><span>SCROLL TO ADVANCE</span><span data-workflow-count>01 / 04</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="m-workflow-track" aria-hidden="true"><i></i><i></i><i></i></div>
+  </section>
     <div class="m-wrap">
       <div class="m-kicker">02 / RESEARCH WORKFLOW</div>
       <h2 class="m-title m-reveal">From discovery to <span class="m-blue">investigation.</span></h2>
@@ -1679,6 +1980,28 @@ ESC       BACK / CLOSE</div>
     </div>
   </section>
 
+  <section class="m-values-scene" data-values-scene aria-label="Alpha research principles">
+    <div class="m-values-sticky">
+      <div class="m-wrap">
+        <div class="m-values-grid">
+          <div class="m-values-copy">
+            <div class="m-kicker">04 / WHAT MATTERS</div>
+            <h2 class="m-title">Don't chase every ticker.<br><span class="m-blue">Follow what matters.</span></h2>
+            <p class="m-lead">A useful research flow is built around what you can discover, understand and verify—not how many numbers fit on a screen.</p>
+            <div class="m-values-counter"><b data-values-count>01 / 04</b><span><i data-values-progress></i></span></div>
+          </div>
+          <div class="m-values-list">
+            <article class="m-value-word is-active" data-value-step="0" aria-current="step"><small>01 / DISCOVERY</small><h3>Narratives</h3><p>See what attention is gathering around.</p></article>
+            <article class="m-value-word" data-value-step="1"><small>02 / CONTEXT</small><h3>Context</h3><p>Connect market attention with selected events and sources.</p></article>
+            <article class="m-value-word" data-value-step="2"><small>03 / RESEARCH</small><h3>Inspection</h3><p>Check the public data available before reaching your own view.</p></article>
+            <article class="m-value-word" data-value-step="3"><small>04 / WORKFLOW</small><h3>Focus</h3><p>Keep the tools close and the navigation predictable.</p></article>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="m-values-track" aria-hidden="true"><i></i><i></i><i></i></div>
+  </section>
+
   <section class="m-section" id="data">
     <div class="m-wrap">
       <div class="m-kicker">04 / DATA &amp; METHODOLOGY</div>
@@ -1705,9 +2028,12 @@ ESC       BACK / CLOSE</div>
   </section>
 
   <section class="m-section" id="faq">
-    <div class="m-wrap">
-      <div class="m-kicker">05 / QUESTIONS &amp; ACCESS</div>
-      <h2 class="m-title m-reveal">Before you enter the <span class="m-blue">terminal.</span></h2>
+    <div class="m-wrap m-faq-layout">
+      <div class="m-faq-intro m-reveal">
+        <div class="m-kicker">05 / QUESTIONS &amp; ACCESS</div>
+        <h2 class="m-title">Asked before<br>you <span class="m-blue">ask.</span></h2>
+        <p class="m-lead">Straight answers about the terminal, its data and what it does not do.</p>
+      </div>
       <div class="m-faq m-reveal">
         <details><summary>What is Alpha?</summary><p>Alpha is a Solana narrative intelligence terminal for market discovery, news context and token investigation.</p></details>
         <details><summary>Is Alpha a trading bot?</summary><p>No. Alpha is a research interface. It does not execute trades or guarantee trading outcomes.</p></details>
@@ -1722,6 +2048,21 @@ ESC       BACK / CLOSE</div>
   <section class="m-cta" id="join">
     <div class="m-wrap">
       <div class="m-cta-box m-reveal">
+        <div class="m-mark-assemble" aria-hidden="true">
+          <span class="m-mark-shard" style="--sx:-58px;--sy:-18px;--rot:22deg"></span>
+          <span class="m-mark-shard" style="--sx:42px;--sy:-45px;--rot:-34deg"></span>
+          <span class="m-mark-shard" style="--sx:64px;--sy:19px;--rot:48deg"></span>
+          <span class="m-mark-shard" style="--sx:20px;--sy:55px;--rot:-12deg"></span>
+          <span class="m-mark-shard" style="--sx:-42px;--sy:48px;--rot:38deg"></span>
+          <span class="m-mark-shard" style="--sx:-70px;--sy:15px;--rot:-44deg"></span>
+          <span class="m-mark-shard" style="--sx:-12px;--sy:-65px;--rot:60deg"></span>
+          <span class="m-mark-shard" style="--sx:56px;--sy:-4px;--rot:-55deg"></span>
+          <span class="m-mark-shard" style="--sx:-32px;--sy:-52px;--rot:18deg"></span>
+          <span class="m-mark-shard" style="--sx:2px;--sy:66px;--rot:-28deg"></span>
+          <span class="m-mark-shard" style="--sx:75px;--sy:46px;--rot:34deg"></span>
+          <span class="m-mark-shard" style="--sx:-76px;--sy:-39px;--rot:-18deg"></span>
+          <svg class="m-mark-final" viewBox="0 0 24 24"><use href="#lg"></use></svg>
+        </div>
         <div class="m-kicker">ALPHA / PRIVATE BETA</div>
         <h2 class="m-title">See the meta before it <span class="m-blue">moves.</span></h2>
         <p class="m-lead">Explore the market through narratives. Build context. Investigate the signals.</p>
@@ -1747,9 +2088,79 @@ const revealTargets=[...document.querySelectorAll('.marketing-site .m-reveal')];
 if('IntersectionObserver' in window){const siteIO=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('v');siteIO.unobserve(entry.target)}}),{threshold:.14,rootMargin:'0px 0px -7% 0px'});revealTargets.forEach(el=>siteIO.observe(el))}else revealTargets.forEach(el=>el.classList.add('v'));
 document.querySelectorAll('.marketing-site .m-steps').forEach(group=>group.querySelectorAll('.m-step').forEach((card,index)=>card.style.setProperty('--reveal-delay',(index*110)+'ms')));
 document.querySelectorAll('.marketing-site .m-grid').forEach(group=>group.querySelectorAll(':scope > .m-reveal').forEach((card,index)=>card.style.setProperty('--reveal-delay',(index*120)+'ms')));
-let progressFrame=0;const updatePageProgress=()=>{const root=document.documentElement,max=root.scrollHeight-innerHeight;root.style.setProperty('--alpha-page-progress',max>0?String(Math.min(1,Math.max(0,scrollY/max))):'0')};
+const clamp01=value=>Math.max(0,Math.min(1,value));
+const workflowScene=document.querySelector('[data-workflow-scene]');
+const workflowSteps=[...document.querySelectorAll('[data-workflow-step-control]')];
+const workflowPanels=[...document.querySelectorAll('[data-workflow-panel]')];
+const valueScene=document.querySelector('[data-values-scene]');
+const valueWords=[...document.querySelectorAll('[data-value-step]')];
+const statementScene=document.querySelector('[data-statement-scene]');
+const statementLines=[...document.querySelectorAll('[data-statement-line]')];
+const setSceneProgress=(scene,count,callback)=>{
+  if(!scene||!count)return;
+  const rect=scene.getBoundingClientRect();
+  const range=Math.max(1,scene.offsetHeight-innerHeight);
+  const progress=clamp01(-rect.top/range);
+  callback(progress);
+};
+const updateCinematicScenes=()=>{
+  setSceneProgress(statementScene,statementLines.length,progress=>{
+    const scaled=progress*statementLines.length;
+    const active=Math.min(statementLines.length-1,Math.floor(scaled));
+    const local=scaled-active;
+    statementLines.forEach((line,index)=>{
+      const amount=index<active?1:index===active?Math.max(.18,local):0;
+      line.style.opacity=String(.16+amount*.84);
+      line.style.transform='translateY('+((1-amount)*26)+'px)';
+      line.classList.toggle('is-active',index===active);
+    });
+    const count=document.querySelector('[data-statement-count]');
+    if(count)count.textContent=String(active+1).padStart(2,'0')+' / '+String(statementLines.length).padStart(2,'0');
+  });
+  setSceneProgress(workflowScene,workflowSteps.length,progress=>{
+    const active=Math.min(workflowSteps.length-1,Math.floor(progress*workflowSteps.length));
+    workflowSteps.forEach((button,index)=>{
+      const selected=index===active;
+      button.classList.toggle('is-active',selected);
+      button.setAttribute('aria-pressed',String(selected));
+    });
+    workflowPanels.forEach((panel,index)=>{
+      const selected=index===active;
+      panel.classList.toggle('is-active',selected);
+      panel.setAttribute('aria-hidden',String(!selected));
+    });
+    const count=document.querySelector('[data-workflow-count]');
+    if(count)count.textContent=String(active+1).padStart(2,'0')+' / '+String(workflowSteps.length).padStart(2,'0');
+  });
+  setSceneProgress(valueScene,valueWords.length,progress=>{
+    const active=Math.min(valueWords.length-1,Math.floor(progress*valueWords.length));
+    valueWords.forEach((word,index)=>{
+      const selected=index===active;
+      word.classList.toggle('is-active',selected);
+      if(selected)word.setAttribute('aria-current','step');else word.removeAttribute('aria-current');
+    });
+    const count=document.querySelector('[data-values-count]');
+    const bar=document.querySelector('[data-values-progress]');
+    if(count)count.textContent=String(active+1).padStart(2,'0')+' / '+String(valueWords.length).padStart(2,'0');
+    if(bar)bar.style.transform='scaleX('+((active+1)/valueWords.length)+')';
+  });
+};
+workflowSteps.forEach(button=>button.addEventListener('click',()=>{
+  if(!workflowScene)return;
+  const index=Number(button.dataset.workflowStepControl);
+  const range=Math.max(1,workflowScene.offsetHeight-innerHeight);
+  const fraction=(index+.45)/Math.max(1,workflowSteps.length);
+  const target=window.scrollY+workflowScene.getBoundingClientRect().top+range*fraction;
+  window.scrollTo({top:target,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+}));
+let progressFrame=0;const updatePageProgress=()=>{
+  const root=document.documentElement,max=root.scrollHeight-innerHeight;
+  root.style.setProperty('--alpha-page-progress',max>0?String(clamp01(scrollY/max)):'0');
+  updateCinematicScenes();
+};
 addEventListener('scroll',()=>{if(progressFrame)return;progressFrame=requestAnimationFrame(()=>{progressFrame=0;updatePageProgress()})},{passive:true});
-addEventListener('resize',updatePageProgress,{passive:true});updatePageProgress();
+addEventListener('resize',updatePageProgress,{passive:true});
+updatePageProgress();
 const year=$('#site-year');if(year)year.textContent=String(new Date().getFullYear());
 // waitlist (talks to the local server)
 const link=c=>location.origin+location.pathname+'#ref-'+c;
