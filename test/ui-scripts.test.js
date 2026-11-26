@@ -17,3 +17,11 @@ test("all inline browser scripts parse", () => {
     );
   });
 });
+
+test("persisted beta sessions only restore the terminal on its explicit route", () => {
+  assert.match(
+    html,
+    /if\s*\(location\.hash\s*===\s*['"]#terminal['"]\)\s*boot\(enter\)/,
+    "a saved session must not replace the public landing page"
+  );
+});
