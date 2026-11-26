@@ -2283,7 +2283,18 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
  text-decoration-color:var(--news-accent);
  text-underline-offset:3px;
 }
-#t2 .news-item-description{display:none!important}
+#t2 .news-item-description{
+ display:-webkit-box!important;
+ order:3;
+ width:100%;
+ max-width:none;
+ margin:0;
+ overflow:hidden;
+ color:var(--news-secondary);
+ font:13px/1.45 var(--font-mono);
+ -webkit-box-orient:vertical;
+ -webkit-line-clamp:2;
+}
 #t2 .news-item-tags{
  display:flex;
  flex:0 0 auto;
