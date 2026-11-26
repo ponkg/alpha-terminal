@@ -2318,8 +2318,9 @@ const renderNewsTabs=()=>{
   refresh.textContent='Refreshing…';
   refresh.setAttribute('aria-busy','true');
   const beforeRefresh=new Set(narrativeNews.map(article=>article.url));
+  const hadPreviousSnapshot=beforeRefresh.size>0;
   await loadNarrativeNews(true);
-  newlyArrivedNews=new Set(narrativeNews.filter(article=>!beforeRefresh.has(article.url)).map(article=>article.url));
+  newlyArrivedNews=hadPreviousSnapshot?new Set(narrativeNews.filter(article=>!beforeRefresh.has(article.url)).map(article=>article.url)):new Set();
   renderNewsTabs();
   rf();
  });
