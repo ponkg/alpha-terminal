@@ -4,6 +4,7 @@ import rateLimit from "express-rate-limit";
 import { createClient } from "@supabase/supabase-js";
 import WebSocket, { WebSocketServer } from "ws";
 import { randomBytes } from "node:crypto";
+import { cleanRssText } from "./lib/rss-utils.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -689,30 +690,6 @@ const NARRATIVE_NEWS_STALE_MS = 60 * 60 * 1000;
 const NARRATIVE_NEWS_MAX_AGE_MS = 4 * 24 * 60 * 60 * 1000;
 let narrativeNewsCache = null;
 let narrativeNewsPending = null;
-
-const decodeRssEntities = value => String(value || "").replace(
-  /&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp);/gi,
-  (match, entity) => {
-    const key = entity.toLowerCase();
-    if (key === "amp") return "&";
-    if (key === "lt") return "<";
-    if (key === "gt") return ">";
-    if (key === "quot") return '"';
-    if (key === "apos" || key === "#39") return "'";
-    if (key === "nbsp") return " ";
-    const code = key.startsWith("#x") ? parseInt(key.slice(2), 16) : parseInt(key.slice(1), 10);
-    try { return Number.isFinite(code) ? String.fromCodePoint(code) : match; }
-    catch { return " "; }
-  }
-);
-
-const cleanRssText = value => decodeRssEntities(
-  String(value || "")
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1")
-    .replace(/<script\b[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style\b[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]*>/g, " ")
-).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
 const readRssTag = (xml, tag) => {
   // Tags are selected only from the fixed parser calls below (no user input).
