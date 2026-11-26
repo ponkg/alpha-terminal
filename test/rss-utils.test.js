@@ -13,7 +13,7 @@ test("decodes repeated entities and non-breaking spaces", () => {
 
 test("strips markup and collapses RSS description whitespace", () => {
   const input = "<p>Fish &amp; Chips</p><p>It&#8217;s <b>fresh</b>.</p>";
-  assert.equal(cleanRssText(input), "Fish & Chips It’s fresh .");
+  assert.equal(cleanRssText(input), "Fish & Chips It’s fresh.");
 });
 
 test("removes script and style content", () => {
