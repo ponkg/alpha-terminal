@@ -1450,6 +1450,13 @@ nav.s{background:transparent;border:0;backdrop-filter:none}
  .hero-film{display:none!important}
  .win.drag{transition:none!important}
 }
+
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.keycap-plus{font:12px Inter,sans-serif;color:var(--text-secondary)}
+#t4 .hk-alias{display:inline-flex;align-items:center;gap:5px}
+#t4 .fixed-label{font:12px Inter,sans-serif;color:var(--text-secondary)}
+#t4 .hk-row.fixed{background:color-mix(in srgb,var(--surface) 45%,transparent)}
+#t2tabs button::after{display:none!important}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a><a href="/docs/"><b>5</b>Field Manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a><a class="blk" href="/docs/">5 Field Manual ↗</a></div></nav>
@@ -2492,21 +2499,18 @@ $('#cvs').onclick=()=>{
 // Configurable keyboard controls and contextual arrow navigation.
 const hk=(code,mods={})=>({code,alt:mods.alt??true,ctrl:mods.ctrl??false,shift:mods.shift??false,meta:mods.meta??false});
 const HOTKEY_GROUPS=[
- {id:'NAVIGATION',label:'NAVIGATION',hint:'↑ / ↓ SELECT ITEMS · ← / → MOVE BETWEEN COLUMNS · ENTER ACTIVATE',note:'Global selection controls and movement between terminal panes.'},
- {id:'WINDOWS',label:'WINDOWS',hint:'ALT + J K L ; MOVE FOCUS BETWEEN TILED WINDOWS',note:'Open, focus and hide terminal windows.'},
- {id:'LAYOUT',label:'LAYOUT',hint:'SHIFT MOVES PANES · CTRL RESIZES · H / V SET THE NEXT SPLIT',note:'Rearrange the terminal workspace without a mouse.'},
- {id:'TRACKER',label:'TRACKER',hint:'↑ / ↓ NARRATIVE GROUPS AND COINS · → ENTER GROUP · ← PARENT · ENTER OPEN CHART',note:'Within Trending, move through narrative headers and their coin rows.'},
- {id:'NEWS FEED',label:'NEWS FEED',hint:'↑ / ↓ CATEGORIES OR HEADLINES · → STORIES · ← CATEGORY INDEX · ENTER OPEN',note:'The category index and story list behave as two keyboard columns.'},
- {id:'SCANNER',label:'SCANNER',hint:'TAB SEARCH / SCAN / RESULTS · ENTER RUN SCAN · ↑ / ↓ INSPECT RESULTS',note:'Type a ticker or mint, submit the scan, then inspect the result rows.'},
- {id:'SYSTEM',label:'SYSTEM',hint:'ESC BACK · ALT + SHIFT + Q CLOSE PANE · ALT + T THEME',note:'Terminal-wide actions and session controls.'}
+ {id:'NAVIGATION',label:'Navigation',hint:'Move through the focused window and its lists.',note:'Selection and movement.'},
+ {id:'WINDOWS',label:'Windows',hint:'Open, focus and hide terminal windows.',note:'Window actions.'},
+ {id:'SEARCH',label:'Search',hint:'Jump to the active tool search field.',note:'Search shortcuts.'},
+ {id:'ACTIONS',label:'Actions',hint:'Rearrange panes and control the session.',note:'Workspace and session actions.'}
 ];
 const HOTKEY_ACTIONS=[
- {id:'selectPrevious',group:'NAVIGATION',label:'Select previous item',detail:'Move selection up inside the active window',key:hk('ArrowUp',{alt:false})},
- {id:'selectNext',group:'NAVIGATION',label:'Select next item',detail:'Move selection down inside the active window',key:hk('ArrowDown',{alt:false})},
- {id:'moveColumnLeft',group:'NAVIGATION',label:'Previous column / category',detail:'Move from stories to categories or return to parent',key:hk('ArrowLeft',{alt:false})},
- {id:'moveColumnRight',group:'NAVIGATION',label:'Next column / enter group',detail:'Move from categories to stories or enter a group',key:hk('ArrowRight',{alt:false})},
- {id:'activateSelection',group:'NAVIGATION',label:'Activate selection',detail:'Open selected coin / article or activate focused control',key:hk('Enter',{alt:false})},
- {id:'focusSearch',group:'NAVIGATION',label:'Focus search',detail:'Jump to the active tool search field',key:hk('Slash')},
+ {id:'selectPrevious',group:'NAVIGATION',label:'Select previous item',detail:'Move selection up inside the active window',key:hk('ArrowUp',{alt:false}),fixed:true},
+ {id:'selectNext',group:'NAVIGATION',label:'Select next item',detail:'Move selection down inside the active window',key:hk('ArrowDown',{alt:false}),fixed:true},
+ {id:'moveColumnLeft',group:'NAVIGATION',label:'Previous column / category',detail:'Move from stories to categories or return to parent',key:hk('ArrowLeft',{alt:false}),fixed:true},
+ {id:'moveColumnRight',group:'NAVIGATION',label:'Next column / enter group',detail:'Move from categories to stories or enter a group',key:hk('ArrowRight',{alt:false}),fixed:true},
+ {id:'activateSelection',group:'NAVIGATION',label:'Activate selection',detail:'Open selected coin / article or activate focused control',key:hk('Enter',{alt:false}),fixed:true},
+ {id:'focusSearch',group:'SEARCH',label:'Focus search',detail:'Jump to the active tool search field',key:hk('Slash')},
  {id:'focusNext',group:'NAVIGATION',label:'Focus next window',detail:'Cycle forward through open windows',key:hk('KeyN')},
  {id:'focusPrevious',group:'NAVIGATION',label:'Focus previous window',detail:'Cycle backward through open windows',key:hk('KeyP')},
  {id:'scrollUp',group:'NAVIGATION',label:'Scroll up',detail:'Scroll active tool content',key:hk('PageUp')},
@@ -2521,7 +2525,7 @@ const HOTKEY_ACTIONS=[
  {id:'focusUp',group:'WINDOWS',label:'Focus window up',detail:'Move focus to the tiled pane above',key:hk('KeyL'),alias:hk('ArrowUp')},
  {id:'focusRight',group:'WINDOWS',label:'Focus window right',detail:'Move focus to the tiled pane on the right',key:hk('Semicolon'),alias:hk('ArrowRight')},
 
- {id:'moveLeft',group:'LAYOUT',label:'Move pane left',detail:'Swap the focused pane with its left neighbour',key:hk('KeyJ',{shift:true}),alias:hk('ArrowLeft',{shift:true})},
+ {id:'moveLeft',group:'ACTIONS',label:'Move pane left',detail:'Swap the focused pane with its left neighbour',key:hk('KeyJ',{shift:true}),alias:hk('ArrowLeft',{shift:true})},
  {id:'moveDown',group:'LAYOUT',label:'Move pane down',detail:'Swap the focused pane with the pane below',key:hk('KeyK',{shift:true}),alias:hk('ArrowDown',{shift:true})},
  {id:'moveUp',group:'LAYOUT',label:'Move pane up',detail:'Swap the focused pane with the pane above',key:hk('KeyL',{shift:true}),alias:hk('ArrowUp',{shift:true})},
  {id:'moveRight',group:'LAYOUT',label:'Move pane right',detail:'Swap the focused pane with its right neighbour',key:hk('Semicolon',{shift:true}),alias:hk('ArrowRight',{shift:true})},
@@ -2533,7 +2537,7 @@ const HOTKEY_ACTIONS=[
  {id:'splitVertical',group:'LAYOUT',label:'Next split: vertical',detail:'The next opened pane splits top / bottom',key:hk('KeyV')},
  {id:'toggleFullscreen',group:'LAYOUT',label:'Toggle pane fullscreen',detail:'Temporarily expand the focused pane',key:hk('KeyF')},
 
- {id:'backOrClose',group:'SYSTEM',label:'Back / close',detail:'Return to parent selection or close the active pane',key:hk('Escape',{alt:false})},
+ {id:'backOrClose',group:'ACTIONS',label:'Back / close',detail:'Return to parent selection or close the active pane',key:hk('Escape',{alt:false})},
  {id:'closeFocused',group:'SYSTEM',label:'Close focused pane',detail:'Close the currently focused tool',key:hk('KeyQ',{shift:true})},
  {id:'toggleTheme',group:'SYSTEM',label:'Toggle theme',detail:'Switch between light and dark mode',key:hk('KeyT')},
  {id:'logout',group:'SYSTEM',label:'Log out',detail:'End the current terminal session',key:hk('KeyE',{shift:true})}
@@ -2550,7 +2554,7 @@ const loadHotkeyBindings=()=>{
  }catch(error){console.warn('Could not load hotkeys:',error);return {}}
 };
 let hotkeyBindings=loadHotkeyBindings(),recordingHotkeyAction=null,hotkeyGroup='NAVIGATION';
-const hotkeyCurrent=action=>hotkeyBindings[action.id]||action.key;
+const hotkeyCurrent=action=>action.fixed?action.key:(hotkeyBindings[action.id]||action.key);
 const hotkeyCodeLabel=code=>{
  if(/^Key[A-Z]$/.test(code))return code.slice(3);
  if(/^Digit[0-9]$/.test(code))return code.slice(5);
@@ -2563,6 +2567,7 @@ const hotkeyLabel=key=>{
  if(key.ctrl)parts.push('CTRL');if(key.alt)parts.push('ALT');if(key.shift)parts.push('SHIFT');if(key.meta)parts.push('SUPER');
  parts.push(hotkeyCodeLabel(key.code));return parts.join(' + ');
 };
+const keycapMarkup=key=>hotkeyLabel(key).split(' + ').map(part=>'<kbd class="keycap">'+esc(part)+'</kbd>').join('<span class="keycap-plus" aria-hidden="true">+</span>');
 const hotkeySame=(a,b)=>!!a&&!!b&&a.code===b.code&&a.alt===b.alt&&a.ctrl===b.ctrl&&a.shift===b.shift&&a.meta===b.meta;
 const saveHotkeyBindings=()=>{try{localStorage.setItem(HOTKEY_STORAGE_KEY,JSON.stringify(hotkeyBindings));return true}catch(error){return false}};
 const renderHotkeyGroups=()=>{
@@ -2572,26 +2577,19 @@ const renderHotkeyGroups=()=>{
 };
 const rk=()=>{
  const query=$('#t4q').value.trim().toLowerCase(),group=HOTKEY_GROUPS.find(item=>item.id===hotkeyGroup)||HOTKEY_GROUPS[0];
- const actions=HOTKEY_ACTIONS.filter(action=>action.group===hotkeyGroup&&(!query||[action.label,action.detail,hotkeyLabel(hotkeyCurrent(action))].join(' ').toLowerCase().includes(query)));
- $('#t4activeGroup').textContent=group.id+' / KEYMAP';
+ const actions=HOTKEY_ACTIONS.filter(action=>action.group===hotkeyGroup&&(!query||[action.label,hotkeyLabel(hotkeyCurrent(action))].join(' ').toLowerCase().includes(query)))
+  .sort((a,b)=>Number(!!a.fixed)-Number(!!b.fixed));
+ $('#t4activeGroup').textContent=group.label;
  $('#t4groupHint').textContent=group.hint;
- $('#t4count').textContent=actions.length+' BINDINGS';
+ $('#t4count').textContent=actions.length+' bindings';
  const rows=actions.map((action,index)=>{
-  const alias=action.alias?'<small class="hk-alias">ARROWS: '+esc(hotkeyLabel(action.alias))+'</small>':'';
   const active=recordingHotkeyAction===action.id;
-  return '<div class="hk-row" data-hk-row><span class="hk-row-no">['+String(index+1).padStart(2,'0')+']</span><div class="hk-copy"><b>'+esc(action.label)+'</b><small>'+esc(action.detail)+'</small></div><div class="hk-bind">'+alias+'<button type="button" class="hk-record'+(active?' recording':'')+'" data-hk="'+esc(action.id)+'">'+(active?'LISTENING…':esc(hotkeyLabel(hotkeyCurrent(action))))+'</button></div></div>';
+  const alias=action.alias?'<span class="hk-alias">'+keycapMarkup(action.alias)+'<span class="fixed-label">Fixed</span></span>':'';
+  const keyMarkup=keycapMarkup(hotkeyCurrent(action));
+  const binding=action.fixed?'<span class="hk-fixed">'+keyMarkup+'<span>Fixed</span></span>':'<button type="button" class="hk-record'+(active?' recording':'')+'" data-hk="'+esc(action.id)+'" aria-label="Edit shortcut for '+esc(action.label)+'">'+(active?'<span>Press new shortcut…</span>':keyMarkup)+'</button>';
+  return '<div class="hk-row'+(action.fixed?' fixed':'')+'" data-hk-row role="row" tabindex="0"><div class="hk-copy"><b>'+esc(action.label)+'</b></div><div class="hk-bind">'+alias+binding+'</div></div>';
  }).join('');
- $('#t4list').innerHTML=rows||'<p class="hk-empty">NO BINDINGS MATCH THIS SEARCH.</p>';
- if(!actions.length){
-  const info=group.id==='TRACKER'
-   ?['↑ / ↓  CYCLE NARRATIVE GROUPS AND COINS','→  OPEN THE SELECTED GROUP','←  RETURN TO THE GROUP HEADER','ENTER  OPEN THE SELECTED COIN CHART']
-   :group.id==='NEWS FEED'
-   ?['↑ / ↓  CYCLE CATEGORIES OR HEADLINES','→  MOVE TO THE STORY COLUMN','←  RETURN TO THE CATEGORY INDEX','ENTER  OPEN THE SELECTED STORY']
-   :group.id==='SCANNER'
-   ?['TAB  MOVE BETWEEN SEARCH, SCAN AND RESULTS','ENTER  RUN THE SCAN','↑ / ↓  INSPECT RESULT ROWS','ESC  RETURN TO SEARCH']
-   :[];
-  if(info.length)$('#t4list').innerHTML=info.map((line,i)=>'<div class="hk-info-row" tabindex="0" role="note"><span>['+String(i+1).padStart(2,'0')+']</span>'+esc(line)+'</div>').join('');
- }
+ $('#t4list').innerHTML=rows||'<p class="hk-empty">No shortcuts match this search.</p>';
 };
 renderHotkeyGroups();rk();
 $('#t4groups').addEventListener('click',event=>{
@@ -2603,8 +2601,14 @@ $('#t4list').addEventListener('click',event=>{
  const button=event.target.closest('[data-hk]');if(!button)return;
  const id=button.dataset.hk;
  recordingHotkeyAction=recordingHotkeyAction===id?null:id;
- $('#t4capturestatus').textContent=recordingHotkeyAction?'LISTENING · PRESS A NEW KEY COMBINATION · ESC TO CANCEL':'READY · EDIT CANCELLED';
+ $('#t4capturestatus').textContent=recordingHotkeyAction?'Press a new shortcut. Esc cancels.':'Shortcut editing cancelled.';
  rk();$('#t4list').querySelector('[data-hk="'+id+'"]')?.focus();
+});
+$('#t4list').addEventListener('keydown',event=>{
+ if(event.key!=='Enter')return;
+ const row=event.target.closest('.hk-row');if(!row)return;
+ const button=row.querySelector('[data-hk]');if(button){event.preventDefault();button.click()}
+ else if(row.classList.contains('fixed'))$('#t4capturestatus').textContent='This navigation shortcut is fixed.';
 });
 $('#t4reset').addEventListener('click',()=>{
  recordingHotkeyAction=null;hotkeyBindings={};saveHotkeyBindings();
