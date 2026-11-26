@@ -2407,6 +2407,140 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
  background:var(--accent);
  color:#0d1824;
 }
+
+/* Hide terminal controls for the entire boot/loading overlay lifetime. */
+body.booting .bbar,
+body.booting .taskbar-apps,
+body.booting #taskbar-help,
+body.booting #desktop-empty{display:none!important}
+body.booting #boot{z-index:1000000}
+
+/* Workspace-ready notification fades out five seconds after it appears. */
+.desktop-empty{
+ opacity:1;
+ transform:translate(-50%,-50%);
+ transition:opacity .45s ease,transform .45s ease;
+}
+.desktop-empty.fade-out{
+ opacity:0;
+ transform:translate(-50%,-54%);
+ pointer-events:none;
+}
+
+/* Normalize all terminal taskbar controls to one 44px control height. */
+html.terminal-route .bbar{
+ align-items:center;
+ gap:6px;
+ padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+}
+html.terminal-route .bbar>.blk:not([hidden]),
+html.terminal-route .bbar #taskbar-help:not([hidden]),
+html.terminal-route .taskbar-apps button{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ box-sizing:border-box;
+ height:44px;
+ min-height:44px;
+ padding:0 12px;
+ border:1px solid var(--border);
+ border-radius:4px;
+ background:var(--surface-raised);
+ color:var(--text-primary);
+ font:500 12px/1.2 Inter,system-ui,sans-serif;
+ letter-spacing:0;
+ white-space:nowrap;
+}
+html.terminal-route .taskbar-apps{
+ display:flex;
+ align-items:center;
+ gap:4px;
+ flex:0 0 auto;
+ min-height:44px;
+}
+html.terminal-route .taskbar-apps button{
+ min-width:66px;
+ cursor:pointer;
+}
+html.terminal-route .bbar #ub:not([hidden]){
+ background:#1769aa;
+ border-color:#1769aa;
+ color:#fff;
+ font-weight:650;
+}
+:root[data-theme="dark"] html.terminal-route .bbar #ub:not([hidden]){
+ background:#8cc7f4;
+ border-color:#8cc7f4;
+ color:#09243a;
+}
+html.terminal-route .bbar #thm{min-width:74px}
+html.terminal-route .bbar #local-clock{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ box-sizing:border-box;
+ height:44px;
+ min-height:44px;
+ min-width:76px;
+ padding:0 10px;
+ border:1px solid var(--border);
+ background:var(--surface-raised);
+ color:var(--text-primary);
+ font:600 12px/1.2 var(--font-mono);
+ font-variant-numeric:tabular-nums;
+}
+html.terminal-route .bbar #shutdown{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ flex:0 0 44px;
+ width:44px;
+ min-width:44px;
+ height:44px;
+ min-height:44px;
+ padding:0;
+ border:1px solid var(--border);
+ background:var(--surface-raised);
+ color:var(--text-primary);
+}
+html.terminal-route .bbar #taskbar-help{
+ flex:0 0 44px;
+ width:44px;
+ min-width:44px;
+ padding:0;
+}
+html.terminal-route .bbar>.blk:not([hidden]):hover,
+html.terminal-route .bbar #taskbar-help:hover,
+html.terminal-route .taskbar-apps button:hover{
+ border-color:var(--accent);
+ background:color-mix(in srgb,var(--accent) 10%,var(--surface-raised));
+ color:var(--text-primary);
+}
+html.terminal-route .bbar #ub:not([hidden]):hover{background:#12588f;color:#fff}
+html.terminal-route .taskbar-apps button.focused{
+ border-color:var(--accent);
+ background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));
+ color:var(--text-primary);
+ font-weight:700;
+}
+html.terminal-route .taskbar-apps button[data-taskwindow="t2"].open{
+ border-color:#12233B;
+ background:#12233B;
+ color:#fff;
+ font-weight:700;
+}
+@media(max-width:767px){
+ html.terminal-route .bbar{gap:4px;padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px))}
+ html.terminal-route .taskbar-apps{flex:1 1 160px;min-width:160px;gap:2px}
+ html.terminal-route .taskbar-apps button{flex:1 1 0;min-width:0;padding:0 4px;font-size:11px}
+ html.terminal-route .bbar #ub:not([hidden]){width:auto;min-width:44px;padding:0 10px}
+ html.terminal-route .bbar #thm{min-width:66px;padding:0 8px}
+ html.terminal-route .bbar #local-clock{min-width:64px;padding:0 6px}
+ html.terminal-route .bbar #taskbar-help{flex:0 0 44px;width:44px;min-width:44px;height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ .desktop-empty{transition:none}
+}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
@@ -3848,6 +3982,7 @@ const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isP
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
 const boot=cb=>{
  if(A.RM||$('#boot')){if(!$('#boot'))cb();return}
+ document.body.classList.add('booting');
  const o=document.createElement('div');o.id='boot';
  const title=document.createElement('div');title.className='boot-title';title.textContent='ALPHA <GO> TERMINAL';o.appendChild(title);
  const log=document.createElement('div');log.className='boot-log';o.appendChild(log);
@@ -3867,7 +4002,7 @@ const boot=cb=>{
   label.textContent=status||'LOADING DATA';value.textContent=current+'%';fill.style.width=current+'%';
   detail.textContent=message||'Loading live terminal data…';
  };
- const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>o.remove(),380)};
+ const fin=()=>{if(done)return;done=true;cb();o.classList.add('out');setTimeout(()=>{o.remove();document.body.classList.remove('booting')},380)};
  const run=async()=>{
   addLine('> authenticating session ........ OK');
   addLine('> initialising workspace ....... OK');
@@ -4351,10 +4486,10 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  help.addEventListener('click',()=>{const hint=$('#hint');if(hint){hint.hidden=!hint.hidden;hint.style.opacity='1'}});
  $('#thm').insertAdjacentElement('beforebegin',help);
  const hint=$('#hint');if(hint)help.insertAdjacentElement('afterend',hint);
- let emptyDismissed=false;
+ let emptyDismissed=false,emptyFadeTimer=null;
  const empty=document.createElement('div');empty.id='desktop-empty';empty.className='desktop-empty';
  empty.innerHTML='<button class="desktop-empty-close" type="button" aria-label="Close Workspace ready">×</button><b>Workspace ready</b><span>Press Alt+1 to open Tracker, or choose an app from the taskbar.</span>';
- empty.querySelector('.desktop-empty-close').addEventListener('click',()=>{emptyDismissed=true;refresh()});
+ empty.querySelector('.desktop-empty-close').addEventListener('click',()=>{emptyDismissed=true;if(emptyFadeTimer){clearTimeout(emptyFadeTimer);emptyFadeTimer=null}empty.hidden=true;refresh()});
  body.appendChild(empty);
  const setDialogSemantics=()=>{
   $$('.win').forEach((win,index)=>{
@@ -4370,8 +4505,27 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  const refresh=()=>{
   const inApp=body.classList.contains('app');
   const openIds=ids.filter(id=>$('#'+id)&&!$('#'+id).hidden);
-  const anyWindowOpen=$$('.win:not([hidden])').length>0;
-  apps.hidden=!inApp;help.hidden=!inApp;empty.hidden=!inApp||anyWindowOpen||emptyDismissed;
+  const anyWindowOpen=$('.win:not([hidden])').length>0;
+  const shouldShowEmpty=inApp&&!anyWindowOpen&&!emptyDismissed;
+  if(!inApp){emptyDismissed=false;empty.classList.remove('fade-out')}
+  if(shouldShowEmpty){
+   if(empty.hidden){
+    empty.classList.remove('fade-out');
+    if(emptyFadeTimer)clearTimeout(emptyFadeTimer);
+    emptyFadeTimer=setTimeout(()=>{
+     empty.classList.add('fade-out');
+     emptyFadeTimer=setTimeout(()=>{
+      emptyDismissed=true;empty.hidden=true;emptyFadeTimer=null;refresh();
+     },450);
+    },5000);
+   }
+   empty.hidden=false;
+  }else{
+   empty.hidden=true;
+   if(emptyFadeTimer){clearTimeout(emptyFadeTimer);emptyFadeTimer=null}
+   if(anyWindowOpen)empty.classList.remove('fade-out');
+  }
+  apps.hidden=!inApp;help.hidden=!inApp;
   apps.querySelectorAll('[data-taskwindow]').forEach(button=>{
    const win=$('#'+button.dataset.taskwindow),open=!!win&&!win.hidden,focused=!!win&&win.classList.contains('foc');
    button.classList.toggle('open',open);button.classList.toggle('focused',focused);
