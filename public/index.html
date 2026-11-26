@@ -3485,7 +3485,7 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  const refresh=()=>{
   const inApp=body.classList.contains('app');
   const openIds=ids.filter(id=>$('#'+id)&&!$('#'+id).hidden);
-  const anyWindowOpen=$('.win:not([hidden])').length>0;
+  const anyWindowOpen=$$('.win:not([hidden])').length>0;
   apps.hidden=!inApp;help.hidden=!inApp;empty.hidden=!inApp||anyWindowOpen||emptyDismissed;
   apps.querySelectorAll('[data-taskwindow]').forEach(button=>{
    const win=$('#'+button.dataset.taskwindow),open=!!win&&!win.hidden,focused=!!win&&win.classList.contains('foc');
