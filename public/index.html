@@ -1156,7 +1156,7 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 @media(max-width:700px){#wm{width:96vw!important;height:84vh!important}#wm .wm-row{grid-template-columns:1fr 1fr;gap:7px}#wm .wm-row>div:first-child{grid-column:1/-1}#wm .wm-row input{grid-column:1/-1}#wm .wm-row button{width:100%}}
 </style><style id="alpha-readability-system">
 /* Readability-first Alpha UI system */
-:root,:root[data-theme="light"]{color-scheme:light;--text-primary:#142536;--text-secondary:#455a6d;--text-disabled:#53687c;--surface:#f3f7fb;--surface-raised:#fff;--border:#7c90a4;--accent:#1769aa;--positive:#146a3b;--negative:#a52824;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--shadow-window:0 18px 44px rgba(4,23,40,.2),0 4px 12px rgba(4,23,40,.12)}
+:root,:root[data-theme="light"]{color-scheme:light;--text-primary:#142536;--text-secondary:#455a6d;--text-disabled:#53687c;--surface:#f3f7fb;--surface-raised:#fff;--border:#7c90a4;--accent:#1769aa;--positive:#146a3b;--negative:#a52824;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--font-sans:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;--type-1:12px;--type-2:14px;--type-3:16px;--type-4:20px;--type-5:28px;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--shadow-window:0 18px 44px rgba(4,23,40,.2),0 4px 12px rgba(4,23,40,.12)}
 :root[data-theme="dark"]{color-scheme:dark;--text-primary:#f1f6fb;--text-secondary:#b7c7d6;--text-disabled:#96a9ba;--surface:#0d1824;--surface-raised:#15283a;--border:#607a91;--accent:#8cc7f4;--positive:#6ad6a2;--negative:#ff8b86;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--shadow-window:0 24px 60px rgba(0,0,0,.48),0 4px 12px rgba(0,0,0,.3)}
 html{scroll-behavior:auto}
 body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;color:var(--text-primary);-webkit-font-smoothing:antialiased}
@@ -1173,7 +1173,7 @@ a{color:var(--text-primary)}
 .xh{display:none!important}
 nav{padding:8px 12px 0;z-index:99990}
 nav.s{background:transparent;border:0;backdrop-filter:none}
-.nbar{width:min(1320px,calc(100% - 32px));margin:0 auto;height:58px;padding:0 14px;border:1px solid rgba(95,119,142,.5);border-radius:10px;background:rgba(248,251,254,.96);backdrop-filter:blur(18px);box-shadow:0 8px 28px rgba(6,26,43,.14)}
+.nbar{width:min(1320px,calc(100% - 32px));margin:0 auto;height:58px;padding:0 14px;border:1px solid var(--border);border-radius:10px;background:rgba(248,251,254,.96);backdrop-filter:blur(18px);box-shadow:0 8px 28px rgba(6,26,43,.14)}
 :root[data-theme="dark"] .nbar{background:rgba(12,27,42,.96);border-color:var(--border)}
 .blk.logo{color:var(--text-primary)!important;text-shadow:none!important}
 .ws{gap:6px!important;align-items:center}
@@ -1188,7 +1188,7 @@ nav.s{background:transparent;border:0;backdrop-filter:none}
 .hl{top:49%;left:max(28px,calc((100vw - 1240px)/2));right:auto;width:min(540px,46vw);transform:translateY(-50%);padding:22px 24px;text-align:left;pointer-events:auto;border:1px solid rgba(212,231,248,.34);border-radius:12px;background:rgba(8,27,46,.94);backdrop-filter:blur(18px);box-shadow:0 24px 64px rgba(0,0,0,.24)}
 .hero-copy{max-width:65ch}
 .preview-badge,.release-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-primary);font:600 12px/1.3 Inter,sans-serif;letter-spacing:0}
-.preview-badge{background:#e7f3fc;border-color:#8fb9d8;color:#163c5c}
+.preview-badge{background:#e7f3fc;border-color:#4d728c;color:#163c5c}
 .hl h1{max-width:16ch;margin:15px 0 12px;color:#f7fbff;font-size:clamp(34px,4.5vw,54px);line-height:1.06;letter-spacing:-.045em;font-weight:700}
 .hl h1 em{font-style:normal;color:#a8d7fb}
 .hero-subhead{max-width:60ch;margin:0;color:#e1edf7;font-size:16px;line-height:1.55}
@@ -1473,6 +1473,8 @@ body.app .bbar .hks{display:none!important}
 #t2 .news-item{max-width:100%}
 #t2 .news-item-description{max-width:70ch}
 </style>
+#t1 .other-note{margin:6px 2px 8px;color:var(--text-secondary);font:12px/1.45 Inter,sans-serif}
+
 #t4capturestatus.hk-status-visible{position:static!important;display:block!important;clip:auto!important;width:auto!important;height:auto!important;margin:0!important;padding:7px 0!important;overflow:visible!important;white-space:normal!important;color:var(--text-secondary);font:13px/1.45 Inter,sans-serif;border-top:1px solid var(--border)}
 </head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
@@ -1501,7 +1503,7 @@ body.app .bbar .hks{display:none!important}
 </div>
 <div class="glow"></div>
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
-<div class="hl"><div class="hero-copy"><span class="preview-badge">Preview · private beta</span><h1>See what the market is paying attention to <em>before everyone else.</em></h1><p class="hero-subhead">alpha is a Solana narrative-intelligence terminal that connects emerging stories with the tokens and market activity around them.</p><div class="ctas"><a href="#" class="blk cta hero-primary" data-open="reg">Request early access</a><a href="#" class="blk cta hero-secondary" data-open="auth">Member login</a></div><p class="tr">Product preview · illustrative data, not live.</p><p class="site-disclaimer">Independent research only. No profit guarantees. Verify every token and do your own research.</p></div></div>
+<div class="hl"><div class="hero-copy"><span class="preview-badge">Preview · not yet released</span><h1>See what the market is paying attention to <em>before everyone else.</em></h1><p class="hero-subhead">alpha is a Solana narrative-intelligence terminal that connects emerging stories with the tokens and market activity around them.</p><div class="ctas"><a href="#" class="blk cta hero-primary" data-open="reg">Request early access</a><a href="#" class="blk cta hero-secondary" data-open="auth">Member login</a></div><p class="tr">Product preview · illustrative data, not live.</p><p class="site-disclaimer">Independent research only. No profit guarantees. Verify every token and do your own research.</p></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
 <div class="win card" id="wm" hidden><div class="tbar" data-drag><span>ALPHA / ACCESS CONTROL</span><span>WAITLIST MANAGER</span><button class="x" aria-label="Close">×</button></div><div class="wb wm-body"><div class="wm-head"><div><h2>Waitlist</h2><p>Approve a person by entering their email and sending a one-time invitation.</p></div><button class="btn o" id="wm-refresh" type="button">Refresh</button></div><div class="wm-meta" id="wm-meta">LOADING WAITLIST…</div><div class="wm-list" id="wm-list"><div class="mut">Loading entries…</div></div><div class="wm-foot">INVITES REQUIRE SUPABASE AUTH EMAIL DELIVERY / SMTP CONFIGURATION.</div></div></div>\n<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>Trending Coin Tracker</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
@@ -1715,7 +1717,7 @@ const NARRATIVE_WINDOWS=[
 const NARRATIVE_ENTITY_RULES=[
  {name:'Jensen Huang',aliases:[['Jensen Huang',.99],['JensenHuang',.99],['Jensen',.96],['Huang',.72],['leather jacket',.93],['jacket',.82]],categories:['AI & Semiconductors']},
  {name:'NVIDIA',aliases:[['NVIDIA',.99],['NVDA',.99],['Blackwell',.88],['CUDA',.84]],categories:['AI & Semiconductors']},
- {name:'Elon Musk',aliases:[['Elon Musk',.99],['Elon',.96],['Musk',.86]],categories:['Celebrity & Creators']},
+ {name:'Elon Musk',aliases:[['Elon Musk',.99],['Elon',.96],['Musk',.86]],categories:['Influencers & Creators']},
  {name:'Tesla',aliases:[['Tesla',.99]],categories:['Technology & Robotics']},
  {name:'xAI',aliases:[['xAI',.99],['Grok',.94]],categories:['AI & Semiconductors','Technology & Robotics']},
  {name:'Donald Trump',aliases:[['Donald Trump',.99],['Trump',.99],['Tremp',.97],['Trunp',.95],['Trumpp',.95],['Donald Tremp',.96],['Donal Trump',.94]],categories:['Political Figures']},
@@ -1730,7 +1732,7 @@ const NARRATIVE_ENTITY_RULES=[
  {name:'AMD',aliases:[['AMD',.99],['Ryzen',.94]],categories:['AI & Semiconductors']},
  {name:'Intel',aliases:[['Intel',.99]],categories:['AI & Semiconductors']},
  {name:'Google',aliases:[['Google',.99],['Gemini',.96],['DeepMind',.96]],categories:['AI & Semiconductors','Technology & Robotics']},
- {name:'Sam Altman',aliases:[['Sam Altman',.99],['Altman',.88]],categories:['AI & Semiconductors','Celebrity & Creators']},
+ {name:'Sam Altman',aliases:[['Sam Altman',.99],['Altman',.88]],categories:['AI & Semiconductors','Influencers & Creators']},
  {name:'Bernie Sanders',aliases:[['Bernie Sanders',.99],['Bernie',.99],['Sanders',.96],['Burnie Sender',.98],['Bernie Sender',.97],['Burnie Sanders',.96],['Bernie Sandars',.95],['Berni Sanders',.95]],categories:['Political Figures']},
  {name:'Togi',aliases:[['Togi',.99]],categories:['Influencers & Creators']},
  {name:'Claudia',aliases:[['Claudia',.99]],categories:['Influencers & Creators']},
@@ -2068,7 +2070,7 @@ const renderT1=()=>{
  const other=categoryFolders.find(group=>group.name==='Other / Unclassified');
  const normalCategories=categoryFolders.filter(group=>group.name!=='Other / Unclassified');
  let categoryHtml='<div class="tracker-folder-section tracker-folder-section-all">'+renderFolderButton(allFolder)+'</div><section class="tracker-folder-section"><div class="tracker-folder-section-head"><span>Market categories</span></div>'+normalCategories.map(renderFolderButton).join('');
- if(other)categoryHtml+='<details class="other-fold"><summary>Other / Unclassified <span>'+other.tokens.length+'</span></summary>'+renderFolderButton(other)+'</details>';
+ if(other)categoryHtml+='<details class="other-fold"><summary>Other / Unclassified <span>'+other.tokens.length+'</span></summary><p class="other-note">Many tokens do not match a configured narrative yet. Extend entity aliases and category rules to improve coverage.</p>'+renderFolderButton(other)+'</details>';
  categoryHtml+='</section>';
  if(entityFolders.length)categoryHtml+='<section class="tracker-folder-section tracker-entity-section"><div class="tracker-folder-section-head"><span>Detected entities</span></div>'+entityFolders.map(renderFolderButton).join('')+'</section>';
  $('#t1groups').innerHTML=categoryHtml;
@@ -2270,7 +2272,7 @@ const classifyNewsArticle=article=>{
  if(altcoin)categories.push('Altcoins');
  if(memecoin)categories.push('Memecoins');
  if(animals)categories.push('Animals');
- if(narratives.has('Influencers & Creators')||narratives.has('Celebrity & Creators'))categories.push('Creators');
+ if(narratives.has('Influencers & Creators')||narratives.has('Influencers & Creators'))categories.push('Creators');
  if(!categories.length)categories.push('Uncategorized');
  const entities=(detection.entities||[]).map(entity=>entity.name);
  return {...article,_alphaDetection:detection,_alphaCategories:[...new Set(categories)],_alphaEntities:entities};
@@ -2575,13 +2577,13 @@ const hotkeyCurrent=action=>action.fixed?action.key:(hotkeyBindings[action.id]||
 const hotkeyCodeLabel=code=>{
  if(/^Key[A-Z]$/.test(code))return code.slice(3);
  if(/^Digit[0-9]$/.test(code))return code.slice(5);
- const labels={ArrowLeft:'←',ArrowRight:'→',ArrowUp:'↑',ArrowDown:'↓',Semicolon:';',Escape:'ESC',PageUp:'PGUP',PageDown:'PGDN',Slash:'/',Space:'SPACE',Enter:'ENTER',Tab:'TAB'};
+ const labels={ArrowLeft:'←',ArrowRight:'→',ArrowUp:'↑',ArrowDown:'↓',Semicolon:';',Escape:'Esc',PageUp:'PageUp',PageDown:'PageDown',Slash:'/',Space:'Space',Enter:'Enter',Tab:'Tab'};
  return labels[code]||code;
 };
 const hotkeyLabel=key=>{
  if(!key)return 'UNASSIGNED';
  const parts=[];
- if(key.ctrl)parts.push('CTRL');if(key.alt)parts.push('ALT');if(key.shift)parts.push('SHIFT');if(key.meta)parts.push('SUPER');
+ if(key.ctrl)parts.push('Ctrl');if(key.alt)parts.push('Alt');if(key.shift)parts.push('Shift');if(key.meta)parts.push('Super');
  parts.push(hotkeyCodeLabel(key.code));return parts.join(' + ');
 };
 const keycapMarkup=key=>hotkeyLabel(key).split(' + ').map(part=>'<kbd class="keycap">'+esc(part)+'</kbd>').join('<span class="keycap-plus" aria-hidden="true">+</span>');
@@ -3386,13 +3388,6 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  if(captureStatus)new MutationObserver(()=>{
   captureStatus.classList.toggle('hk-status-visible',!!captureStatus.textContent.trim());
  }).observe(captureStatus,{childList:true,characterData:true,subtree:true});
- const hotkeyList=$('#t4list');
- if(hotkeyList)hotkeyList.addEventListener('keydown',event=>{
-  if(event.key!=='Enter')return;
-  const row=event.target.closest('.hk-row');if(!row)return;
-  const button=row.querySelector('[data-hk]');if(button){event.preventDefault();button.click()}
-  else if(row.classList.contains('fixed'))$('#t4capturestatus').textContent='This navigation shortcut is fixed.';
- });
  if(!body.classList.contains('app')&&matchMedia('(min-width:768px)').matches){
   const overview=$('#w-ov');
   if(overview){overview.style.width='min(400px,38vw)';window.AW.open('w-ov')}
