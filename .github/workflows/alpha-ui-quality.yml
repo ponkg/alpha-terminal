@@ -1,0 +1,20 @@
+name: Alpha UI quality
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test RSS text cleanup and UI scripts
+        run: npm test
+      - name: Check server and RSS utility syntax
+        run: |
+          node --check server.js
+          node --check lib/rss-utils.js
