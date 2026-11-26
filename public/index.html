@@ -1472,6 +1472,8 @@ body.app .bbar .hks{display:none!important}
 #t2tabs button{font-size:12px}
 #t2 .news-item{max-width:100%}
 #t2 .news-item-description{max-width:70ch}
+
+#t1 .tracker-grid{display:flex;flex-direction:column;flex:1;min-height:0}
 </style>
 #t1 .other-note{margin:6px 2px 8px;color:var(--text-secondary);font:12px/1.45 Inter,sans-serif}
 
@@ -1522,14 +1524,14 @@ body.app .bbar .hks{display:none!important}
    </div>
   </div>
   <span id="t1active" class="sr-only">Trending</span><span id="t1heading" class="sr-only">All tokens</span>
-  <div class="tracker-col-head" role="row" aria-label="Sort tokens">
+  <div class="tracker-grid" role="grid" aria-label="Trending market tokens"><div class="tracker-col-head" role="row" aria-label="Sort tokens">
    <span role="columnheader">Asset</span>
    <button type="button" data-sort="price" role="columnheader" aria-sort="none">Price</button>
    <button type="button" data-sort="change" role="columnheader" aria-sort="none" id="t1headchange">Change 5m</button>
    <button type="button" data-sort="volume" role="columnheader" aria-sort="descending" id="t1headvolume">Vol 5m</button>
    <button type="button" data-sort="liquidity" role="columnheader" aria-sort="none">Liquidity</button>
   </div>
-  <div id="t1list" role="rowgroup" aria-label="Token rows"></div>
+  <div id="t1list" role="rowgroup" aria-label="Token rows"></div></div>
   <div class="tracker-main-foot"><p class="k" id="t1n">LOADING JUPITER TRENDING…</p></div>
  </section>
 </div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
