@@ -4315,7 +4315,7 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
   apps.querySelectorAll('[data-taskwindow]').forEach(button=>{
    const win=$('#'+button.dataset.taskwindow),open=!!win&&!win.hidden,focused=!!win&&win.classList.contains('foc');
    button.classList.toggle('open',open);button.classList.toggle('focused',focused);
-   button.setAttribute('aria-pressed',String(id==='t2'?open:focused));
+   button.setAttribute('aria-pressed',String(button.dataset.taskwindow==='t2'?open:focused));
   });
  };
  window.AlphaUI={refresh,restoreFocus:id=>{const opener=openers.get(id);if(opener&&opener.isConnected)opener.focus({preventScroll:true});else{const task=apps.querySelector('[data-taskwindow="'+id+'"]');const nav=$('.ws a[data-open="w-ov"]');(task||nav)?.focus({preventScroll:true})}refresh()}};
