@@ -1537,6 +1537,53 @@ html:not(.terminal-route) .hero .hero-access:focus-visible{outline:2px solid #ff
  html:not(.terminal-route) .hero .hero-mark{font-size:clamp(88px,25vw,132px)}
  html:not(.terminal-route) .hero .hero-lockup h1{font-size:clamp(27px,8vw,36px)}
 }
+/* Floating terminal taskbar and anchored help popover. */
+html.terminal-route .bbar{
+ position:fixed;left:50%;right:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));
+ transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);
+ box-sizing:border-box;flex-wrap:nowrap;overflow:visible;gap:8px;
+ padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+ border:1px solid var(--border);border-radius:11px;z-index:100010;
+ background:rgba(246,250,253,.97);box-shadow:0 8px 30px rgba(5,25,42,.2)
+}
+:root[data-theme="dark"] html.terminal-route .bbar{background:rgba(11,25,38,.98)}
+html.terminal-route .bbar .gr{display:none!important}
+html.terminal-route #taskbar-help{
+ width:36px;min-width:36px;height:36px;min-height:36px;padding:0!important;
+ display:inline-flex;align-items:center;justify-content:center;text-align:center;
+ line-height:1;font-size:16px;font-weight:700;flex:0 0 36px;box-sizing:border-box
+}
+html.terminal-route .bbar #hint{
+ position:absolute;right:0;left:auto;bottom:calc(100% + 10px);z-index:100020;
+ width:max-content;max-width:min(620px,calc(100vw - 32px));box-sizing:border-box;
+ margin:0;white-space:normal;box-shadow:0 10px 30px rgba(0,0,0,.22);
+ border:1px solid var(--border);border-radius:8px;background:var(--surface-raised);
+ color:var(--text-secondary);padding:12px 14px;line-height:1.6
+}
+html.terminal-route .bbar #hint[hidden]{display:none!important}
+html.terminal-route .desktop-empty{padding:24px 38px 20px 24px}
+html.terminal-route .desktop-empty-close{
+ position:absolute;top:7px;right:8px;width:28px;height:28px;padding:0;
+ display:inline-flex;align-items:center;justify-content:center;
+ border:0;border-radius:4px;background:transparent;color:var(--text-secondary);
+ font:20px/1 Inter,sans-serif;cursor:pointer
+}
+html.terminal-route .desktop-empty-close:hover{background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary)}
+@media(max-width:767px){
+ html.terminal-route .bbar{
+  left:50%;right:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));
+  width:calc(100vw - 20px);max-width:calc(100vw - 20px);
+  padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));
+  gap:5px;overflow-x:auto;overflow-y:visible;border-radius:11px
+ }
+ html.terminal-route .taskbar-apps{flex:1 0 180px;min-width:180px;justify-content:space-between;gap:3px}
+ html.terminal-route .bbar #taskbar-help{flex:0 0 34px;width:34px;min-width:34px;height:36px}
+ html.terminal-route .bbar #hint{right:0;max-width:calc(100vw - 36px)}
+ html.terminal-route .win.tool:not([hidden]){
+  bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;
+  height:calc(100svh - 78px - env(safe-area-inset-bottom,0px))!important
+ }
+}
 /* Route-level isolation: the public landing page never renders terminal workspace UI. */
 html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-route) #t3,html:not(.terminal-route) #t4,html:not(.terminal-route) #desktop-empty,html:not(.terminal-route) .desktop-empty,html:not(.terminal-route) .bbar,html:not(.terminal-route) .taskbar-apps,html:not(.terminal-route) #taskbar-help,html:not(.terminal-route) #account-chip{display:none!important}
 </style>
@@ -1619,7 +1666,7 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
 <div class="row"><span class="mut">X handle</span><b id="sh"></b></div><div class="row"><span class="mut">Successful referrals</span><b id="sr">0</b></div><div class="row"><span class="mut">Status</span><b id="ss">On the waitlist</b></div>
 <div class="lk"><input id="sl" readonly aria-label="Your invite link"></div>
 <div class="bt"><button class="btn" id="cb">Copy invite link</button><button class="btn o" id="xb">Share on X</button><button class="btn o" id="nb" hidden>Share…</button></div>
-<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><ol class="how-steps"><li><b>Detect emerging narratives</b><span>Find stories and cultural moments gaining attention.</span></li><li><b>Cluster related tokens</b><span>Connect assets and tickers that share the same theme.</span></li><li><b>Track the meta lifecycle</b><span>Watch attention move from emerging to crowded and cooling.</span></li></ol><span class="release-badge">Product preview · illustrative data, not live</span><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><span class="release-badge">Product vision · not yet released</span></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><button class="blk appo" id="thm">◐ Light</button><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X</a><time class="blk appo" id="local-clock" aria-label="Your local time" title="Your local time">--:--</time></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
+<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><ol class="how-steps"><li><b>Detect emerging narratives</b><span>Find stories and cultural moments gaining attention.</span></li><li><b>Cluster related tokens</b><span>Connect assets and tickers that share the same theme.</span></li><li><b>Track the meta lifecycle</b><span>Watch attention move from emerging to crowded and cooling.</span></li></ol><span class="release-badge">Product preview · illustrative data, not live</span><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><span class="release-badge">Product vision · not yet released</span></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><button class="blk appo" id="thm">◐ Light</button><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X</a><time class="blk appo" id="local-clock" aria-label="Your local time" title="Your local time">--:--</time></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
 const $=s=>document.querySelector(s),nv=$('#nv');
 addEventListener('scroll',()=>nv.classList.toggle('s',scrollY>10),{passive:true});
 $('#mb').onclick=()=>$('#mm').classList.toggle('o');document.querySelectorAll('#mm a').forEach(a=>a.onclick=()=>$('#mm').classList.remove('o'));
@@ -2976,7 +3023,7 @@ let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light
 const cfg=window.ALPHA_SUPABASE_CONFIG||{};
 const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 const U={name:'',addr:'',role:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
-const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';const chip=document.querySelector('#account-chip');if(chip){chip.hidden=!U.addr&&!U.name;chip.textContent=U.addr?short(U.addr):(U.name?'Member':'');chip.dataset.address=U.addr||'';chip.title=U.addr?'Copy wallet address':'Signed-in member';}ub.hidden=!!U.addr;};
+const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';ub.hidden=!!U.addr;};
 showU();
 const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
@@ -3398,14 +3445,6 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  const names={t1:'Tracker',t2:'Feed',t3:'Scanner',t4:'Hotkeys'};
  const body=document.body,bar=$('.bbar'),wallet=$('#ub');
  if(!bar||!wallet||!window.AW)return;
- const account=document.createElement('button');
- account.type='button';account.id='account-chip';account.className='blk appo';account.hidden=true;
- account.setAttribute('aria-label','Signed-in member or connected wallet');
- wallet.insertAdjacentElement('afterend',account);
- account.addEventListener('click',async()=>{
-  const address=account.dataset.address||'';if(!address)return;
-  try{await navigator.clipboard.writeText(address);account.textContent='Copied';setTimeout(()=>{account.textContent=address.slice(0,4)+'…'+address.slice(-4)},1100)}catch{}
- });
  const apps=document.createElement('div');apps.className='taskbar-apps';apps.setAttribute('role','group');apps.setAttribute('aria-label','Terminal applications');
  ids.forEach(id=>{
   const button=document.createElement('button');button.type='button';button.dataset.taskwindow=id;button.textContent=names[id];
@@ -3413,12 +3452,15 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
   button.addEventListener('click',()=>{openers.set(id,button);window.AW.open(id);refresh()});
   apps.appendChild(button);
  });
- account.insertAdjacentElement('afterend',apps);
+ wallet.insertAdjacentElement('afterend',apps);
  const help=document.createElement('button');help.type='button';help.id='taskbar-help';help.className='blk appo';help.textContent='?';help.title='Keyboard shortcuts';help.setAttribute('aria-label','Show keyboard shortcuts');
  help.addEventListener('click',()=>{const hint=$('#hint');if(hint){hint.hidden=!hint.hidden;hint.style.opacity='1'}});
  $('#thm').insertAdjacentElement('beforebegin',help);
+ const hint=$('#hint');if(hint)help.insertAdjacentElement('afterend',hint);
+ let emptyDismissed=false;
  const empty=document.createElement('div');empty.id='desktop-empty';empty.className='desktop-empty';
- empty.innerHTML='<b>Workspace ready</b><span>Press Alt+1 to open Tracker, or choose an app from the taskbar.</span>';
+ empty.innerHTML='<button class="desktop-empty-close" type="button" aria-label="Close Workspace ready">×</button><b>Workspace ready</b><span>Press Alt+1 to open Tracker, or choose an app from the taskbar.</span>';
+ empty.querySelector('.desktop-empty-close').addEventListener('click',()=>{emptyDismissed=true;refresh()});
  body.appendChild(empty);
  const setDialogSemantics=()=>{
   $$('.win').forEach((win,index)=>{
@@ -3434,7 +3476,8 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  const refresh=()=>{
   const inApp=body.classList.contains('app');
   const openIds=ids.filter(id=>$('#'+id)&&!$('#'+id).hidden);
-  apps.hidden=!inApp;help.hidden=!inApp;empty.hidden=!inApp||openIds.length>0;
+  const anyWindowOpen=$('.win:not([hidden])').length>0;
+  apps.hidden=!inApp;help.hidden=!inApp;empty.hidden=!inApp||anyWindowOpen||emptyDismissed;
   apps.querySelectorAll('[data-taskwindow]').forEach(button=>{
    const win=$('#'+button.dataset.taskwindow),open=!!win&&!win.hidden,focused=!!win&&win.classList.contains('foc');
    button.classList.toggle('open',open);button.classList.toggle('focused',focused);
