@@ -4329,7 +4329,7 @@ addEventListener('keydown',event=>{
  event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
 },true);
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
-if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){if(location.hash==='#terminal'){await completeAuthSession(data.session,true)}else{const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr=''}}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session)await completeAuthSession(data.session,location.hash==='#terminal')}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
 </script><script id="alpha-ui-controller">
 (function(){
