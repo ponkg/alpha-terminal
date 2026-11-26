@@ -3423,6 +3423,7 @@ const exit=()=>{
    catch(error){location.hash=''}
    // replaceState does not emit hashchange, so explicitly restore landing-page styles.
    document.documentElement.classList.remove('terminal-route');
+   window.AlphaLandingVideo?.resume();
    exitPromise=null;
   }
  })();
@@ -3935,6 +3936,17 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
       playVideo();
     }else{
       video.pause();
+    }
+  };
+
+  // Logout uses history.replaceState (which does not fire hashchange), so expose
+  // an explicit landing-page resume hook for the shared exit flow.
+  window.AlphaLandingVideo={
+    sync:syncPlayback,
+    resume:()=>{
+      if(!showLanding())return;
+      try{video.currentTime=0}catch(_){}
+      playVideo();
     }
   };
 
