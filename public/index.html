@@ -1340,29 +1340,129 @@ body:not(.app) .win a{color:#b9d9ef}
  body:not(.app) *,body:not(.app) *::before,body:not(.app) *::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
 
+
+/* Dragonfly Redux cues, translated into Alpha's own palette */
+body:not(.app) .alpha-frame{position:fixed;inset:0;z-index:99980;pointer-events:none;color:#d8e9f5}
+body:not(.app) .frame-corner{position:absolute;font:500 10px var(--mono)!important;letter-spacing:.15em;color:#9bb8ce}
+body:not(.app) .frame-tl{top:22px;left:27px;font:500 23px Georgia,"Times New Roman",serif!important;letter-spacing:-.08em;color:#eff7fc}
+body:not(.app) .frame-tr{top:27px;right:29px}
+body:not(.app) .frame-bl{bottom:24px;left:27px}
+body:not(.app) .frame-br{bottom:24px;right:29px}
+body:not(.app) .frame-cross{position:absolute;left:50%;transform:translateX(-50%);font:12px var(--mono)!important;color:#7fa8c7;opacity:.72}
+body:not(.app) .frame-cross-top{top:27px}
+body:not(.app) .frame-cross-bottom{bottom:21px}
+body.app .alpha-frame{display:none!important}
+body:not(.app) nav{left:50%;right:auto;top:16px;transform:translateX(-50%);width:min(430px,calc(100vw - 36px));padding:0;background:transparent;z-index:99990}
+body:not(.app) nav.s{background:transparent;border:0;padding:0;backdrop-filter:none}
+body:not(.app) .nbar{height:45px;width:100%;margin:0;padding:0 15px;display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(164,204,232,.28);border-radius:999px!important;background:rgba(7,23,37,.76);backdrop-filter:blur(20px);box-shadow:0 8px 38px rgba(0,0,0,.12)}
+body:not(.app) .blk.logo{font:500 17px Georgia,"Times New Roman",serif!important;letter-spacing:-.08em;padding:0;color:#edf5fc}
+body:not(.app) .blk.logo .la{color:#9cccf0}
+body:not(.app) .ws{display:flex;align-items:center;gap:15px;background:none!important;border:0!important;padding:0!important}
+body:not(.app) .ws a{width:18px;height:24px;display:flex;align-items:center;justify-content:center;padding:0;color:#7897b1;font:500 8px var(--mono)!important;border:0!important;background:transparent!important}
+body:not(.app) .ws a:hover{color:#fff}
+body:not(.app) .rt{margin-left:auto;display:flex;align-items:center}
+body:not(.app) .menu-trigger{display:inline-flex;align-items:center;gap:10px;padding:7px 0 7px 10px;color:#e4f0f8;font:500 9px var(--mono)!important;letter-spacing:.14em}
+body:not(.app) .menu-trigger span{color:#9cccf0;font-size:15px}
+body:not(.app) #mb.blk{display:inline-flex!important}
+body:not(.app) #mm{position:absolute;top:54px;right:0;left:auto;width:228px;display:none;flex-direction:column;gap:2px;margin:0;padding:9px;background:rgba(7,23,37,.97);border:1px solid rgba(154,193,223,.3);border-radius:0!important;backdrop-filter:blur(22px);box-shadow:0 18px 50px rgba(0,0,0,.28)}
+body:not(.app) #mm.o{display:flex}
+body:not(.app) #mm .blk{display:flex;width:100%;justify-content:flex-start;padding:11px 10px;border-bottom:1px solid rgba(154,193,223,.13);font-size:9px}
+body:not(.app) #mm .blk:last-child{border-bottom:0;color:#a9d3f2}
+body:not(.app) .hl.dragonfly-hero{top:50%;transform:translate(-50%,-43%);text-align:center;padding:0 5%}
+body:not(.app) .hero-copy{max-width:none;margin:0 auto;text-align:center}
+body:not(.app) .hero-eyebrow{justify-content:center;font-size:9px!important;letter-spacing:.18em}
+body:not(.app) .hero h1{font:600 clamp(92px,22vw,285px)/.76 Inter,system-ui,sans-serif!important;letter-spacing:-.105em;margin:38px 0 24px;padding-right:.1em;color:#f2f8fc;text-align:center}
+body:not(.app) .hero-deck{margin:0 auto;max-width:460px;font-size:clamp(14px,1.45vw,19px);letter-spacing:.015em;color:#c2d7e7}
+body:not(.app) .hero .ctas{justify-content:center;margin:30px 0 0}
+body:not(.app) .hero .secondary-cta{border:0;border-bottom:1px solid rgba(190,217,237,.5);padding:11px 4px}
+body:not(.app) .hero-ascii{left:50%;right:auto;top:51%;transform:translate(-50%,-50%);width:94%;max-width:1400px;font-size:clamp(5px,.66vw,9px)!important;line-height:1.1;opacity:.18;letter-spacing:.12em}
+body:not(.app) .hero-baseline{justify-content:center;gap:32px;margin-top:56px}
+body:not(.app) .hero-side-note{display:none}
+body:not(.app) .hero-film{opacity:.3}
+body:not(.app) .story-section{max-width:1540px;padding-left:8%;padding-right:8%}
+body:not(.app) .section-index{font-size:9px!important;letter-spacing:.18em;padding-bottom:18px}
+body:not(.app) .section-index>span:first-child{font:500 24px Georgia,"Times New Roman",serif!important;color:#9cccf0}
+body:not(.app) .section-index>span:nth-child(2){color:#edf5fc}
+body:not(.app) .index-rule{background:rgba(154,193,223,.32)}
+body:not(.app) .index-head{display:flex;justify-content:space-between;gap:18px;padding:19px 0 13px;border-bottom:1px solid rgba(154,193,223,.26);font:500 9px var(--mono)!important;letter-spacing:.15em;color:#8faac0}
+body:not(.app) .index-head span:first-child{color:#e0edf7}
+body:not(.app) .directory-toolbar{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:22px 0;border-bottom:1px solid rgba(154,193,223,.22)}
+body:not(.app) .directory-label{font:500 9px var(--mono)!important;letter-spacing:.13em;color:#7f9db6}
+body:not(.app) .directory-filters{display:flex;gap:6px;flex-wrap:wrap}
+body:not(.app) .directory-filter{padding:7px 11px;border:1px solid rgba(154,193,223,.23);background:transparent;color:#a9bfd1;font:500 8px var(--mono)!important;letter-spacing:.12em;cursor:pointer}
+body:not(.app) .directory-filter:hover,body:not(.app) .directory-filter.active{border-color:#9cccf0;color:#071725;background:#9cccf0}
+body:not(.app) .directory-list{display:grid;grid-template-columns:1fr 1fr}
+body:not(.app) .directory-entry{display:grid;grid-template-columns:42px minmax(150px,.9fr) 1fr 16px;gap:12px;align-items:center;padding:24px 12px 24px 0;border-bottom:1px solid rgba(154,193,223,.19);transition:color .18s,background .18s}
+body:not(.app) .directory-entry:nth-child(odd){margin-right:22px}
+body:not(.app) .directory-entry:nth-child(even){padding-left:22px;border-left:1px solid rgba(154,193,223,.16)}
+body:not(.app) .directory-entry:hover{color:#fff;background:rgba(94,158,206,.045)}
+body:not(.app) .dir-num{font:500 10px var(--mono)!important;color:#7b9ab4}
+body:not(.app) .dir-name{font:500 11px var(--mono)!important;letter-spacing:.04em;color:#e3edf5}
+body:not(.app) .dir-description{font-size:11px;color:#91a9bd;line-height:1.55}
+body:not(.app) .dir-arrow{font-size:14px;color:#8cb9dc}
+body:not(.app) .index-foot{display:flex;justify-content:space-between;gap:20px;padding:17px 0;border-bottom:1px solid rgba(154,193,223,.28);font:500 8px var(--mono)!important;letter-spacing:.13em;color:#718da5}
+body:not(.app) .directory-entry[hidden]{display:none!important}
+body:not(.app) .feature-list{margin-top:80px}
+body:not(.app) .feature-row{grid-template-columns:.55fr 1.1fr 1.35fr 54px;padding:34px 0}
+body:not(.app) .feature-num{font-size:8px!important}
+body:not(.app) .feature-title h3{letter-spacing:-.045em}
+@media(max-width:900px){
+ body:not(.app) .directory-entry{grid-template-columns:28px 1fr 14px;gap:10px}
+ body:not(.app) .dir-description{grid-column:2;grid-row:2}
+ body:not(.app) .dir-arrow{grid-column:3;grid-row:1}
+}
+@media(max-width:680px){
+ body:not(.app) .alpha-frame .frame-tl{top:15px;left:14px;font-size:18px!important}
+ body:not(.app) .alpha-frame .frame-tr{top:20px;right:15px;font-size:7px!important}
+ body:not(.app) .alpha-frame .frame-bl{bottom:14px;left:14px;font-size:7px!important}
+ body:not(.app) .alpha-frame .frame-br{bottom:14px;right:15px;font-size:7px!important}
+ body:not(.app) .frame-cross{display:none}
+ body:not(.app) nav{top:11px;width:min(370px,calc(100vw - 86px))}
+ body:not(.app) .nbar{height:41px;padding:0 12px}
+ body:not(.app) .hero{min-height:650px}
+ body:not(.app) .hl.dragonfly-hero{top:48%;padding:0 18px}
+ body:not(.app) .hero h1{font-size:clamp(82px,23vw,142px)!important;margin:32px 0 22px}
+ body:not(.app) .hero-eyebrow{font-size:7px!important}
+ body:not(.app) .hero-ascii{width:118%;font-size:5px!important;opacity:.13}
+ body:not(.app) .hero-baseline{gap:12px 18px;margin-top:39px;font-size:7px!important}
+ body:not(.app) .story-section{padding:74px 22px}
+ body:not(.app) .directory-toolbar{align-items:flex-start;flex-direction:column;gap:14px}
+ body:not(.app) .directory-list{grid-template-columns:1fr}
+ body:not(.app) .directory-entry:nth-child(odd){margin-right:0}
+ body:not(.app) .directory-entry:nth-child(even){padding-left:0;border-left:0}
+ body:not(.app) .directory-entry{padding:18px 0}
+ body:not(.app) .index-foot{flex-direction:column;gap:7px}
+}
+
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
+<div class="alpha-frame" aria-hidden="true">
+  <span class="frame-corner frame-tl">[a]</span>
+  <span class="frame-corner frame-tr">SOLANA</span>
+  <span class="frame-corner frame-bl">NARRATIVE INTELLIGENCE</span>
+  <span class="frame-corner frame-br">PRIVATE BETA / 2026</span>
+  <span class="frame-cross frame-cross-top">+</span>
+  <span class="frame-cross frame-cross-bottom">+</span>
+</div>
 <nav id="nv" aria-label="Main navigation">
   <div class="nbar">
     <a href="#top" class="blk logo" aria-label="Alpha home">[<span class="la">a</span>]</a>
-    <div class="blk ws">
-      <a href="#why">01 <b>Thesis</b></a>
-      <a href="#platform">02 <b>Platform</b></a>
-      <a href="#signals">03 <b>Signals</b></a>
-      <a href="/docs/">04 <b>Field Manual ↗</b></a>
+    <div class="blk ws" aria-label="Page sections">
+      <a href="#why" aria-label="01 Thesis">01</a>
+      <a href="#platform" aria-label="02 Index">02</a>
+      <a href="#signals" aria-label="03 Method">03</a>
     </div>
     <div class="rt">
-      <a href="#" class="blk login-link" data-open="auth">Member login</a>
-      <a href="#" class="blk cta" data-open="reg">Request access <span aria-hidden="true">↗</span></a>
-      <button id="mb" class="blk" aria-label="Menu" aria-expanded="false">☰</button>
+      <button id="mb" class="blk menu-trigger" aria-label="Open menu" aria-expanded="false">MENU <span aria-hidden="true">+</span></button>
     </div>
   </div>
-  <div id="mm" aria-label="Mobile navigation">
-    <a class="blk" href="#why">01 / Thesis</a>
-    <a class="blk" href="#platform">02 / Platform</a>
-    <a class="blk" href="#signals">03 / Signals</a>
-    <a class="blk" href="/docs/">04 / Field Manual ↗</a>
-    <a class="blk" href="#" data-open="auth">Member login</a>
+  <div id="mm" aria-label="Site menu">
+    <a class="blk" href="#why">01 / THE THESIS</a>
+    <a class="blk" href="#platform">02 / CATEGORY INDEX</a>
+    <a class="blk" href="#signals">03 / THE METHOD</a>
+    <a class="blk" href="/docs/">04 / FIELD MANUAL ↗</a>
+    <a class="blk" href="#" data-open="auth">MEMBER LOGIN ↗</a>
+    <a class="blk" href="#" data-open="reg">REQUEST ACCESS ↗</a>
   </div>
 </nav>
 
@@ -1391,9 +1491,9 @@ body:not(.app) .win a{color:#b9d9ef}
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 <div class="hl dragonfly-hero">
   <div class="hero-copy">
-    <div class="hero-eyebrow"><span class="status-dot"></span> SOLANA NARRATIVE INTELLIGENCE <span class="hero-index">/ 001</span></div>
-    <h1>Read the noise.<br><span>Find the narrative.</span></h1>
-    <p class="hero-deck">A field guide to the stories, people and moments moving attention across Solana.</p>
+    <div class="hero-eyebrow"><span class="status-dot"></span> SOLANA NARRATIVE INTELLIGENCE <span class="hero-index">/ FIELD NOTES 001</span></div>
+    <h1>ALPHA</h1>
+    <p class="hero-deck">Narrative intelligence for the Solana trenches.</p>
     <div class="ctas">
       <a href="#" class="blk cta" data-open="reg">Request early access <span aria-hidden="true">↗</span></a>
       <a href="#platform" class="blk secondary-cta">Explore the platform <span aria-hidden="true">↓</span></a>
@@ -1482,27 +1582,26 @@ body:not(.app) .win a{color:#b9d9ef}
       <p>From the first headline to a token’s market data, Alpha gives you a place to explore the context behind a move. The previews below are illustrative, not live market data.</p>
     </div>
 
-    <div class="terminal-showcase">
-      <div class="showcase-top"><span>[a] / NARRATIVE INDEX</span><span>PUBLIC PREVIEW / ILLUSTRATIVE DATA</span><span>01—03</span></div>
-      <div class="showcase-content">
-        <aside class="showcase-rail">
-          <div class="showcase-label">DIRECTORY / SOLANA</div>
-          <div class="showcase-category active"><span>01</span> ANIMAL CULTURE <b>↗</b></div>
-          <div class="showcase-category"><span>02</span> INTERNET CULTURE <b>↗</b></div>
-          <div class="showcase-category"><span>03</span> PUBLIC FIGURES <b>↗</b></div>
-          <div class="showcase-category"><span>04</span> CRYPTO EVENTS <b>↗</b></div>
-          <div class="showcase-rail-foot">FILTER / ENTITY + KEYWORD</div>
-        </aside>
-        <div class="showcase-main">
-          <div class="showcase-command"><span>alpha@terminal : /narratives</span><span>SEARCH [ NAME / STORY / MINT ]</span></div>
-          <div class="showcase-output"><span>SELECTED SIGNAL</span><span>STATUS / EXAMPLE</span></div>
-          <div class="showcase-story-row"><span class="story-number">01</span><div><b>Viral animal story</b><small>ANIMAL CULTURE / NEWS CONTEXT</small></div><span class="story-state">TRACKING</span></div>
-          <div class="showcase-story-row"><span class="story-number">02</span><div><b>Internet-born character</b><small>INTERNET CULTURE / MEME ORIGIN</small></div><span class="story-state">CLASSIFIED</span></div>
-          <div class="showcase-story-row"><span class="story-number">03</span><div><b>Public figure headline</b><small>PEOPLE / POLITICS / BUSINESS</small></div><span class="story-state">CONTEXT</span></div>
-          <div class="showcase-story-row"><span class="story-number">04</span><div><b>Crypto-native event</b><small>EXPLOIT / ECOSYSTEM / ALTCOIN</small></div><span class="story-state">NEW STORY</span></div>
-          <div class="showcase-bottom"><span>CLASSIFICATION IS HEURISTIC</span><span>OPEN A STORY TO INVESTIGATE ↗</span></div>
+    <div class="narrative-index">
+      <div class="index-head"><span>INDEX / DETECTION CATEGORIES</span><span>ALPHA / SOLANA</span></div>
+      <div class="directory-toolbar">
+        <span class="directory-label">FILTER THE INDEX</span>
+        <div class="directory-filters" role="group" aria-label="Filter narrative categories">
+          <button type="button" class="directory-filter active" data-filter="all">ALL</button>
+          <button type="button" class="directory-filter" data-filter="culture">CULTURE</button>
+          <button type="button" class="directory-filter" data-filter="people">PEOPLE</button>
+          <button type="button" class="directory-filter" data-filter="crypto">CRYPTO</button>
         </div>
       </div>
+      <div class="directory-list">
+        <a class="directory-entry" data-kind="culture" href="#" data-open="auth"><span class="dir-num">01</span><span class="dir-name">ANIMAL CULTURE</span><span class="dir-description">Viral animals, wildlife stories and public attention</span><span class="dir-arrow">↗</span></a>
+        <a class="directory-entry" data-kind="culture" href="#" data-open="auth"><span class="dir-num">02</span><span class="dir-name">INTERNET CULTURE</span><span class="dir-description">Meme origins, forum-born characters and references</span><span class="dir-arrow">↗</span></a>
+        <a class="directory-entry" data-kind="people" href="#" data-open="auth"><span class="dir-num">03</span><span class="dir-name">PUBLIC FIGURES</span><span class="dir-description">Politicians, founders and people in the headlines</span><span class="dir-arrow">↗</span></a>
+        <a class="directory-entry" data-kind="people" href="#" data-open="auth"><span class="dir-num">04</span><span class="dir-name">INFLUENCERS</span><span class="dir-description">Creators, KOL references and social momentum</span><span class="dir-arrow">↗</span></a>
+        <a class="directory-entry" data-kind="crypto" href="#" data-open="auth"><span class="dir-num">05</span><span class="dir-name">CRYPTO EVENTS</span><span class="dir-description">Security incidents, launches and ecosystem news</span><span class="dir-arrow">↗</span></a>
+        <a class="directory-entry" data-kind="crypto" href="#" data-open="auth"><span class="dir-num">06</span><span class="dir-name">ALTCOIN & MEMECOIN</span><span class="dir-description">Crypto-native headlines and token narratives</span><span class="dir-arrow">↗</span></a>
+      </div>
+      <div class="index-foot"><span>CLASSIFICATION / HEURISTIC MATCHING</span><span>RESEARCH CONTEXT / NOT A BUY SIGNAL</span></div>
     </div>
 
     <div class="feature-list">
@@ -3269,4 +3368,15 @@ addEventListener('keydown',event=>{
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
 if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
-</script></body></html>
+</script><script>
+(() => {
+  const filters = document.querySelectorAll('.directory-filter');
+  const rows = document.querySelectorAll('.directory-entry');
+  filters.forEach(button => button.addEventListener('click', () => {
+    const selected = button.dataset.filter || 'all';
+    filters.forEach(item => item.classList.toggle('active', item === button));
+    rows.forEach(row => { row.hidden = selected !== 'all' && row.dataset.kind !== selected; });
+  }));
+})();
+</script>
+</body></html>
