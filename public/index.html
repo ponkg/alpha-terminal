@@ -3487,6 +3487,16 @@ const nb=(id,d)=>{const a=R[id];if(!a)return null;let best=null,bs=1e9;for(const
 if(d==='L'){g=a.x-(c.x+c.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='R'){g=c.x-(a.x+a.w);o=Math.min(a.y+a.h,c.y+c.h)-Math.max(a.y,c.y)}else if(d==='U'){g=a.y-(c.y+c.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}else{g=c.y-(a.y+a.h);o=Math.min(a.x+a.w,c.x+c.w)-Math.max(a.x,c.x)}
 if(g>-2&&o>0&&g<bs){bs=g;best=k}}return best};
 const rs=d=>{if(!root||!foc)return;const ax=d==='L'||d==='R'?'h':'v',path=[],f=n=>{if(n.id)return n.id===foc;path.push(n);if(f(n.a)||f(n.b))return true;path.pop();return false};f(root);const n=[...path].reverse().find(x=>x.d===ax);if(!n)return;n.r=Math.min(.85,Math.max(.15,n.r+(d==='R'||d==='D'?.05:-.05)));apply()};
+const openWorkspaceWindow=id=>{
+ const win=A.W[id];
+ if(!win||!b.classList.contains('app'))return false;
+ if(win.hidden)A.open(id);
+ // Keep the visible window registered with the tiling manager, then focus it.
+ sync2();
+ if(find(id))focusPane(id);
+ return true;
+};
+window.AlphaWorkspace={open:openWorkspaceWindow};
 const closeW=id=>A.hide(A.W[id]);
 const tog=id=>{const w=A.W[id];if(w.hidden)A.open(id);else if(foc!==id){foc=id;apply()}else closeW(id)};
 const keyMatchesEvent=(event,binding)=>!!binding&&event.code===binding.code&&event.altKey===binding.alt&&event.ctrlKey===binding.ctrl&&event.shiftKey===binding.shift&&event.metaKey===binding.meta;
@@ -3805,7 +3815,7 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  ids.forEach(id=>{
   const button=document.createElement('button');button.type='button';button.dataset.taskwindow=id;button.textContent=names[id];
   button.setAttribute('aria-controls',id);button.setAttribute('aria-label','Open '+names[id]);
-  button.addEventListener('click',()=>{openers.set(id,button);window.AW.open(id);refresh()});
+  button.addEventListener('click',()=>{openers.set(id,button);if(!window.AlphaWorkspace?.open(id))window.AW.open(id);refresh();requestAnimationFrame(refresh)});
   apps.appendChild(button);
  });
  wallet.insertAdjacentElement('afterend',apps);
