@@ -106,3 +106,7 @@ Calculated with the WCAG relative-luminance formula for the token pairs below. T
 - **Coin-detail chart timeframes:** the detail chart retains its backend-native intervals (1m/5m/15m/1h/4h/1d). The Tracker and landing preview use 5m/10m/30m/1h/24h; I did not relabel chart candles without adding aggregation support.
 - **100%, 125% and 200% browser zoom / real-device QA:** not verified in a rendered browser in this pass. Responsive breakpoints, overflow and touch-target styles are in source, and the PR workflow checks JavaScript syntax/tests; a visual browser pass is still required before release.
 - **Automated WCAG audit of every legacy chart/scanner state:** not run. The report covers the new semantic design-token pairs; chart-library canvas labels and remote imagery need visual inspection at runtime.
+
+## Landing route regression fix
+- A restored beta session no longer forces the terminal open on the public root URL.
+- The terminal is restored only when the browser is on the explicit `/#terminal` route, preventing the private workspace from appearing over the landing page.
