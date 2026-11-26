@@ -1155,6 +1155,66 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 #wm .wm-state{color:var(--ac);font-size:12px;text-transform:uppercase}
 #wm .wm-state.revoked{color:#d36b6b}
 @media(max-width:700px){#wm{width:96vw!important;height:84vh!important}#wm .wm-row{grid-template-columns:1fr 1fr;gap:7px}#wm .wm-row>div:first-child{grid-column:1/-1}#wm .wm-row input{grid-column:1/-1}#wm .wm-row button{width:100%}}
+
+/* Landing-only cleanup: transparent navigation, restored pre-November 26 CTA, and strict terminal isolation. */
+html:not(.terminal-route) #nv,
+html:not(.terminal-route) #nv.s{
+ background:transparent!important;
+ border:0!important;
+ box-shadow:none!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important
+}
+html:not(.terminal-route) #nv .nbar,
+html:not(.terminal-route) #nv .blk,
+html:not(.terminal-route) #nv #mm,
+html:not(.terminal-route) #nv #mm .blk{
+ background:transparent!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important
+}
+html:not(.terminal-route) #nv .blk:hover,
+html:not(.terminal-route) #nv #mm .blk:hover{
+ background:rgba(255,255,255,.12)!important
+}
+html:not(.terminal-route) .hero .hero-primary{
+ pointer-events:auto;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ min-height:46px;
+ margin-top:clamp(8px,1.5vh,16px);
+ padding:0 22px;
+ border:1px solid #9fd1f3;
+ border-radius:4px;
+ background:#9fd1f3;
+ color:#102c45;
+ font:600 14px/1 Inter,system-ui,sans-serif;
+ text-decoration:none;
+ box-shadow:0 8px 24px rgba(3,24,45,.18);
+ transition:background .16s ease,transform .16s ease
+}
+html:not(.terminal-route) .hero .hero-primary:hover{
+ background:#d4edff!important;
+ color:#102c45!important;
+ transform:translateY(-1px)
+}
+html:not(.terminal-route) #t1,
+html:not(.terminal-route) #t2,
+html:not(.terminal-route) #t3,
+html:not(.terminal-route) #t4,
+html:not(.terminal-route) #desktop-empty,
+html:not(.terminal-route) .desktop-empty,
+html:not(.terminal-route) .bbar,
+html:not(.terminal-route) .taskbar-apps,
+html:not(.terminal-route) #taskbar-help,
+html:not(.terminal-route) #hint,
+html:not(.terminal-route) #account-chip{
+ display:none!important
+}
+
 </style><style id="alpha-readability-system">
 /* Readability-first Alpha UI system */
 :root,:root[data-theme="light"]{color-scheme:light;--text-primary:#142536;--text-secondary:#455a6d;--text-disabled:#53687c;--surface:#f3f7fb;--surface-raised:#fff;--border:#7c90a4;--accent:#1769aa;--positive:#146a3b;--negative:#a52824;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--font-sans:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;--type-1:12px;--type-2:14px;--type-3:16px;--type-4:20px;--type-5:28px;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--shadow-window:0 18px 44px rgba(4,23,40,.2),0 4px 12px rgba(4,23,40,.12)}
@@ -1627,8 +1687,7 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
 <div class="hl hero-lockup">
   <p class="hero-eyebrow">See the</p>
   <div class="hero-mark" aria-label="alpha">[<span>a</span>]</div>
-  <h1>Before everyone else</h1>
-  <a href="#" class="hero-access" data-open="reg">Request early access</a>
+  <a href="#" class="blk cta hero-primary" data-open="reg">Request Early Access</a>
  </div>
  <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
 <div class="win card" id="wm" hidden><div class="tbar" data-drag><span>ALPHA / ACCESS CONTROL</span><span>WAITLIST MANAGER</span><button class="x" aria-label="Close">×</button></div><div class="wb wm-body"><div class="wm-head"><div><h2>Waitlist</h2><p>Approve a person by entering their email and sending a one-time invitation.</p></div><button class="btn o" id="wm-refresh" type="button">Refresh</button></div><div class="wm-meta" id="wm-meta">LOADING WAITLIST…</div><div class="wm-list" id="wm-list"><div class="mut">Loading entries…</div></div><div class="wm-foot">INVITES REQUIRE SUPABASE AUTH EMAIL DELIVERY / SMTP CONFIGURATION.</div></div></div><div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>Trending Coin Tracker</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
