@@ -1864,7 +1864,7 @@ const detectTokenNarratives=token=>{
 };
 const TRACKER_ALL_GROUP='__ALL_MARKETS__';
 let narrativeWindow=0,narrativeSelectedGroup=TRACKER_ALL_GROUP,trackerSearchTerm='',narrativePools=[],narrativeUpdated=0,narrativeLoadPromise=null;
-let narrativeNews=[],narrativeNewsCheckedAt=0,narrativeNewsPromise=null;
+let narrativeNews=[],narrativeNewsCheckedAt=0,narrativeNewsPromise=null,newlyArrivedNews=new Set();
 let narrativeNewsMeta={ok:false,stale:false,successfulFeeds:0,feeds:[]};
 const usd=n=>{n=Number(n)||0;return n>=1e9?'$'+(n/1e9).toFixed(1)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':n>=1e3?'$'+(n/1e3).toFixed(n>=1e5?0:1)+'K':'$'+Math.round(n)};
 const pct=n=>(n>0?'+':'')+Number(n||0).toFixed(1)+'%';
@@ -2313,7 +2313,9 @@ const renderNewsTabs=()=>{
   refresh.disabled=true;
   refresh.textContent='Refreshing…';
   refresh.setAttribute('aria-busy','true');
+  const beforeRefresh=new Set(narrativeNews.map(article=>article.url));
   await loadNarrativeNews(true);
+  newlyArrivedNews=new Set(narrativeNews.filter(article=>!beforeRefresh.has(article.url)).map(article=>article.url));
   renderNewsTabs();
   rf();
  });
@@ -2359,7 +2361,8 @@ const rf=()=>{
   const summary=article._cleanSummary?'<p class="news-item-description">'+esc(article._cleanSummary.slice(0,300))+(article._cleanSummary.length>300?'…':'')+'</p>':'';
   const publisher=article.source||article.domain||article.feed||'RSS';
   const published=relativeNewsTime(article);
-  return '<article class="news-item '+(isRead?'is-read':'is-new')+'" data-news-url="'+esc(url)+'">'+
+  const isNew=newlyArrivedNews.has(url)&&!isRead;
+  return '<article class="news-item '+(isRead?'is-read':isNew?'is-new':'')+'" data-news-url="'+esc(url)+'">'+
    '<div class="news-meta"><span class="news-item-source">'+esc(publisher)+'</span><span aria-hidden="true">·</span><time class="news-item-time">'+esc(published)+'</time></div>'+
    '<div class="news-item-line"><a class="news-item-title" data-kbd-item="news" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(article.title)+'</a></div>'+
    summary+'<div class="news-item-tags">'+categoryTags+entityTags+'</div></article>';
@@ -2372,7 +2375,7 @@ const rf=()=>{
  });
  $('#t2active').textContent=selected;
  $('#t2count').textContent=articles.length+' stor'+(articles.length===1?'y':'ies');
- const newCount=articles.filter(article=>!readSet.has(article.url)).length;
+ const newCount=articles.filter(article=>newlyArrivedNews.has(article.url)&&!readSet.has(article.url)).length;
  $('#t2new').textContent=newCount+' new';$('#t2new').hidden=!newCount;
  const updated=narrativeNewsMeta.fetchedAt?new Date(narrativeNewsMeta.fetchedAt).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'}):'—';
  $('#t2n').textContent='● '+(narrativeNewsMeta.stale?'Cached':'Live')+' · updated '+updated;
@@ -2385,6 +2388,8 @@ $('#t2list').addEventListener('click',event=>{
  const key=item.dataset.newsUrl;if(!key)return;
  try{const saved=new Set(JSON.parse(localStorage.getItem('alpha_news_read_v1')||'[]'));saved.add(key);localStorage.setItem('alpha_news_read_v1',JSON.stringify([...saved].slice(-500)))}catch{}
  item.classList.remove('is-new');item.classList.add('is-read');
+ const count=[...$('#t2list').querySelectorAll('.news-item')].filter(row=>newlyArrivedNews.has(row.dataset.newsUrl)&&!row.classList.contains('is-read')).length;
+ $('#t2new').textContent=count+' new';$('#t2new').hidden=!count;
 });
 renderNewsTabs();
 rf();
