@@ -1439,9 +1439,21 @@ html.terminal-route .hero-meta{display:none!important}
     gap:6px;
     padding:6px 8px
   }
-  html:not(.terminal-route) .hero-meta-label{font-size:11px!important}
-  html:not(.terminal-route) .hero-coming-soon{gap:7px}
-  html:not(.terminal-route) .hero-analog{gap:5px}
+  html:not(.terminal-route) .hero-meta-label{font-size:12px!important}
+  html:not(.terminal-route) .hero-coming-soon{
+    min-width:78px;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:center;
+    gap:2px
+  }
+  html:not(.terminal-route) .hero-analog{
+    min-width:64px;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:2px
+  }
   html:not(.terminal-route) .hero-clock-face{width:34px;height:34px}
   html:not(.terminal-route) .hero-digital{min-width:112px}
   html:not(.terminal-route) .hero-digital-time{font-size:14px!important}
@@ -1451,6 +1463,18 @@ html.terminal-route .hero-meta{display:none!important}
 @media(prefers-reduced-motion:reduce){
   html:not(.terminal-route) .hero-request{transition:none!important}
   html:not(.terminal-route) .hero-request:hover{transform:none}
+}
+
+
+@media(max-width:350px){
+  html:not(.terminal-route) .hero-meta{gap:5px}
+  html:not(.terminal-route) .hero-meta-card{padding:4px 6px;gap:4px}
+  html:not(.terminal-route) .hero-coming-soon{min-width:74px}
+  html:not(.terminal-route) .hero-meta-value{font-size:12px!important}
+  html:not(.terminal-route) .hero-analog{min-width:58px}
+  html:not(.terminal-route) .hero-clock-face{width:30px;height:30px}
+  html:not(.terminal-route) .hero-digital{min-width:98px}
+  html:not(.terminal-route) .hero-digital-time{font-size:13px!important}
 }
 
 </style><style id="alpha-readability-system">
