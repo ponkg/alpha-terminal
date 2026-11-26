@@ -1215,6 +1215,244 @@ html:not(.terminal-route) #account-chip{
  display:none!important
 }
 
+
+/* Landing hero: the supplied 1920x1080 film is the only central wordmark/background. */
+html:not(.terminal-route) .hero{
+  position:relative!important;
+  display:block!important;
+  width:100vw!important;
+  height:100svh!important;
+  min-height:100svh!important;
+  max-height:100svh!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  isolation:isolate;
+  text-align:center!important;
+  background:transparent!important
+}
+html:not(.terminal-route) .hero::before,
+html:not(.terminal-route) .hero::after{
+  content:none!important;
+  display:none!important;
+  background:none!important
+}
+html:not(.terminal-route) .hero-stage{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:max(100vw,177.77778vh);
+  aspect-ratio:16 / 9;
+  height:auto;
+  transform:translate(-50%,-50%);
+  overflow:hidden;
+  z-index:0;
+  pointer-events:none
+}
+html:not(.terminal-route) .hero-stage .hero-film{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  object-fit:cover!important;
+  object-position:50% 50%!important;
+  z-index:0!important;
+  opacity:1!important;
+  visibility:visible!important;
+  background:transparent!important;
+  pointer-events:none
+}
+html:not(.terminal-route) .hero-copy-grid{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) 24% minmax(0,1fr);
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  pointer-events:none
+}
+html:not(.terminal-route) .hero-copy-top{
+  align-self:end;
+  justify-self:center;
+  margin:0;
+  padding:0;
+  color:#12233B;
+  font:500 28px/1.2 Inter,system-ui,sans-serif!important;
+  letter-spacing:0;
+  text-align:center;
+  text-shadow:none
+}
+html:not(.terminal-route) .hero-copy-reserved{min-width:0;min-height:0}
+html:not(.terminal-route) .hero-copy-bottom{
+  align-self:start;
+  justify-self:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0;
+  margin:0;
+  padding:0 16px;
+  text-align:center;
+  pointer-events:none
+}
+html:not(.terminal-route) .hero-slogan{
+  margin:0;
+  padding:0;
+  color:#1A63B5;
+  font:700 28px/1.2 Inter,system-ui,sans-serif!important;
+  letter-spacing:0;
+  text-align:center;
+  text-shadow:none
+}
+html:not(.terminal-route) .hero-request{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:52px;
+  margin-top:32px;
+  padding:0 26px;
+  border:1px solid #1A63B5;
+  border-radius:0!important;
+  background:#1A63B5;
+  color:#fff;
+  font:700 14px/1 Inter,system-ui,sans-serif!important;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  text-decoration:none;
+  white-space:nowrap;
+  box-shadow:none;
+  pointer-events:auto;
+  transition:background .16s ease,border-color .16s ease,transform .16s ease
+}
+html:not(.terminal-route) .hero-request:hover{
+  background:#164F91;
+  border-color:#164F91;
+  color:#fff;
+  transform:translateY(-1px)
+}
+html:not(.terminal-route) .hero-request:focus-visible{
+  outline:2px solid #12233B;
+  outline-offset:4px
+}
+/* The bottom status/time strip shares the navigation's 1320px container width. */
+html:not(.terminal-route) .hero-meta{
+  position:absolute;
+  left:50%;
+  bottom:max(18px,env(safe-area-inset-bottom,0px));
+  transform:translateX(-50%);
+  z-index:5;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:12px;
+  width:min(1320px,calc(100vw - 32px));
+  margin:0;
+  padding:0;
+  pointer-events:none
+}
+html:not(.terminal-route) .hero-meta-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:58px;
+  padding:8px 12px;
+  border:1px solid #9FB3C8;
+  border-radius:0!important;
+  background:#F9FBFE;
+  color:#566B87;
+  box-shadow:none;
+  font-family:Inter,system-ui,sans-serif!important;
+  pointer-events:auto
+}
+html:not(.terminal-route) .hero-meta-label{
+  display:block;
+  color:#566B87;
+  font:600 12px/1.2 Inter,system-ui,sans-serif!important;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap
+}
+html:not(.terminal-route) .hero-meta-value{
+  color:#12233B;
+  font:500 14px/1.2 Inter,system-ui,sans-serif!important;
+  white-space:nowrap
+}
+html:not(.terminal-route) .hero-meta-right{
+  display:flex;
+  align-items:stretch;
+  justify-content:flex-end;
+  gap:8px
+}
+html:not(.terminal-route) .hero-analog{gap:9px}
+html:not(.terminal-route) .hero-clock-face{
+  display:block;
+  width:42px;
+  height:42px;
+  flex:none;
+  overflow:visible;
+  background:transparent
+}
+html:not(.terminal-route) .hero-digital{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  gap:3px;
+  min-width:132px
+}
+html:not(.terminal-route) .hero-digital-time{
+  color:#12233B;
+  font:700 17px/1.1 "JetBrains Mono",ui-monospace,monospace!important;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.02em;
+  white-space:nowrap
+}
+html:not(.terminal-route) .hero-timezone{
+  color:#566B87;
+  font:500 11px/1.2 Inter,system-ui,sans-serif!important;
+  overflow-wrap:anywhere
+}
+/* Keep the landing background free of legacy CSS recreations and terminal chrome. */
+html:not(.terminal-route) .sky,
+html:not(.terminal-route) .glow,
+html:not(.terminal-route) .xh,
+html:not(.terminal-route) .hero-lockup,
+html:not(.terminal-route) .hl{
+  display:none!important
+}
+html.terminal-route .hero-stage,
+html.terminal-route .hero-meta{display:none!important}
+@media(max-width:600px){
+  html:not(.terminal-route) .hero-meta{
+    width:calc(100vw - 24px);
+    bottom:max(12px,env(safe-area-inset-bottom,0px));
+    gap:7px
+  }
+  html:not(.terminal-route) .hero-meta-card{
+    min-height:52px;
+    gap:6px;
+    padding:6px 8px
+  }
+  html:not(.terminal-route) .hero-meta-label{font-size:11px!important}
+  html:not(.terminal-route) .hero-coming-soon{gap:7px}
+  html:not(.terminal-route) .hero-analog{gap:5px}
+  html:not(.terminal-route) .hero-clock-face{width:34px;height:34px}
+  html:not(.terminal-route) .hero-digital{min-width:112px}
+  html:not(.terminal-route) .hero-digital-time{font-size:14px!important}
+  html:not(.terminal-route) .hero-timezone{font-size:10px!important}
+  html:not(.terminal-route) .hero-request{padding:0 20px}
+}
+@media(prefers-reduced-motion:reduce){
+  html:not(.terminal-route) .hero-request{transition:none!important}
+  html:not(.terminal-route) .hero-request:hover{transform:none}
+}
+
 </style><style id="alpha-readability-system">
 /* Readability-first Alpha UI system */
 :root,:root[data-theme="light"]{color-scheme:light;--text-primary:#142536;--text-secondary:#455a6d;--text-disabled:#53687c;--surface:#f3f7fb;--surface-raised:#fff;--border:#7c90a4;--accent:#1769aa;--positive:#146a3b;--negative:#a52824;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--font-sans:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace;--type-1:12px;--type-2:14px;--type-3:16px;--type-4:20px;--type-5:28px;--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--shadow-window:0 18px 44px rgba(4,23,40,.2),0 4px 12px rgba(4,23,40,.12)}
@@ -1661,9 +1899,19 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a><a href="/docs/"><b>5</b>Field Manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a><a class="blk" href="/docs/">5 Field Manual ↗</a></div></nav>
 
 <header class="hero" id="top">
-<video class="hero-film" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
-  <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
-</video>
+<div class="hero-stage" aria-label="Alpha video hero">
+  <video id="alpha-hero-video" class="hero-film" muted playsinline webkit-playsinline preload="auto" aria-hidden="true" tabindex="-1" disablepictureinpicture disableremoteplayback>
+    <source src="/alpha-film-rebuilt.mp4" type="video/mp4">
+  </video>
+  <div class="hero-copy-grid">
+    <p class="hero-copy-top">See the</p>
+    <div class="hero-copy-reserved" aria-hidden="true"></div>
+    <div class="hero-copy-bottom">
+      <p class="hero-slogan">before everyone else.</p>
+      <a href="#" class="hero-request" data-open="reg">Request early access</a>
+    </div>
+  </div>
+</div>
 <div class="sky" aria-hidden="true">
   <div class="cloud" style="--x:0.18; --y:0.17; --sx:0.115; --sy:0.2; --rgb:72 122 186; --a:0.97; --ax:0.12; --ay:0.1; --k:0.82; --ph:0rad; --orbit:32s; --drift:36s; --breathe:17s; --dx1:7vw; --dy1:-3vh; --dx2:-5vw; --dy2:4vh; --dx3:4vw; --dy3:2vh"></div>
   <div class="cloud" style="--x:0.82; --y:0.74; --sx:0.11; --sy:0.19; --rgb:160 197 230; --a:0.8; --ax:0.15; --ay:0.11; --k:1.15; --ph:1.7rad; --orbit:39s; --drift:42s; --breathe:19s; --dx1:-8vw; --dy1:3vh; --dx2:5vw; --dy2:-4vh; --dx3:-3vw; --dy3:-2vh"></div>
@@ -1683,12 +1931,32 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
 </div>
 <div class="glow"></div>
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
+<div class="hero-meta" aria-label="Alpha launch status and local time">
+  <div class="hero-meta-card hero-coming-soon">
+    <span class="hero-meta-label">CA</span>
+    <span class="hero-meta-value">Coming soon</span>
+  </div>
+  <div class="hero-meta-right">
+    <div class="hero-meta-card hero-analog" aria-label="Analog local clock">
+      <span class="hero-meta-label">ANALOG</span>
+      <svg class="hero-clock-face" viewBox="0 0 64 64" role="img" aria-label="Local analog clock">
+        <circle cx="32" cy="32" r="29" fill="#F9FBFE" stroke="#9FB3C8" stroke-width="1.5"/>
+        <path d="M32 5.5V10 M32 54V58.5 M5.5 32H10 M54 32H58.5" stroke="#566B87" stroke-width="1.5" stroke-linecap="square"/>
+        <path id="hero-hour-hand" d="M32 32V19" stroke="#12233B" stroke-width="2.8" stroke-linecap="round"/>
+        <path id="hero-minute-hand" d="M32 32V12" stroke="#12233B" stroke-width="2" stroke-linecap="round"/>
+        <path id="hero-second-hand" d="M32 36V8" stroke="#1A63B5" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="2.4" fill="#1A63B5"/>
+      </svg>
+    </div>
+    <div class="hero-meta-card hero-digital">
+      <span class="hero-meta-label">LOCAL TIME</span>
+      <time id="hero-digital-time" class="hero-digital-time">--:--:--</time>
+      <span id="hero-timezone" class="hero-timezone">Local time zone</span>
+    </div>
+  </div>
+</div>
 
-<div class="hl hero-lockup">
-  <p class="hero-eyebrow">See the</p>
-  <div class="hero-mark" aria-label="alpha">[<span>a</span>]</div>
-  <a href="#" class="blk cta hero-primary" data-open="reg">Request Early Access</a>
- </div>
+
  <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
 <div class="win card" id="wm" hidden><div class="tbar" data-drag><span>ALPHA / ACCESS CONTROL</span><span>WAITLIST MANAGER</span><button class="x" aria-label="Close">×</button></div><div class="wb wm-body"><div class="wm-head"><div><h2>Waitlist</h2><p>Approve a person by entering their email and sending a one-time invitation.</p></div><button class="btn o" id="wm-refresh" type="button">Refresh</button></div><div class="wm-meta" id="wm-meta">LOADING WAITLIST…</div><div class="wm-list" id="wm-list"><div class="mut">Loading entries…</div></div><div class="wm-foot">INVITES REQUIRE SUPABASE AUTH EMAIL DELIVERY / SMTP CONFIGURATION.</div></div></div><div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>Trending Coin Tracker</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
@@ -3603,4 +3871,63 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  }
  refresh();
 })();
-</script></body></html>
+</script>
+<script id="alpha-landing-hero">
+(function(){
+  const root=document.documentElement;
+  const video=document.getElementById('alpha-hero-video');
+  const timeNode=document.getElementById('hero-digital-time');
+  const zoneNode=document.getElementById('hero-timezone');
+  const hourHand=document.getElementById('hero-hour-hand');
+  const minuteHand=document.getElementById('hero-minute-hand');
+  const secondHand=document.getElementById('hero-second-hand');
+  if(!video||!timeNode||!zoneNode)return;
+
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const returnToPoster=()=>{
+    video.autoplay=false;
+    video.loop=false;
+    video.pause();
+    const holdFirstFrame=()=>{
+      video.pause();
+      try{video.currentTime=0}catch(_){}
+    };
+    if(video.readyState>=2)holdFirstFrame();
+    else video.addEventListener('loadeddata',holdFirstFrame,{once:true});
+  };
+  const syncPlayback=()=>{
+    if(root.classList.contains('terminal-route')||reduceMotion.matches){
+      returnToPoster();
+      return;
+    }
+    video.loop=false; // The supplied animation resolves to the final [a] lockup; hold that last frame.
+    video.autoplay=true;
+    const playAttempt=video.play();
+    if(playAttempt&&typeof playAttempt.catch==='function')playAttempt.catch(()=>{});
+  };
+  syncPlayback();
+  if(typeof reduceMotion.addEventListener==='function')reduceMotion.addEventListener('change',syncPlayback);
+  else if(typeof reduceMotion.addListener==='function')reduceMotion.addListener(syncPlayback);
+  window.addEventListener('hashchange',syncPlayback);
+
+  const timezone=Intl.DateTimeFormat().resolvedOptions().timeZone||'Local time';
+  zoneNode.textContent=timezone;
+  const timeFormat=new Intl.DateTimeFormat(undefined,{
+    hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'
+  });
+  const updateClock=()=>{
+    const now=new Date();
+    timeNode.textContent=timeFormat.format(now);
+    timeNode.dateTime=now.toISOString();
+    const hours=now.getHours()%12+now.getMinutes()/60+now.getSeconds()/3600;
+    const minutes=now.getMinutes()+now.getSeconds()/60;
+    const seconds=now.getSeconds()+now.getMilliseconds()/1000;
+    hourHand?.setAttribute('transform','rotate('+(hours*30)+' 32 32)');
+    minuteHand?.setAttribute('transform','rotate('+(minutes*6)+' 32 32)');
+    secondHand?.setAttribute('transform','rotate('+(seconds*6)+' 32 32)');
+  };
+  updateClock();
+  window.setInterval(updateClock,1000);
+})();
+</script>
+</body></html>
