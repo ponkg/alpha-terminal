@@ -3119,7 +3119,7 @@ const lay=(n,r,o)=>{if(n.id){o[n.id]=r;return}if(n.d==='h'){const w=r.w*n.r;lay(
 const find=id=>root&&leaves(root).find(l=>l.id===id);
 const par=(n,id)=>n.id?null:(n.a.id===id||n.b.id===id)?n:par(n.a,id)||par(n.b,id);
 const apply=()=>{
- R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)},R);
+ R={};if(root)lay(root,{x:0,y:0,w:hero.clientWidth,h:hero.clientHeight-((document.querySelector('.bbar')||{}).offsetHeight||0)-24},R);
  TW.forEach(w=>{
   const r=R[w.id],on=!!r,was=w.classList.contains('tile');
   w.classList.toggle('tile',on);w.classList.toggle('foc',on&&w.id===foc);
