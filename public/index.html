@@ -1903,6 +1903,7 @@ const readJupiterTokens=payload=>{
    mint,poolAddress:'',symbol:String(token.symbol||''),name:String(token.name||''),
    imageUrl:String(token.icon||token.logoURI||token.image||''),
    liquidity:Number(token.liquidity)||0,volume24:volume24||Number(token.volume24h)||0,
+   volumes:{m5:Number(stats5.buyVolume||0)+Number(stats5.sellVolume||0),h1:Number(stats1.buyVolume||0)+Number(stats1.sellVolume||0),h24:volume24},
    marketCap:Number(token.mcap||token.marketCap||0),priceUsd:Number(token.usdPrice)||0,
    organicScore:Number(token.organicScore)||0,isVerified:token.isVerified===true,
    changes:{
@@ -1931,7 +1932,7 @@ const readGeckoTrendingPools=payload=>{
    symbol:String(base.symbol||''),name:String(base.name||''),
    imageUrl:String(base.image_url||''),
    liquidity:Number(attrs.reserve_in_usd)||0,
-   volume24:Number(vol.h24)||0,
+   volume24:Number(vol.h24)||0,volumes:{h24:Number(vol.h24)||0},
    marketCap:Number(attrs.market_cap_usd||attrs.fdv_usd)||0,
    priceUsd:Number(attrs.base_token_price_usd)||0,
    changes:{
@@ -1962,6 +1963,7 @@ const mergeNarrativeTokens=(jupiter,gecko)=>{
    imageUrl:current.imageUrl||token.imageUrl,
    liquidity:current.liquidity||token.liquidity,
    volume24:current.volume24||token.volume24,
+   volumes:current.volumes||token.volumes,
    marketCap:current.marketCap||token.marketCap,
    changes:Object.fromEntries(Object.keys(token.changes||{}).map(key=>[key,current.changes?.[key]??token.changes?.[key]??null]))
   });
@@ -2018,80 +2020,86 @@ const narrativeGroups=()=>{
   });
 };
 const narrativeState=p=>p==null?'Collecting data':p>=2.5?'Accelerating':p>=0.5?'Emerging':p>-.5?'Crowded':'Cooling';
+let trackerSortKey='volume',trackerSortDirection=-1;
 const renderT1=()=>{
  const active=document.activeElement;
  const focusedMint=active?.closest?.('.narrative-token')?.dataset.m||'';
  const focusedCategory=active?.closest?.('[data-tracker-group]')?.dataset.trackerGroup||'';
  const searchFocused=active?.id==='t1q',searchCaret=searchFocused?active.selectionStart:null;
  const groups=narrativeGroups();
- const allTokens=[...new Map(groups.flatMap(group=>group.tokens).filter(token=>token.mint).map(token=>[token.mint,token])).values()]
-  .sort((a,b)=>b.volume24-a.volume24||b.liquidity-a.liquidity);
+ const allTokens=[...new Map(groups.flatMap(group=>group.tokens).filter(token=>token.mint).map(token=>[token.mint,token])).values()];
  const allFolder={name:'ALL TOKENS',type:'DIRECTORY',tokens:allTokens};
  const folders=[allFolder,...groups];
  if(!folders.some(group=>group.name===narrativeSelectedGroup))narrativeSelectedGroup=TRACKER_ALL_GROUP;
  const selectedGroup=narrativeSelectedGroup===TRACKER_ALL_GROUP?allFolder:(groups.find(group=>group.name===narrativeSelectedGroup)||allFolder);
  const uniqueTokens=[...new Map(narrativePools.map(token=>[token.mint,token])).values()];
- const matched=new Set(groups.filter(group=>group.type!=='OTHER').flatMap(group=>group.tokens.map(token=>token.mint))).size;
  const renderFolderButton=group=>{
   const active=group.type==='DIRECTORY'?narrativeSelectedGroup===TRACKER_ALL_GROUP:group.name===narrativeSelectedGroup;
   const key=group.type==='DIRECTORY'?TRACKER_ALL_GROUP:group.name;
-  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(key)+'" aria-pressed="'+String(active)+'" aria-label="Show '+esc(group.name)+' tokens, '+group.tokens.length+'" title="'+esc(group.name)+' · '+group.tokens.length+' tokens">'+
-   '<span class="tracker-folder-mark" aria-hidden="true">'+(active?'›':'')+'</span>'+
-   '<span class="tracker-folder-name">'+esc(group.name)+'</span>'+
-   '<span class="tracker-folder-count">'+group.tokens.length+'</span>'+
-  '</button>';
+  return '<button type="button" class="tracker-folder'+(active?' on':'')+'" data-tracker-group="'+esc(key)+'" aria-pressed="'+String(active)+'" aria-label="Show '+esc(group.name)+' tokens, '+group.tokens.length+'" title="'+esc(group.name)+' · '+group.tokens.length+' tokens"><span class="tracker-folder-mark" aria-hidden="true">'+(active?'›':'')+'</span><span class="tracker-folder-name">'+esc(group.name)+'</span><span class="tracker-folder-count">'+group.tokens.length+'</span></button>';
  };
- const marketFolders=folders.filter(group=>group.type!=='ENTITY');
- const entityFolders=folders.filter(group=>group.type==='ENTITY');
- const categoryFolders=marketFolders.filter(group=>group.type!=='DIRECTORY');
- const categoryHtml=
-  '<div class="tracker-folder-section tracker-folder-section-all">'+renderFolderButton(allFolder)+'</div>'+
-  '<section class="tracker-folder-section"><div class="tracker-folder-section-head"><span>MARKET CATEGORIES</span><b>'+categoryFolders.length+'</b></div>'+
-   categoryFolders.map(renderFolderButton).join('')+
-  '</section>'+
-  (entityFolders.length?
-   '<section class="tracker-folder-section tracker-entity-section"><div class="tracker-folder-section-head"><span>DETECTED ENTITIES</span><b>'+entityFolders.length+'</b></div>'+
-    entityFolders.map(renderFolderButton).join('')+
-   '</section>':'');
- $('#t1groups').innerHTML=categoryHtml||'<div class="tracker-rail-empty">NO CATEGORIES</div>';
- $('#t1groupmeta').textContent=categoryFolders.length+' CATEGORIES / '+entityFolders.length+' ENTITIES';
+ const entityFolders=folders.filter(group=>group.type==='ENTITY'&&group.tokens.length);
+ const categoryFolders=folders.filter(group=>group.type!=='ENTITY'&&group.type!=='DIRECTORY'&&group.tokens.length)
+  .sort((a,b)=>(a.name==='Other / Unclassified'?1:0)-(b.name==='Other / Unclassified'?1:0));
+ const other=categoryFolders.find(group=>group.name==='Other / Unclassified');
+ const normalCategories=categoryFolders.filter(group=>group.name!=='Other / Unclassified');
+ let categoryHtml='<div class="tracker-folder-section tracker-folder-section-all">'+renderFolderButton(allFolder)+'</div><section class="tracker-folder-section"><div class="tracker-folder-section-head"><span>Market categories</span></div>'+normalCategories.map(renderFolderButton).join('');
+ if(other)categoryHtml+='<details class="other-fold"><summary>Other / Unclassified <span>'+other.tokens.length+'</span></summary>'+renderFolderButton(other)+'</details>';
+ categoryHtml+='</section>';
+ if(entityFolders.length)categoryHtml+='<section class="tracker-folder-section tracker-entity-section"><div class="tracker-folder-section-head"><span>Detected entities</span></div>'+entityFolders.map(renderFolderButton).join('')+'</section>';
+ $('#t1groups').innerHTML=categoryHtml;
+ $('#t1groupmeta').textContent='';
  $('#t1active').textContent=selectedGroup.name.toUpperCase();
- $('#t1heading').textContent=selectedGroup.name.toUpperCase()+' / TOKEN DIRECTORY';
+ $('#t1heading').textContent=selectedGroup.name;
  const query=trackerSearchTerm.trim().toLowerCase();
- const tokens=(selectedGroup.tokens||[]).filter(token=>!query||[
-  token.symbol,token.name,token.mint,token.poolName
- ].join(' ').toLowerCase().includes(query));
- $('#t1count').textContent=tokens.length+' / '+(selectedGroup.tokens.length||0)+' TOKENS';
+ const tokens=(selectedGroup.tokens||[]).filter(token=>!query||[token.symbol,token.name,token.mint,token.poolName].join(' ').toLowerCase().includes(query));
+ const selectedWindow=NARRATIVE_WINDOWS[narrativeWindow];
+ const volumeKey=selectedWindow.field==='m5'?'m5':selectedWindow.field==='h1'?'h1':selectedWindow.field==='h24'?'h24':null;
+ const volumeFor=token=>volumeKey==null?null:Number(token.volumes?.[volumeKey]??(volumeKey==='h24'?token.volume24:0))||0;
+ const valueFor=(token,key)=>{
+  if(key==='price')return Number(token.priceUsd)||0;
+  if(key==='change')return token.change==null?-Infinity:Number(token.change);
+  if(key==='liquidity')return Number(token.liquidity)||0;
+  return volumeFor(token)??-Infinity;
+ };
+ tokens.sort((a,b)=>(valueFor(a,trackerSortKey)-valueFor(b,trackerSortKey))*trackerSortDirection);
+ $('#t1count').textContent=tokens.length+' token'+(tokens.length===1?'':'s');
  $('#t1q').value=trackerSearchTerm;
+ $('#t1headchange').textContent='Change '+selectedWindow.interval;
+ $('#t1headvolume').textContent='Vol '+selectedWindow.interval;
+ ['price','change','volume','liquidity'].forEach(key=>{
+  const button=$('#t1 .tracker-col-head [data-sort="'+key+'"]');
+  if(button)button.setAttribute('aria-sort',trackerSortKey===key?(trackerSortDirection===1?'ascending':'descending'):'none');
+ });
  const tokenRows=tokens.map(token=>{
   const image=String(token.imageUrl||'').startsWith('https://')?token.imageUrl:'';
-  const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'>'+
-   '<span class="narrative-logo-fallback">◎</span>';
-  const change=token.change==null?'<span class="mut">—</span>':'<span class="'+(token.change>=0?'up':'dn')+'">'+pct(token.change)+'</span>';
-  const tags=token.detection.labels.length
-   ?token.detection.labels.map(label=>'<span class="narrative-tag '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+' <i>'+Math.round(label.confidence*100)+'%</i></span>').join('')
-   :'<span class="narrative-tag unclassified">UNCLASSIFIED</span>';
-  const reasons=token.detection.labels.map(label=>label.name+': '+label.reason).join(' · ')||'No configured entity or narrative keyword matched the available token metadata.';
-  const matchReason=token.groupMatch?.reason||'No configured entity or narrative keyword matched symbol, name, or pool name.';
-  return '<div class="pump-row narrative-token" role="group" tabindex="0" aria-label="Coin $'+esc(token.symbol||'UNKNOWN')+'; press Enter to open chart" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'">'+
-   '<div class="pump-logo">'+imageTag+'</div>'+
-   '<div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div>'+
-   '<details class="narrative-detection"><summary>DETECTION · '+token.detection.labels.length+'</summary><div class="narrative-tags">'+tags+'</div><div class="narrative-match-reason">CATEGORY MATCH: '+esc(matchReason)+'</div><div class="narrative-match-reason">WHY: '+esc(reasons)+'</div></details></div>'+
-   '<div class="narrative-volume">'+usd(token.volume24)+'</div>'+
-   '<div class="narrative-liq">'+usd(token.liquidity)+'</div>'+
-   '<div class="narrative-change">'+change+'</div>'+
+  const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'><span class="narrative-logo-fallback" aria-hidden="true">◎</span>';
+  const changeValue=token.change==null?null:Number(token.change);
+  const change=changeValue==null?'<span class="change-value muted-value">—</span>':'<span class="change-value '+(changeValue>=0?'up':'dn')+(Math.abs(changeValue)>=100?' outlier':'')+'"><i aria-hidden="true">'+(changeValue>=0?'▲':'▼')+'</i> '+pct(changeValue)+'</span>';
+  const label=token.detection.labels[0]||null;
+  const narrative=label?'<span class="token-narrative '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+'</span>':'';
+  const price=Number(token.priceUsd)||0;
+  const priceText=price?(price>=1?'$'+price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:4}):'$'+price.toPrecision(4)):'—';
+  const marketCap=Number(token.marketCap)||0;
+  const volume=volumeFor(token);
+  return '<div class="pump-row narrative-token" role="row" tabindex="0" aria-label="Coin $'+esc(token.symbol||'UNKNOWN')+'; press Enter to open chart" data-c="$'+esc(token.symbol||'UNKNOWN')+'" data-p="'+esc(token.poolAddress)+'" data-m="'+esc(token.mint)+'">'+
+   '<div class="token-asset" role="gridcell"><div class="pump-logo">'+imageTag+'</div><div class="pump-token"><div class="narrative-token-heading"><b>$'+esc(token.symbol||'UNKNOWN')+'</b><small>'+esc(token.name||shortCA(token.mint))+'</small></div><div class="token-narrative-wrap">'+narrative+'</div></div></div>'+
+   '<div class="narrative-price" role="gridcell"><b>'+priceText+'</b><small>'+(marketCap?'MCap '+usd(marketCap):'')+'</small></div>'+
+   '<div class="narrative-change" role="gridcell">'+change+'</div>'+
+   '<div class="narrative-volume" role="gridcell">'+(volume==null?'—':usd(volume))+'</div>'+
+   '<div class="narrative-liq" role="gridcell">'+usd(token.liquidity)+'</div>'+
   '</div>';
  }).join('');
  $('#t1list').innerHTML=tokenRows||'<p class="narrative-empty">'+(selectedGroup.name==='Other / Unclassified'?'No unclassified tokens in this market snapshot.':query?'No tokens match this search.':'No tokens currently match this category.')+'</p>';
- $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>{
-  img.addEventListener('error',()=>{img.hidden=true},{once:true});
- });
+ $('#t1list').querySelectorAll('.narrative-token img').forEach(img=>img.addEventListener('error',()=>{img.hidden=true},{once:true}));
  uniqueTokens.filter(token=>!token.imageUrl).slice(0,20).forEach(token=>pumpLogo(token.mint));
- const time=narrativeUpdated?new Date(narrativeUpdated).toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'}):'—';
- $('#t1n').textContent='LIVE · JUPITER + GECKOTERMINAL · '+time+' · '+uniqueTokens.length+' UNIQUE TOKENS · '+matched+' WITH NARRATIVE MATCHES';
+ const seconds=narrativeUpdated?Math.max(0,Math.floor((Date.now()-narrativeUpdated)/1000)):null;
+ const freshness=seconds==null?'waiting for update':seconds<60?seconds+'s ago':Math.floor(seconds/60)+'m ago';
+ $('#t1n').textContent='Updated '+freshness;
+ $('#t1n').title='Market sources: Jupiter and GeckoTerminal. Tokens in snapshot: '+uniqueTokens.length+'.';
  if(focusedMint){
-  const selected=[...$('#t1list').querySelectorAll('.narrative-token')].find(row=>row.dataset.m===focusedMint);
-  if(selected)selected.focus({preventScroll:true});
+  const row=[...$('#t1list').querySelectorAll('.narrative-token')].find(item=>item.dataset.m===focusedMint);
+  if(row)row.focus({preventScroll:true});
   else if(focusedCategory)$('#t1groups [data-tracker-group="'+CSS.escape(focusedCategory)+'"]')?.focus({preventScroll:true});
  }else if(focusedCategory){
   $('#t1groups [data-tracker-group="'+CSS.escape(focusedCategory)+'"]')?.focus({preventScroll:true});
@@ -2801,7 +2809,14 @@ const openCoin=(tk,p,m)=>{
 const gotoCoin=(s,p,m)=>{if(A.W.t1.hidden)A.open('t1');openCoin(s,p,m)};
 $('#t2list').addEventListener('click',e=>{const c=e.target.closest('[data-c]');if(c)gotoCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 setInterval(()=>{if(!A.W.t1.hidden&&!$('#t1v2').hidden&&!document.hidden){if(tab===0){if(curP)loadChart(false)}else if(tab===1)loadTrades()}},60000);
-$('#t1list').addEventListener('click',e=>{if(e.target.closest('.narrative-detection'))return;const c=e.target.closest('.narrative-token[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
+$('#t1 .tracker-col-head').addEventListener('click',event=>{
+ const button=event.target.closest('[data-sort]');if(!button)return;
+ const key=button.dataset.sort;
+ if(trackerSortKey===key)trackerSortDirection*=-1;
+ else{trackerSortKey=key;trackerSortDirection=key==='price'?-1:-1}
+ renderT1();
+});
+$('#t1list').addEventListener('click',e=>{const c=e.target.closest('.narrative-token[data-c]');if(c)openCoin(c.dataset.c,c.dataset.p,c.dataset.m)});
 $('#t1list').addEventListener('keydown',event=>{
  if(event.target.closest('.narrative-detection'))return;
  const row=event.target.closest('.narrative-token');if(!row)return;
