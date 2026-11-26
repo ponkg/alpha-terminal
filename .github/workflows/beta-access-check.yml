@@ -25,8 +25,7 @@ jobs:
       - run: node --check server.js
       - name: Check inline frontend JavaScript
         run: |
-          node --input-type=module -e "import fs from 'node:fs'; const html=fs.readFileSync('public/index.html','utf8'); const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).filter(s=>s.trim()); if(scripts.length!==1) throw new Error('Expected one inline app script, found '+scripts.length); fs.writeFileSync('/tmp/alpha-inline.js',scripts[0]);"
-          node --check /tmp/alpha-inline.js
+          node --input-type=module -e "import fs from 'node:fs'; import vm from 'node:vm'; const html=fs.readFileSync('public/index.html','utf8'); const scripts=[...html.matchAll(/<script(?:\\s[^>]*)?>([\\s\\S]*?)<\\/script>/gi)].map(m=>m[1]).filter(s=>s.trim()); if(!scripts.length) throw new Error('No inline JavaScript found'); scripts.forEach((source,index)=>new vm.Script(source,{filename:'inline-'+index+'.js'})); console.log('Validated '+scripts.length+' inline scripts');"
       - name: Assert protected routes and admin-only manager
         run: |
           node --input-type=module <<'NODE'
