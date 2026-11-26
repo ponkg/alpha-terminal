@@ -3327,7 +3327,7 @@ addEventListener('keydown',event=>{
  event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
 },true);
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
-if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr='';if(location.hash==='#terminal')boot(enter)}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
 </script><script id="alpha-ui-controller">
 (function(){
