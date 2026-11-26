@@ -1483,7 +1483,7 @@ body.app .bbar .hks{display:none!important}
 #t2 .news-item:active{background:color-mix(in srgb,var(--accent) 8%,var(--surface-raised))}
 #t1 .other-note{margin:6px 2px 8px;color:var(--text-secondary);font:12px/1.45 Inter,sans-serif}
 #t4capturestatus.hk-status-visible{position:static!important;display:block!important;clip:auto!important;width:auto!important;height:auto!important;margin:0!important;padding:7px 0!important;overflow:visible!important;white-space:normal!important;color:var(--text-secondary);font:13px/1.45 Inter,sans-serif;border-top:1px solid var(--border)}
-.desktop-empty[hidden],body:not(.app) #t1,body:not(.app) #t2,body:not(.app) #t3,body:not(.app) #t4{display:none!important}
+.desktop-empty[hidden],body:not(.app) #t1,body:not(.app) #t2,body:not(.app) #t3,body:not(.app) #t4{display:none!important};body:not(.app) #desktop-empty{display:none!important}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
@@ -3424,6 +3424,11 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
  if(captureStatus)new MutationObserver(()=>{
   captureStatus.classList.toggle('hk-status-visible',!!captureStatus.textContent.trim());
  }).observe(captureStatus,{childList:true,characterData:true,subtree:true});
+ if(location.pathname==='/'&&location.hash!=='#terminal'){
+  body.classList.remove('app');
+  ids.forEach(id=>{const win=$('#'+id);if(win)win.hidden=true});
+  empty.hidden=true;
+ }
  refresh();
 })();
 </script></body></html>
