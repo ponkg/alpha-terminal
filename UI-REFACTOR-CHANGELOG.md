@@ -93,5 +93,6 @@ Calculated with the WCAG relative-luminance formula for the token pairs below. T
 ## Not implemented / limitations
 - **Seven-point sparklines:** omitted because the current tracker payload contains latest price/change aggregates, not a seven-point historical series. Drawing synthetic sparkline points would be misleading.
 - **10m and 30m volume:** the upstream token stats currently expose 5m, 1h and 24h volume aggregates, not 10m/30m aggregates. The corresponding volume cells show an em dash rather than relabelling or estimating another interval. Change percentages still follow the selected interval where available.
+- **Coin-detail chart timeframes:** the detail chart retains its backend-native intervals (1m/5m/15m/1h/4h/1d). The Tracker and landing preview use 5m/10m/30m/1h/24h; I did not relabel chart candles without adding aggregation support.
 - **100%, 125% and 200% browser zoom / real-device QA:** not verified in a rendered browser in this pass. Responsive breakpoints, overflow and touch-target styles are in source, and the PR workflow checks JavaScript syntax/tests; a visual browser pass is still required before release.
 - **Automated WCAG audit of every legacy chart/scanner state:** not run. The report covers the new semantic design-token pairs; chart-library canvas labels and remote imagery need visual inspection at runtime.
