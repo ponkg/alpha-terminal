@@ -1574,9 +1574,17 @@ html.terminal-route .desktop-empty-close:hover{background:color-mix(in srgb,var(
   left:50%;right:auto;bottom:calc(10px + env(safe-area-inset-bottom,0px));
   width:calc(100vw - 20px);max-width:calc(100vw - 20px);
   padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px));
-  gap:5px;overflow-x:auto;overflow-y:visible;border-radius:11px
+  gap:4px;overflow:visible;border-radius:11px
  }
- html.terminal-route .taskbar-apps{flex:1 0 180px;min-width:180px;justify-content:space-between;gap:3px}
+ html.terminal-route .bbar #ub{
+  width:34px;min-width:34px;height:36px;padding:0!important;
+  flex:0 0 34px;font-size:0!important
+ }
+ html.terminal-route .bbar #ub::before{content:"◈";font-size:16px;line-height:1}
+ html.terminal-route .taskbar-apps{flex:1 1 140px;min-width:140px;justify-content:space-between;gap:2px}
+ html.terminal-route .taskbar-apps button{min-width:0;padding:5px 2px;font-size:10px}
+ html.terminal-route .bbar #thm{padding:6px 7px!important;gap:4px;font-size:11px}
+ html.terminal-route .bbar #local-clock{min-width:44px;padding:6px 5px;font-size:10px!important}
  html.terminal-route .bbar #taskbar-help{flex:0 0 34px;width:34px;min-width:34px;height:36px}
  html.terminal-route .bbar #hint{right:0;max-width:calc(100vw - 36px)}
  html.terminal-route .win.tool:not([hidden]){
@@ -1584,6 +1592,7 @@ html.terminal-route .desktop-empty-close:hover{background:color-mix(in srgb,var(
   height:calc(100svh - 78px - env(safe-area-inset-bottom,0px))!important
  }
 }
+@media(max-width:380px){html.terminal-route .bbar #local-clock{display:none!important}}
 /* Route-level isolation: the public landing page never renders terminal workspace UI. */
 html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-route) #t3,html:not(.terminal-route) #t4,html:not(.terminal-route) #desktop-empty,html:not(.terminal-route) .desktop-empty,html:not(.terminal-route) .bbar,html:not(.terminal-route) .taskbar-apps,html:not(.terminal-route) #taskbar-help,html:not(.terminal-route) #account-chip{display:none!important}
 </style>
@@ -3023,7 +3032,7 @@ let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light
 const cfg=window.ALPHA_SUPABASE_CONFIG||{};
 const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 const U={name:'',addr:'',role:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
-const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';ub.hidden=!!U.addr;};
+const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';ub.setAttribute('aria-label','Connect Phantom wallet');ub.hidden=!!U.addr;};
 showU();
 const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
