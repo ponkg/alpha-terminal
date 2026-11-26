@@ -125,13 +125,18 @@ kbd{border-radius:0!important;background:rgba(115,172,215,.08);border-color:var(
 .callout{border-radius:0!important;border-left:2px solid #9cccf0;background:rgba(74,133,180,.1);color:#b4cadb;padding:18px 20px}
 .footer{margin-top:90px;padding-top:23px;border-top:1px solid var(--line);font:500 9px var(--mono);letter-spacing:.12em;color:#7d99b0}
 .footer a{color:#b5d5eb}
-:root[data-doc-theme="light"]{color-scheme:dark;--bg:#071725;--fg:#edf5fc;--mut:#9fb6ca;--dim:#7793aa;--line:rgba(154,193,223,.24);--soft:rgba(111,177,224,.08)}
-:root[data-doc-theme="light"] body{background:radial-gradient(ellipse 42% 27% at 6% 0%,rgba(65,132,184,.22),transparent 80%),linear-gradient(180deg,#071725,#081a29 78%)}
-:root[data-doc-theme="light"] .header-shell{background:rgba(7,23,37,.82)}
-:root[data-doc-theme="light"] .doc-card{background:rgba(9,28,44,.38)}
-:root[data-doc-theme="light"] .doc-card:hover{background:rgba(82,143,190,.11)}
-:root[data-doc-theme="light"] .search{background:rgba(4,17,28,.4)}
-:root[data-doc-theme="light"] .launch{background:#9cccf0;color:#071725}
+:root[data-doc-theme="light"]{color-scheme:light;--bg:#e8f2fa;--fg:#142b3d;--mut:#59748b;--dim:#718ba0;--line:rgba(54,103,143,.22);--soft:rgba(79,149,202,.1)}
+:root[data-doc-theme="light"] body{background:radial-gradient(ellipse 42% 27% at 6% 0%,rgba(111,176,222,.24),transparent 80%),linear-gradient(180deg,#f4f9fd,#e8f2fa 78%);color:var(--fg)}
+:root[data-doc-theme="light"] .header-shell{background:rgba(243,249,254,.9)}
+:root[data-doc-theme="light"] .brand,:root[data-doc-theme="light"] .primary a:hover,:root[data-doc-theme="light"] .primary a.active{color:#142b3d}
+:root[data-doc-theme="light"] .doc-card,:root[data-doc-theme="light"] .info{background:rgba(255,255,255,.68)}
+:root[data-doc-theme="light"] .doc-card:hover{background:#fff}
+:root[data-doc-theme="light"] .doc-card h2,:root[data-doc-theme="light"] .info b,:root[data-doc-theme="light"] .doc-section h2{color:#142b3d}
+:root[data-doc-theme="light"] .doc-card p,:root[data-doc-theme="light"] .info span,:root[data-doc-theme="light"] .doc-section p,:root[data-doc-theme="light"] .doc-section ul,:root[data-doc-theme="light"] .doc-section ol{color:#536f86}
+:root[data-doc-theme="light"] .search{background:rgba(255,255,255,.6)}
+:root[data-doc-theme="light"] .launch{background:#163c58;color:white}
+:root[data-doc-theme="light"] .quick-link,:root[data-doc-theme="light"] .footer a{color:#275d83}
+:root[data-doc-theme="light"] .callout{background:rgba(111,176,222,.18);color:#315a79}
 @media(max-width:1000px){.layout{grid-template-columns:190px minmax(0,1fr);gap:32px}.topin{padding:0 28px}}
 @media(max-width:700px){
  .topin{padding:0 15px;grid-template-columns:auto 1fr;gap:10px}
