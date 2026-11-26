@@ -2379,6 +2379,18 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
  color:#fff;
  font-weight:700;
 }
+
+:root[data-theme="dark"] #t2tabs button.on{
+ border-color:var(--news-accent);
+ background:var(--news-accent);
+ color:#0d1824;
+}
+:root[data-theme="dark"] #t2tabs button.on::after{color:#0d1824}
+#t2 .news-item.is-new .news-item-title,
+#t2 .news-item.is-read .news-item-title{
+ color:var(--news-primary);
+ font-weight:600;
+}
 :root[data-theme="dark"] .taskbar-apps button[data-taskwindow="t2"].open{
  border-color:var(--accent);
  background:var(--accent);
