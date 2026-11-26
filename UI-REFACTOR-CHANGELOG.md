@@ -57,6 +57,16 @@
 - Added five utility tests and an inline-browser-script syntax test using Node's built-in test runner.
 - Added `npm test` and a GitHub Actions workflow for the tests and Node syntax checks. No runtime package dependency was added.
 
+## Reusable UI building blocks
+The existing app is a single-page vanilla-JavaScript implementation, so these refactors use shared markup templates, helpers and CSS rather than introducing a component framework:
+- **WindowFrame:** shared `.win` / `.tbar` chrome, active/inactive titlebars, close controls and dialog labelling.
+- **Toolbar / SegmentedControl:** consolidated Tracker and News toolbars, plus shared 5m/10m/30m/1h/24h and category tab styling.
+- **TokenRow:** compact, sortable asset/price/change/volume/liquidity row template.
+- **NewsItem:** source/time, deduplicated title, optional summary, tags and read state.
+- **Keycap:** reusable `keycapMarkup` helper for shortcut keycaps.
+- **Pill / Badge:** narrative, entity, category, preview and release badges.
+- **Taskbar:** connected wallet/member chip, app launch tabs, focused/open states, shortcut help and empty-workspace hint.
+
 ## Design tokens
 The CSS variables in `public/index.html` include:
 - Type: 12 / 14 / 16 / 20 / 28px.
