@@ -1486,6 +1486,21 @@ body.app .bbar .hks{display:none!important}
 #t4capturestatus.hk-status-visible{position:static!important;display:block!important;clip:auto!important;width:auto!important;height:auto!important;margin:0!important;padding:7px 0!important;overflow:visible!important;white-space:normal!important;color:var(--text-secondary);font:13px/1.45 Inter,sans-serif;border-top:1px solid var(--border)}
 .desktop-empty[hidden],body:not(.app) #t1,body:not(.app) #t2,body:not(.app) #t3,body:not(.app) #t4{display:none!important};body:not(.app) #desktop-empty{display:none!important}
 
+/* Keep the landing navigation, remove the solid white panel behind it. */
+html:not(.terminal-route) #nv .nbar{
+ background:transparent!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important
+}
+html:not(.terminal-route) #nv #mm{
+ background:transparent!important;
+ border-color:transparent!important;
+ box-shadow:none!important;
+ backdrop-filter:none!important;
+ -webkit-backdrop-filter:none!important
+}
 /* Route-level isolation: the public landing page never renders terminal workspace UI. */
 html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-route) #t3,html:not(.terminal-route) #t4,html:not(.terminal-route) #desktop-empty,html:not(.terminal-route) .desktop-empty,html:not(.terminal-route) .bbar,html:not(.terminal-route) .taskbar-apps,html:not(.terminal-route) #taskbar-help,html:not(.terminal-route) #account-chip{display:none!important}
 </style>
