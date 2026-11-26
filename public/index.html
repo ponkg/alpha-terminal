@@ -2916,6 +2916,7 @@ const cfg=window.ALPHA_SUPABASE_CONFIG||{};
 const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 const U={name:'',addr:'',role:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
 const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';const chip=document.querySelector('#account-chip');if(chip){chip.hidden=!U.addr&&!U.name;chip.textContent=U.addr?short(U.addr):(U.name?'Member':'');chip.dataset.address=U.addr||'';chip.title=U.addr?'Copy wallet address':'Signed-in member';}ub.hidden=!!U.addr;};
+showU();
 const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
 const boot=cb=>{
