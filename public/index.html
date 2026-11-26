@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>alpha — See the meta before it moves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#F7F7F5;--fg:#141414;--mut:#777;--card:#fff;--bd:#e6e6e2;--ac:#3f8fd0;--gr:#4fae4e;--dk:#111214;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0e0e10;--fg:#f1f1ee;--mut:#9a9a9a;--card:#17171a;--bd:#2a2a2e;--gr:#9be36a;color-scheme:dark}}
@@ -1154,6 +1154,302 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 #wm .wm-state{color:var(--ac);font-size:9px;text-transform:uppercase}
 #wm .wm-state.revoked{color:#d36b6b}
 @media(max-width:700px){#wm{width:96vw!important;height:84vh!important}#wm .wm-row{grid-template-columns:1fr 1fr;gap:7px}#wm .wm-row>div:first-child{grid-column:1/-1}#wm .wm-row input{grid-column:1/-1}#wm .wm-row button{width:100%}}
+</style><style id="alpha-readability-system">
+/* Readability-first Alpha UI system */
+:root,:root[data-theme="light"]{color-scheme:light;--text-primary:#142536;--text-secondary:#455a6d;--text-disabled:#53687c;--surface:#f3f7fb;--surface-raised:#fff;--border:#7c90a4;--accent:#1769aa;--positive:#146a3b;--negative:#a52824;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--radius-sm:4px;--radius-md:8px;--radius-lg:12px;--shadow-window:0 18px 44px rgba(4,23,40,.2),0 4px 12px rgba(4,23,40,.12)}
+:root[data-theme="dark"]{color-scheme:dark;--text-primary:#f1f6fb;--text-secondary:#b7c7d6;--text-disabled:#96a9ba;--surface:#0d1824;--surface-raised:#15283a;--border:#587086;--accent:#8cc7f4;--positive:#6ad6a2;--negative:#ff8b86;--bg:var(--surface);--fg:var(--text-primary);--mut:var(--text-secondary);--card:var(--surface-raised);--bd:var(--border);--ac:var(--accent);--gr:var(--positive);--shadow-window:0 24px 60px rgba(0,0,0,.48),0 4px 12px rgba(0,0,0,.3)}
+html{scroll-behavior:auto}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.55;color:var(--text-primary);-webkit-font-smoothing:antialiased}
+p,li,.wb p,.news-item-description,.hero-subhead{font-size:14px;line-height:1.55;color:var(--text-secondary)}
+.wb p,.wb details p{max-width:68ch;font-size:14px;line-height:1.55;color:var(--text-secondary)}
+h1,h2,h3,.btn,.links,.ws,.blk,.tracker-folder,.news-tag,.hk-row,.tracker-col-head{font-family:Inter,system-ui,sans-serif}
+button,input,select,textarea{font:inherit}
+:where(button,a,input,select,textarea,summary,[tabindex]:not([tabindex="-1"])):focus-visible{outline:2px solid var(--accent)!important;outline-offset:2px!important;box-shadow:0 0 0 2px var(--surface-raised)!important}
+:where(button,a,summary){min-height:32px}
+:where(button:disabled,[aria-disabled="true"]){cursor:not-allowed!important;color:var(--text-disabled)!important;opacity:1!important}
+a{color:var(--text-primary)}
+.mut,.muted,.wb p,.news-status{color:var(--text-secondary)}
+.up,.g1{color:var(--positive)!important}.dn,.g3{color:var(--negative)!important}
+.xh{display:none!important}
+nav{padding:8px 12px 0;z-index:99990}
+nav.s{background:transparent;border:0;backdrop-filter:none}
+.nbar{width:min(1320px,calc(100% - 32px));margin:0 auto;height:58px;padding:0 14px;border:1px solid rgba(95,119,142,.5);border-radius:10px;background:rgba(248,251,254,.96);backdrop-filter:blur(18px);box-shadow:0 8px 28px rgba(6,26,43,.14)}
+:root[data-theme="dark"] .nbar{background:rgba(12,27,42,.96);border-color:#526a7f}
+.blk.logo{color:var(--text-primary)!important;text-shadow:none!important}
+.ws{gap:6px!important;align-items:center}
+.ws a{display:inline-flex;align-items:center;gap:7px;padding:8px 10px;border-radius:6px;color:var(--text-secondary);font-size:14px;font-weight:500;white-space:nowrap}
+.ws a b{font:600 12px "JetBrains Mono",monospace;color:var(--text-disabled);letter-spacing:0}
+.ws a:hover,.ws a.active{background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary)}
+.ws a.active{box-shadow:inset 0 -2px 0 var(--accent)}
+#mm{background:var(--surface-raised);border:1px solid var(--border);border-radius:10px;margin:4px auto;max-width:1320px;box-shadow:var(--shadow-window)}
+#nv .rt .cta{border:1px solid var(--border);background:transparent;color:var(--text-primary);padding:9px 14px;border-radius:6px;font-size:14px}
+.hero{min-height:min(840px,100svh);padding:120px 0 76px;overflow:hidden;background:linear-gradient(135deg,#0c2e51 0%,#174f80 48%,#0b2948 100%)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,28,48,.34),rgba(8,28,48,.08) 56%,rgba(8,28,48,.22))}
+.hl{top:49%;left:max(28px,calc((100vw - 1240px)/2));right:auto;width:min(540px,46vw);transform:translateY(-50%);padding:22px 24px;text-align:left;pointer-events:auto;border:1px solid rgba(212,231,248,.34);border-radius:12px;background:rgba(8,27,46,.94);backdrop-filter:blur(18px);box-shadow:0 24px 64px rgba(0,0,0,.24)}
+.hero-copy{max-width:65ch}
+.preview-badge,.release-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-primary);font:600 12px/1.3 Inter,sans-serif;letter-spacing:0}
+.preview-badge{background:#e7f3fc;border-color:#8fb9d8;color:#163c5c}
+.hl h1{max-width:16ch;margin:15px 0 12px;color:#f7fbff;font-size:clamp(34px,4.5vw,54px);line-height:1.06;letter-spacing:-.045em;font-weight:700}
+.hl h1 em{font-style:normal;color:#a8d7fb}
+.hero-subhead{max-width:60ch;margin:0;color:#e1edf7;font-size:16px;line-height:1.55}
+.hl .ctas{justify-content:flex-start;gap:10px;margin:20px 0 10px}
+.hero-primary,.hero-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 17px;border-radius:6px;font:600 14px Inter,sans-serif}
+.hero-primary{background:#9fd1f3;color:#102c45;border:1px solid #9fd1f3}
+.hero-primary:hover{background:#d4edff;color:#102c45}
+.hero-secondary{background:transparent;color:#f2f8fe;border:1px solid #d2e4f2}
+.hero-secondary:hover{background:rgba(255,255,255,.12)}
+.hl .tr{font-size:12px;color:#e1edf7}
+.site-disclaimer{margin-top:13px;padding-top:10px;border-top:1px solid rgba(225,237,247,.32);max-width:65ch;font-size:12px;color:#d4e5f2}
+.win{border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.97);backdrop-filter:blur(22px);box-shadow:var(--shadow-window)!important;max-height:calc(100svh - 120px);overflow:hidden}
+:root[data-theme="dark"] .win{background:rgba(17,35,52,.98)}
+.win .tbar{display:flex;min-height:42px;padding:0 13px;background:#101820;color:#f4f8fc;border:0;border-bottom:1px solid #405365;font:600 14px/1.3 Inter,sans-serif;letter-spacing:0}
+.win:not(.foc) .tbar{background:#253747;color:#e5edf3}
+.win.foc{box-shadow:0 24px 64px rgba(2,15,28,.34),0 0 0 1px var(--accent)!important}
+.win .x{min-width:32px;min-height:32px;border-radius:4px;color:inherit;font-size:20px}
+.win .x:hover{background:rgba(255,255,255,.13)}
+.wb{padding:20px 22px;line-height:1.55}
+.win h2,.wb h2{font-size:20px;line-height:1.25;letter-spacing:-.025em;font-weight:650;color:var(--text-primary)}
+.wb p{max-width:68ch}
+.wb .it{padding:12px 0;border-color:var(--border)}
+.wb .it b{font-size:14px;color:var(--text-primary)}
+.wb .it span{font-size:14px;line-height:1.5;color:var(--text-secondary)}
+.wb p.k{font:600 12px/1.4 Inter,sans-serif;letter-spacing:.04em;color:var(--text-secondary)}
+.release-badge{margin:10px 0 4px;background:var(--surface-raised);border-color:var(--border)}
+.how-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;padding:0;margin:0 0 16px;counter-reset:how}
+.how-steps li{counter-increment:how;display:flex;flex-direction:column;gap:5px;padding:12px;border:1px solid var(--border);border-radius:6px;background:var(--surface)}
+.how-steps li::before{content:counter(how,decimal-leading-zero);font:600 12px "JetBrains Mono",monospace;color:var(--accent)}
+.how-steps b{font-size:14px;color:var(--text-primary)}
+.how-steps span{font-size:12px;line-height:1.45;color:var(--text-secondary)}
+.wb details{border-bottom:1px solid var(--border);padding:12px 0}
+.wb summary{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;font-weight:600;color:var(--text-primary);cursor:pointer;list-style:none}
+.wb summary::-webkit-details-marker{display:none}
+.wb summary::after{content:"+";font:500 20px/1 Inter,sans-serif;color:var(--accent);transition:transform .15s}
+.wb details[open] summary::after{content:"−";transform:rotate(180deg)}
+.wb details p{margin:8px 0 0;font-size:14px}
+.bbar{align-items:center;gap:8px;padding:9px 14px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(246,250,253,.97);border-top:1px solid var(--border);backdrop-filter:blur(16px);box-shadow:0 -6px 20px rgba(5,25,42,.08)}
+:root[data-theme="dark"] .bbar{background:rgba(11,25,38,.98)}
+.bbar .blk{min-height:36px;height:auto;padding:7px 11px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-primary);font:500 12px/1.25 Inter,sans-serif;letter-spacing:0;text-transform:none}
+.bbar .blk:hover{background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised))}
+.bbar .blk:active{transform:translateY(1px)}
+.bbar .gr{flex:1}
+#ub{background:#1769aa;color:#fff;border-color:#1769aa;font-weight:650}
+:root[data-theme="dark"] #ub{background:#8cc7f4;color:#09243a;border-color:#8cc7f4}
+#local-clock{font:600 12px "JetBrains Mono",monospace!important;font-variant-numeric:tabular-nums}
+#xl{font-weight:600}
+.tracker-terminal{display:grid;grid-template-columns:194px minmax(0,1fr);min-height:500px;height:min(70vh,700px);max-height:calc(100svh - 170px);gap:0;background:var(--surface-raised)}
+#t1.win.wide{width:min(1120px,96vw)}
+#t1 .tracker-rail{display:flex;flex-direction:column;min-width:0;max-height:100%;overflow:hidden;padding:12px 10px;background:var(--surface);border-right:1px solid var(--border)}
+#t1 .tracker-panel-title{display:flex;align-items:center;gap:6px;padding:0 2px 9px;border-bottom:1px solid var(--border);font:600 13px/1.4 Inter,sans-serif;letter-spacing:0;color:var(--text-primary)}
+#t1 .tracker-panel-title span{font:inherit;letter-spacing:0;color:var(--text-primary)}
+#t1 .tracker-panel-title b{color:var(--text-primary)}
+#t1 .tracker-panel-title .tracker-utility{margin-left:auto}
+#t1 .tracker-index-label,#t1 .tracker-folders-label{padding:11px 2px 5px;font:600 12px/1.3 Inter,sans-serif;letter-spacing:0;color:var(--text-secondary)}
+#t1 #t1groups{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;padding:3px 1px 9px}
+#t1 .tracker-folder-section{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+#t1 .tracker-folder-section-head{padding:7px 4px 4px;font:600 12px/1.3 Inter,sans-serif;letter-spacing:0;color:var(--text-secondary)}
+#t1 .tracker-folder-section-head b{display:none}
+#t1 .tracker-folder{display:flex;align-items:center;gap:7px;width:100%;min-height:34px;padding:6px 8px;border:0;border-left:3px solid transparent;border-radius:4px;background:transparent;color:var(--text-secondary);font:500 13px/1.35 Inter,sans-serif;text-align:left}
+#t1 .tracker-folder:hover{background:color-mix(in srgb,var(--accent) 8%,var(--surface-raised));color:var(--text-primary)}
+#t1 .tracker-folder.on{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary);font-weight:700}
+#t1 .tracker-folder-mark{width:10px;flex:none;color:var(--accent)}
+#t1 .tracker-folder-count{margin-left:auto;font:12px "JetBrains Mono",monospace;font-variant-numeric:tabular-nums;color:var(--text-secondary)}
+#t1 .tracker-entity-section{max-height:230px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#t1 .tracker-entity-section::after{content:"";position:sticky;bottom:0;display:block;height:14px;background:linear-gradient(transparent,var(--surface));pointer-events:none}
+#t1 .other-fold{padding:5px 7px;border-top:1px solid var(--border)}
+#t1 .other-fold summary{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;cursor:pointer;color:var(--text-secondary)}
+#t1 .other-fold summary span{font:12px "JetBrains Mono",monospace}
+#t1 .other-fold .tracker-folder{margin-top:5px}
+#t1 .tracker-rail-foot{display:none}
+#t1 .tracker-main{display:flex;flex-direction:column;min-width:0;min-height:0;padding:12px 14px 10px}
+#t1 .tracker-commandbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:0 0 10px;border-bottom:1px solid var(--border)}
+#t1 .tracker-path,#t1 .tracker-output-head{display:none}
+#t1 .tracker-search{display:flex;align-items:center;gap:9px;flex:1;min-width:220px;max-width:470px;height:38px;padding:0 10px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-secondary)}
+#t1 .tracker-search span{font:500 18px Inter,sans-serif;color:var(--text-secondary)}
+#t1 .tracker-search input{min-width:0;width:100%;border:0;outline:0;background:transparent;color:var(--text-primary);font:14px Inter,sans-serif}
+#t1 .tracker-search kbd,.news-search kbd{flex:none;padding:1px 6px;border:1px solid var(--border);border-radius:3px;background:var(--surface);font:12px "JetBrains Mono",monospace;color:var(--text-secondary)}
+#t1 .tracker-controls{display:flex;align-items:center;gap:10px}
+#t1 .tracker-timeframe-row{display:flex;align-items:center;gap:8px;margin:0}
+#t1 .tracker-timeframe-row>span{font:500 12px Inter,sans-serif;color:var(--text-secondary)}
+#t1tabs{display:flex;gap:3px;margin:0}
+#t1tabs button{min-width:42px;min-height:32px;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-secondary);font:600 12px "JetBrains Mono",monospace}
+#t1tabs button.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary)}
+#t1 .tracker-count{font:600 12px "JetBrains Mono",monospace;color:var(--text-primary);white-space:nowrap}
+#t1 .tracker-info{width:30px;min-height:30px;border:1px solid var(--border);border-radius:50%;background:var(--surface-raised);color:var(--text-secondary);font-weight:700}
+#t1 .tracker-info:hover{border-color:var(--accent);color:var(--accent)}
+#t1 .tracker-col-head{display:grid;grid-template-columns:minmax(260px,1fr) 108px 110px 116px 110px;gap:12px;align-items:center;padding:10px 7px 8px;border-bottom:1px solid var(--border);color:var(--text-secondary);font:600 12px/1.3 Inter,sans-serif}
+#t1 .tracker-col-head span:first-child{text-align:left}
+#t1 .tracker-col-head button{min-width:0;min-height:30px;padding:4px 0;border:0;background:transparent;color:var(--text-secondary);font:600 12px Inter,sans-serif;text-align:right}
+#t1 .tracker-col-head button[aria-sort="ascending"]::after{content:" ▲";color:var(--accent)}
+#t1 .tracker-col-head button[aria-sort="descending"]::after{content:" ▼";color:var(--accent)}
+#t1 #t1list{flex:1;min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#t1 .narrative-token{display:grid;grid-template-columns:minmax(260px,1fr) 108px 110px 116px 110px;gap:12px;align-items:center;min-height:62px;padding:8px 7px;border-bottom:1px solid color-mix(in srgb,var(--border) 62%,transparent);cursor:pointer}
+#t1 .narrative-token:hover{background:color-mix(in srgb,var(--accent) 7%,var(--surface-raised))}
+#t1 .narrative-token:focus,#t1 .narrative-token:focus-visible{outline:none!important;background:color-mix(in srgb,var(--accent) 13%,var(--surface-raised));box-shadow:inset 3px 0 0 var(--accent)!important}
+#t1 .token-asset{display:flex;align-items:center;gap:10px;min-width:0}
+#t1 .pump-logo{width:32px;height:32px;flex:none;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+#t1 .pump-logo img{width:100%;height:100%;object-fit:cover}
+#t1 .pump-token{display:flex;flex-direction:column;gap:3px;min-width:0}
+#t1 .narrative-token-heading{display:flex;align-items:baseline;gap:9px;min-width:0;max-width:100%}
+#t1 .narrative-token-heading b{font-size:15px;font-weight:700;white-space:nowrap;color:var(--text-primary)}
+#t1 .narrative-token-heading small{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;color:var(--text-secondary)}
+#t1 .token-narrative-wrap{min-height:0}
+#t1 .token-narrative{display:inline-flex;max-width:100%;padding:2px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;line-height:1.3;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#t1 .token-narrative.entity{border-color:var(--accent);color:var(--text-primary);background:color-mix(in srgb,var(--accent) 8%,var(--surface-raised))}
+#t1 .narrative-price{text-align:right;font:600 13px "JetBrains Mono",monospace;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+#t1 .narrative-price small{display:block;margin-top:3px;font:12px Inter,sans-serif;color:var(--text-secondary)}
+#t1 .narrative-change{text-align:right;font:600 13px "JetBrains Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+#t1 .change-value{display:inline-flex;align-items:center;gap:4px;padding:3px 5px;border-radius:4px}
+#t1 .change-value i{font:normal 11px Inter,sans-serif}
+#t1 .change-value.outlier{border:1px solid color-mix(in srgb,var(--negative) 38%,var(--positive));background:color-mix(in srgb,var(--negative) 8%,var(--surface-raised))}
+#t1 .narrative-volume,#t1 .narrative-liq{text-align:right;font:600 13px "JetBrains Mono",monospace;font-variant-numeric:tabular-nums;color:var(--text-primary)}
+#t1 .narrative-empty{padding:20px 8px;font-size:14px;color:var(--text-secondary)}
+#t1 .tracker-main-foot{padding-top:7px;border-top:1px solid var(--border)}
+#t1 .tracker-main-foot #t1n{font:12px/1.4 Inter,sans-serif;color:var(--text-secondary)}
+#t2.win.wide{width:min(900px,96vw)}
+#t2 .news-terminal{display:flex;min-height:0;padding:0;background:var(--surface-raised)}
+#t2 .news-shell{display:block;max-width:780px;width:100%;min-height:0;margin:0 auto;padding:14px 20px;overflow:hidden}
+#t2 .news-rail{display:none!important}
+#t2 .news-main{display:flex;flex-direction:column;min-width:0;min-height:0;height:min(72vh,720px)}
+#t2 .news-commandbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--border)}
+#t2 .news-path{display:none}
+#t2 .news-search{display:flex;align-items:center;gap:8px;flex:1 1 230px;min-width:180px;max-width:none;height:38px;padding:0 10px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-secondary)}
+#t2 .news-search span{font-size:18px}
+#t2 .news-search input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--text-primary);font:14px Inter,sans-serif}
+#t2tabs.news-tabs{display:flex;flex:1 1 100%;gap:5px;max-width:100%;margin:0;overflow-x:auto;flex-wrap:nowrap}
+#t2tabs button{min-height:32px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-secondary);font:500 12px Inter,sans-serif;white-space:nowrap}
+#t2tabs button.on{background:color-mix(in srgb,var(--accent) 13%,var(--surface-raised));border-color:var(--accent);color:var(--text-primary);font-weight:700}
+#t2tabs button::before{display:none}
+#t2tabs button::after{font:12px "JetBrains Mono",monospace;color:var(--text-secondary)}
+#t2tabs .news-refresh{margin-left:auto;min-width:82px;padding:5px 10px;border:1px solid var(--accent);background:var(--surface-raised);color:var(--accent);font:600 12px Inter,sans-serif}
+#t2tabs .news-refresh:disabled{opacity:1;background:var(--surface);color:var(--text-disabled)}
+#t2 .news-output-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 7px;color:var(--text-primary);font:600 14px Inter,sans-serif;letter-spacing:0}
+#t2 .news-counts{display:flex;align-items:center;gap:8px}
+#t2count{font:12px "JetBrains Mono",monospace;color:var(--text-secondary)}
+#t2new.new-pill{padding:3px 7px;border:1px solid var(--accent);border-radius:4px;color:var(--text-primary);background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));font:600 12px Inter,sans-serif}
+#t2list{flex:1;min-height:0;overflow:auto;padding:0 3px 8px 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#t2 .news-item{display:flex;flex-direction:column;gap:6px;padding:13px 7px 14px;border-bottom:1px solid color-mix(in srgb,var(--border) 62%,transparent);font-family:Inter,sans-serif}
+#t2 .news-item.is-new .news-item-title{font-weight:700}
+#t2 .news-item.is-read .news-item-title{color:var(--text-secondary);font-weight:500}
+#t2 .news-meta{display:flex;align-items:center;gap:6px;font:12px/1.4 Inter,sans-serif;color:var(--text-secondary)}
+#t2 .news-item-source{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#t2 .news-item-time{font:12px "JetBrains Mono",monospace;color:var(--text-secondary)}
+#t2 .news-item-line{display:block}
+#t2 .news-item-title{display:block;color:var(--text-primary);font:600 16px/1.4 Inter,sans-serif;max-width:70ch;text-decoration:none}
+#t2 .news-item-title:hover{text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:3px}
+#t2 .news-item-description{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;max-width:70ch;margin:0;color:var(--text-secondary);font:14px/1.5 Inter,sans-serif}
+#t2 .news-item-tags{display:flex;flex-wrap:wrap;gap:5px}
+#t2 .news-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 7px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-secondary);font:12px/1.3 Inter,sans-serif}
+#t2 .news-tag.entity{border-style:dashed;border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--surface-raised));color:var(--text-primary)}
+#t2 .news-status{padding:8px 0;font:12px/1.4 Inter,sans-serif;color:var(--text-secondary)}
+#t2 .news-empty{padding:20px 7px;color:var(--text-secondary);font:14px/1.5 Inter,sans-serif}
+#t4.win.wide{width:min(780px,96vw)}
+#t4 .hk-terminal{display:grid;grid-template-columns:150px minmax(0,1fr);min-height:0;max-height:min(68vh,650px);padding:0;overflow:hidden;background:var(--surface-raised)}
+#t4 .hk-rail{padding:13px 10px;background:var(--surface);border-right:1px solid var(--border)}
+#t4 .hk-panel-title,#t4 .hk-index-label{font:600 12px/1.4 Inter,sans-serif;letter-spacing:0;color:var(--text-secondary)}
+#t4 .hk-panel-title{padding-bottom:10px;border-bottom:1px solid var(--border)}
+#t4 .hk-panel-title b{color:var(--text-primary)}
+#t4 #t4groups{display:flex;flex-direction:column;gap:4px}
+#t4 #t4groups button{display:flex;align-items:center;min-height:34px;width:100%;padding:6px 8px;border:0;border-left:3px solid transparent;border-radius:4px;background:transparent;color:var(--text-secondary);font:500 13px Inter,sans-serif;text-align:left}
+#t4 #t4groups button.on{border-left-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary);font-weight:700}
+#t4 .hk-rail-foot{display:none}
+#t4 .hk-main{display:flex;flex-direction:column;min-width:0;min-height:0;padding:13px 16px}
+#t4 .hk-commandbar{display:flex;align-items:center;padding:0 0 10px;border-bottom:1px solid var(--border)}
+#t4 .hk-path{display:none}
+#t4 .hk-search{width:100%;height:38px}
+#t4 .hk-search span{display:none}
+#t4 .hk-search input{width:100%;height:38px;padding:0 10px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-primary);font:14px Inter,sans-serif}
+#t4 .hk-output-head{display:flex;align-items:center;justify-content:space-between;padding:10px 0 7px;font:600 14px Inter,sans-serif;color:var(--text-primary);letter-spacing:0}
+#t4 .hk-output-head #t4reset{min-height:32px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-secondary);font:600 12px Inter,sans-serif}
+#t4 .hk-group-hint,#t4capturestatus{display:none!important}
+#t4 #t4list{flex:1;min-height:0;overflow:auto}
+#t4 .hk-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:8px 5px;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent)}
+#t4 .hk-row:focus-visible{background:color-mix(in srgb,var(--accent) 8%,var(--surface-raised))}
+#t4 .hk-copy b{font:600 14px Inter,sans-serif;color:var(--text-primary)}
+#t4 .hk-bind{display:flex;align-items:center;gap:9px}
+#t4 .hk-record{display:flex;align-items:center;gap:4px;min-height:34px;padding:4px 7px;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-primary)}
+#t4 .hk-record.recording{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--surface));color:var(--text-primary)}
+.keycap{display:inline-flex;align-items:center;justify-content:center;min-width:25px;height:25px;padding:2px 6px;border:1px solid var(--border);border-bottom-width:2px;border-radius:4px;background:var(--surface-raised);color:var(--text-primary);font:600 12px/1 "JetBrains Mono",monospace}
+#t4 .hk-fixed{display:inline-flex;align-items:center;gap:7px}
+#t4 .hk-fixed>span:last-child{font:12px Inter,sans-serif;color:var(--text-secondary)}
+#t4 .hk-footer{padding:10px 0 0;border-top:1px solid var(--border);font:12px Inter,sans-serif;color:var(--text-secondary)}
+#t3 .wb{max-height:70vh;overflow:auto}
+#t3 form{display:flex;gap:8px;align-items:center}
+#t3 form .in{flex:1;margin:0}
+#t3 form .btn{width:auto!important;min-width:100px;min-height:40px}
+#t3 input{font:14px Inter,sans-serif}
+#t3 #t3r{max-width:70ch}
+#t3 .fd,#t3 .lg,#t3 .trd{font-family:Inter,sans-serif;font-size:14px;line-height:1.5}
+#t3 .fd i{font:500 12px Inter,sans-serif;letter-spacing:0;color:var(--text-secondary)}
+.desktop-empty{position:fixed;left:50%;top:43%;transform:translate(-50%,-50%);z-index:1;max-width:400px;padding:20px 24px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.96);color:var(--text-secondary);text-align:center;box-shadow:var(--shadow-window)}
+:root[data-theme="dark"] .desktop-empty{background:rgba(17,35,52,.98)}
+.desktop-empty b{display:block;margin-bottom:6px;font-size:16px;color:var(--text-primary)}
+.desktop-empty span{font-size:14px}
+.taskbar-apps{display:flex;align-items:center;gap:5px}
+.taskbar-apps button{position:relative;min-height:34px;padding:6px 10px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-secondary);font:500 12px Inter,sans-serif}
+.taskbar-apps button:hover{background:color-mix(in srgb,var(--accent) 10%,var(--surface-raised));color:var(--text-primary)}
+.taskbar-apps button.open::after{content:"";position:absolute;left:9px;right:9px;bottom:2px;height:2px;background:var(--border)}
+.taskbar-apps button.focused{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface-raised));color:var(--text-primary);font-weight:700}
+#account-chip{min-width:0;max-width:125px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#taskbar-help{width:34px;padding:4px!important;font-weight:700}
+.hint{max-width:min(90vw,620px);padding:10px 12px;border:1px solid var(--border);border-radius:6px;background:var(--surface-raised);color:var(--text-secondary);font:13px/1.5 Inter,sans-serif;opacity:1!important}
+@media(max-width:767px){
+ .hero{min-height:760px;padding-top:104px}
+ .hl{left:14px;right:14px;top:31%;width:auto;transform:none;padding:18px}
+ .hl h1{font-size:36px}
+ .hero-subhead{font-size:14px}
+ .how-steps{grid-template-columns:1fr}
+ .nbar{width:calc(100% - 12px);padding:0 9px}
+ .ws{display:none!important}
+ .bbar{gap:5px;padding-left:6px;padding-right:6px;overflow-x:auto}
+ .bbar .tl,.bbar .hks,#xl{display:none!important}
+ .taskbar-apps{flex:1;justify-content:space-between;gap:3px}
+ .taskbar-apps button{flex:1;padding:5px 4px;font-size:11px}
+ .win.tool:not([hidden]){position:fixed!important;inset:0 0 calc(58px + env(safe-area-inset-bottom,0px)) 0!important;width:100vw!important;height:calc(100svh - 58px - env(safe-area-inset-bottom,0px))!important;max-height:none!important;margin:0!important;border-radius:0!important;z-index:100001!important}
+ body.app .win.tool:not(.foc){display:none!important}
+ body.app .win.tool.foc:not([hidden]){display:flex!important}
+ #t1 .tracker-terminal{grid-template-columns:1fr;height:100%;min-height:0;max-height:none}
+ #t1 .tracker-rail{max-height:150px;border-right:0;border-bottom:1px solid var(--border)}
+ #t1 #t1groups{display:flex;flex-direction:row;gap:5px;overflow:auto;max-height:82px}
+ #t1 .tracker-folder-section{flex-direction:row;gap:5px;align-items:center;flex-wrap:nowrap}
+ #t1 .tracker-folder-section-head{display:none}
+ #t1 .tracker-folder{flex:none;width:auto;min-height:34px}
+ #t1 .tracker-entity-section{max-height:none;overflow:visible}
+ #t1 .tracker-main{padding:9px 9px 7px}
+ #t1 .tracker-commandbar{align-items:stretch;gap:8px}
+ #t1 .tracker-search{min-width:100%;max-width:none}
+ #t1 .tracker-controls{justify-content:space-between;flex-wrap:wrap}
+ #t1 .tracker-col-head{display:none}
+ #t1 .narrative-token{grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;min-height:68px;padding:9px 5px}
+ #t1 .token-asset{grid-column:1;grid-row:1}
+ #t1 .narrative-change{grid-column:2;grid-row:1}
+ #t1 .narrative-price{display:none}
+ #t1 .narrative-volume{grid-column:1;grid-row:2;text-align:left;padding-left:42px}
+ #t1 .narrative-liq{grid-column:2;grid-row:2}
+ #t1 .narrative-volume::before{content:"Vol ";font:12px Inter,sans-serif;color:var(--text-secondary)}
+ #t1 .narrative-liq::before{content:"Liq ";font:12px Inter,sans-serif;color:var(--text-secondary)}
+ #t2 .news-shell{padding:9px 10px;height:100%}
+ #t2 .news-main{height:100%}
+ #t2tabs.news-tabs{overflow-x:auto;max-height:42px}
+ #t2 .news-item-title{font-size:15px}
+ #t4 .hk-terminal{grid-template-columns:112px minmax(0,1fr);max-height:none;height:100%}
+ #t4 .hk-rail{padding:9px 5px}
+ #t4 .hk-main{padding:9px}
+ #t4 .hk-row{align-items:flex-start}
+ #t4 .hk-bind{flex-wrap:wrap;justify-content:flex-end}
+ #t3 form{align-items:stretch;flex-direction:column}
+ #t3 form .btn{width:100%!important}
+}
+@media(hover:none) and (pointer:coarse){
+ :where(button,a,summary){min-height:44px}
+ .taskbar-apps button{min-height:44px}
+ #t1tabs button,#t2tabs button{min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+ .sky .cloud{animation:none!important}
+ .hero-film{display:none!important}
+ .win.drag{transition:none!important}
+}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a><a href="/docs/"><b>5</b>Field Manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a><a class="blk" href="/docs/">5 Field Manual ↗</a></div></nav>
@@ -1181,7 +1477,7 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 </div>
 <div class="glow"></div>
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
-<div class="hl"><div class="ctas"><a href="#" class="blk cta" data-open="reg">Request early access</a></div></div>
+<div class="hl"><div class="hero-copy"><span class="preview-badge">Preview · private beta</span><h1>See what the market is paying attention to <em>before everyone else.</em></h1><p class="hero-subhead">alpha is a Solana narrative-intelligence terminal that connects emerging stories with the tokens and market activity around them.</p><div class="ctas"><a href="#" class="blk cta hero-primary" data-open="reg">Request early access</a><a href="#" class="blk cta hero-secondary" data-open="auth">Member login</a></div><p class="tr">Product preview · illustrative data, not live.</p><p class="site-disclaimer">Independent research only. No profit guarantees. Verify every token and do your own research.</p></div></div>
 <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
 <div class="win card" id="wm" hidden><div class="tbar" data-drag><span>ALPHA / ACCESS CONTROL</span><span>WAITLIST MANAGER</span><button class="x" aria-label="Close">×</button></div><div class="wb wm-body"><div class="wm-head"><div><h2>Waitlist</h2><p>Approve a person by entering their email and sending a one-time invitation.</p></div><button class="btn o" id="wm-refresh" type="button">Refresh</button></div><div class="wm-meta" id="wm-meta">LOADING WAITLIST…</div><div class="wm-list" id="wm-list"><div class="mut">Loading entries…</div></div><div class="wm-foot">INVITES REQUIRE SUPABASE AUTH EMAIL DELIVERY / SMTP CONFIGURATION.</div></div></div>\n<div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>1 TRENDING</span><span id="t1S">COIN TRACKER</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
@@ -1192,19 +1488,28 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
  </aside>
  <section class="tracker-main">
   <div class="tracker-commandbar">
-   <div class="tracker-path"><span class="tracker-user">alpha@terminal</span><span>:</span><span>/markets</span><span>$</span><b id="t1active">TRENDING</b></div>
-   <label class="tracker-search"><span>FIND</span><input id="t1q" placeholder="search ticker / name / mint" autocomplete="off" spellcheck="false" aria-label="Search tokens in selected narrative"></label>
+   <label class="tracker-search"><span aria-hidden="true">⌕</span><input id="t1q" placeholder="Search ticker or name" autocomplete="off" spellcheck="false" aria-label="Search ticker or name"><kbd>/</kbd></label>
+   <div class="tracker-controls">
+    <div class="tracker-timeframe-row"><span>Timeframe</span><div class="tabs tracker-timeframes" id="t1tabs" aria-label="Market timeframe"></div></div>
+    <span id="t1count" class="tracker-count" aria-live="polite">0 tokens</span>
+    <button type="button" class="tracker-info" title="Network: Solana · Sources: Jupiter and GeckoTerminal" aria-label="Network: Solana. Data sources: Jupiter and GeckoTerminal">i</button>
+   </div>
   </div>
-  <div class="tracker-output-head"><span id="t1heading">ALL TOKENS / MARKET DIRECTORY</span><span id="t1count">0 TOKENS</span></div>
-  <div class="tracker-timeframe-row"><span>TIMEFRAME</span><div class="tabs tracker-timeframes" id="t1tabs" aria-label="Market timeframe"></div></div>
-  <div class="tracker-col-head"><span>ASSET</span><span>VOLUME 24H</span><span>LIQUIDITY</span><span>CHANGE</span></div>
+  <span id="t1active" class="sr-only">Trending</span><span id="t1heading" class="sr-only">All tokens</span>
+  <div class="tracker-col-head" role="row" aria-label="Sort tokens">
+   <span role="columnheader">Asset</span>
+   <button type="button" data-sort="price" role="columnheader" aria-sort="none">Price</button>
+   <button type="button" data-sort="change" role="columnheader" aria-sort="none" id="t1headchange">Change 5m</button>
+   <button type="button" data-sort="volume" role="columnheader" aria-sort="descending" id="t1headvolume">Vol 5m</button>
+   <button type="button" data-sort="liquidity" role="columnheader" aria-sort="none">Liquidity</button>
+  </div>
   <div id="t1list"></div>
   <div class="tracker-main-foot"><p class="k" id="t1n">LOADING JUPITER TRENDING…</p></div>
  </section>
 </div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
-<div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><span>RSS / TERMINAL STREAM</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><aside class="news-rail"><div class="news-panel-title"><span>01 / FEED INDEX</span><b>ALPHA</b></div><div class="news-index-label">CATEGORIES</div><div class="tabs" id="t2tabs" aria-label="News categories"></div><div class="news-rail-foot"><span>PROTOCOL <b>RSS / HTTP</b></span><span>MODE <b>CATEGORIZED</b></span><span>STREAM <b>LIVE / CACHED</b></span></div></aside><section class="news-main"><div class="news-commandbar"><div class="news-path"><span class="path-user">alpha@terminal</span><span>:</span><span>/news</span><span>$</span><b id="t2active">ALL</b></div><label class="news-search"><span>FIND</span><input id="t2q" placeholder="search headlines / topics / people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label></div><div class="news-output-head"><span>RECENT DISPATCHES</span><b id="t2count">0 STORIES</b></div><div id="t2list"></div><div class="news-status" id="t2n">CONNECTING TO RSS SOURCES…</div></section></div></div></div>
+<div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><section class="news-main"><div class="news-commandbar"><label class="news-search"><span aria-hidden="true">⌕</span><input id="t2q" placeholder="Search headlines, topics or people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label><div class="tabs news-tabs" id="t2tabs" aria-label="News categories"></div><span id="t2active" class="sr-only">All</span></div><div class="news-output-head"><span>News</span><div class="news-counts"><b id="t2count">0 stories</b><span id="t2new" class="new-pill" hidden>0 new</span></div></div><div id="t2list"></div><div class="news-status" id="t2n" role="status" title="RSS source details">● Live · awaiting first update</div></section></div></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
-<div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEY CONFIG</span><span>LOCAL KEYMAP / v1.0</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav><div class="hk-rail-foot"><span>PROFILE <b>LOCAL</b></span><span>MODE <b>EDITABLE</b></span><span>STATUS <b>ACTIVE</b></span></div></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="search action / shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" aria-live="polite">READY · SELECT A BINDING AND PRESS ENTER TO EDIT</div><div class="hk-footer">[↑↓] SELECT &nbsp; [←→] SWITCH PANE &nbsp; [ENTER] EDIT / ACTIVATE &nbsp; [ESC] BACK</div></section></div></div>
+<div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>4 HOTKEY CONFIG</span><span>LOCAL KEYMAP / v1.0</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="Search action or shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" class="sr-only" aria-live="polite">Select a binding to edit.</div><div class="hk-footer">↑↓ Select · Enter Edit · Esc Back</div></section></div></div>
 
 <div class="hint" id="hint" hidden>Alt+J/K/L/; focus panes · arrows select within window · Alt+4 keymap</div>
 <div class="win card" id="reg" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>WAITLIST</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div id="fv"><h3>Get ahead of the next meta.</h3><p>alpha is launching in private beta. Join the waitlist and get priority access as we open the platform to our first users.</p>
@@ -1218,7 +1523,7 @@ body.app #t1.win.wide,body.app #t2.win.wide,body.app #t3.win.wide{width:min(700p
 <div class="row"><span class="mut">X handle</span><b id="sh"></b></div><div class="row"><span class="mut">Successful referrals</span><b id="sr">0</b></div><div class="row"><span class="mut">Status</span><b id="ss">On the waitlist</b></div>
 <div class="lk"><input id="sl" readonly aria-label="Your invite link"></div>
 <div class="bt"><button class="btn" id="cb">Copy invite link</button><button class="btn o" id="xb">Share on X</button><button class="btn o" id="nb" hidden>Share…</button></div>
-<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div><p class="k" style="margin-top:12px">THE ALPHA VISION</p><div class="it"><b></b><span>Monitor market-wide narrative activity, identify clusters of related tokens, observe shifts in attention and track narratives through their lifecycle.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div><p class="k" style="margin-top:12px">PRODUCT PREVIEW — ILLUSTRATIVE DATA, NOT LIVE</p></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><p class="k" style="margin-top:12px">PRODUCT VISION — NOT YET RELEASED</p></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details><details><summary>Does alpha guarantee profitable trades?</summary><p>No. alpha provides market information and research tools. It does not guarantee trading outcomes.</p></details><details><summary>Not financial advice (NFA)</summary><p>Nothing on alpha is financial advice. Memecoins are volatile and can go to zero.</p></details><details><summary>Do your own research (DYOR)</summary><p>Verify every token, contract and claim yourself before acting.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><button class="blk appo" id="thm">◐ Light</button><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X / Twitter</a><time class="blk appo" id="local-clock" aria-label="Your local time" title="Your local time">--:--</time></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
+<div class="demo">Handles are user-submitted and are not verified against X.</div></div><p class="tr">Built for Solana traders, researchers and narrative hunters.</p></div></div><div class="win card" id="w-ov" hidden><div class="tbar" data-drag><span>OVERVIEW</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Know what the market is paying attention to before everyone else.</h2><p>Markets move in narratives. alpha tracks emerging Solana metas, identifies accelerating attention, and helps you understand where the next wave of opportunity might be forming.</p><p class="k">TRADITIONAL TOKEN DISCOVERY</p><div class="it"><b></b><span>Search individual tokens, react to large price moves, spot themes by hand and often find narratives once they are crowded.</span></div></div></div><div class="win card" id="w-how" hidden><div class="tbar" data-drag><span>HOW IT WORKS</span><button class="x" aria-label="Close">×</button></div><div class="wb dm"><ol class="how-steps"><li><b>Detect emerging narratives</b><span>Find stories and cultural moments gaining attention.</span></li><li><b>Cluster related tokens</b><span>Connect assets and tickers that share the same theme.</span></li><li><b>Track the meta lifecycle</b><span>Watch attention move from emerging to crowded and cooling.</span></li></ol><span class="release-badge">Product preview · illustrative data, not live</span><div class="tabs" id="tabs"></div><div class="apb" id="apb"><i></i></div><div id="dlist"></div></div></div><div class="win card" id="w-vis" hidden><div class="tbar" data-drag><span>THE VISION</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>More than another trending token list.</h2><p>Most tools show you what is already pumping. alpha is being built to help you understand why the market is moving — and where attention is going next.</p><div class="it"><b>Emerging Narratives</b><span>Discover themes gaining traction before they become mainstream.</span></div><div class="it"><b>Momentum Intelligence</b><span>Understand which metas are accelerating, stabilizing or losing momentum.</span></div><div class="it"><b>Token Clusters</b><span>See the tokens, liquidity and market activity connected to each narrative.</span></div><div class="it"><b>Meta Lifecycle</b><span>Emerging → Accelerating → Crowded → Cooling. Track a narrative from first appearance to eventual decline.</span></div><span class="release-badge">Product vision · not yet released</span></div></div><div class="win card" id="w-faq" hidden><div class="tbar" data-drag><span>FAQ</span><button class="x" aria-label="Close">×</button></div><div class="wb"><details><summary>What is alpha?</summary><p>alpha is an upcoming Solana narrative intelligence platform designed to help traders discover emerging memecoin metas and monitor shifts in market attention.</p></details><details><summary>Is alpha available yet?</summary><p>Not yet. alpha is preparing for its first private beta. Join the waitlist to receive early-access opportunities.</p></details><details><summary>Do I need to connect my wallet?</summary><p>No. Joining the waitlist only requires your X handle.</p></details><details><summary>How does the referral system work?</summary><p>After joining, you receive a unique invitation link. Each valid referral improves your priority in the early-access queue.</p></details><details><summary>Is alpha a trading bot?</summary><p>No. alpha is designed as a market research and narrative intelligence platform, not an automated trading service.</p></details></div></div><div class="win card tool" id="w-legal" hidden><div class="tbar" data-drag><span>PRIVACY &amp; TERMS</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Privacy and disclaimer</h2><p>alpha stores the public X handle you submit, an optional updates preference, a generated referral code, referral counts and, if you are invited to the beta, the email address and account-access status you provide. Handles are user-submitted and not verified, are never shown to other users, and alpha never asks for wallet keys or seed phrases. Full policy and terms will be published before launch.</p><p>alpha is an independent research platform. It is not affiliated with, endorsed by, or sponsored by any token issuer, exchange or blockchain organization. Information provided by the platform is for research and informational purposes only and does not constitute financial advice.</p></div></div></header><div class="bbar"><span class="blk tl">alpha · Narrative intelligence for the Solana ecosystem.</span><button class="blk appo" id="ub" title="Account"></button><span class="blk appo hks">Alt+1 tracker · Alt+2 feed · Alt+3 scanner · Alt+4 hotkeys</span><span class="gr"></span><button class="blk appo" id="thm">◐ Light</button><a href="https://x.com/aterminalsol" class="blk" id="xl" target="_blank" rel="noopener noreferrer">X</a><time class="blk appo" id="local-clock" aria-label="Your local time" title="Your local time">--:--</time></div><script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js" onerror="this.onerror=null;this.src='https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script><script src="/api/config.js"></script><script>
 const $=s=>document.querySelector(s),nv=$('#nv');
 addEventListener('scroll',()=>nv.classList.toggle('s',scrollY>10),{passive:true});
 $('#mb').onclick=()=>$('#mm').classList.toggle('o');document.querySelectorAll('#mm a').forEach(a=>a.onclick=()=>$('#mm').classList.remove('o'));
@@ -1279,7 +1584,7 @@ addEventListener('resize',()=>{Object.values(W).forEach(w=>{if(!w.hidden)clamp(w
 window.AW={W,open,sync,hide,scr,upd,RM};
 })();
 
-(()=>{const T=['1 min','5 min','10 min','30 min','1 hour'],M=[['AI Agents',['$AGNT','$LOOP','$SYNTH']],['Internet Culture',['$PEPE','$DOGE','$WOJAK']],['AI Infrastructure',['$NODEX','$GPUX','$MESH']],['Political Figures',['$PODIUM','$VOTE','$GAVEL']],['Celebrity',['$STAN','$FAME','$LIMO']]];
+(()=>{const T=['5m','10m','30m','1h','24h'],M=[['AI Agents',['$AGNT','$LOOP','$SYNTH']],['Internet Culture',['$PEPE','$DOGE','$WOJAK']],['AI Infrastructure',['$NODEX','$GPUX','$MESH']],['Political Figures',['$PODIUM','$VOTE','$GAVEL']],['Celebrity',['$STAN','$FAME','$LIMO']]];
 const tb=$('#tabs'),dl=$('#dlist'),S=p=>p>=40?'Accelerating':p>=15?'Emerging':p>=0?'Crowded':'Cooling',F=p=>(p>0?'+':'')+p+'%',C=p=>p>=0?'up':'dn';
 const ST={};
 const R2=k=>{AW.upd(dl,ST,M.map((m,i)=>({n:m[0],c:m[1],p:((i*37+k*53)%90)-20,t:4+(i*7+k*3)%30})).sort((a,b)=>b.p-a.p).map(r=>`<details><summary><span class="mn">${r.n}</span><span class="s2">${S(r.p)}</span><span class="pc ${C(r.p)}" data-k="m:${r.n}">${F(r.p)}</span></summary><div class="cns"><div class="cn"><span class="mut">${r.t} tokens in this meta</span></div>${r.c.map((c,j)=>{const q=Math.round(r.p*(1.3-j*.35)+j*3);return`<div class="cn"><span>${c}</span><span class="${C(q)}" data-k="c:${c}">${F(q)}</span></div>`}).join('')}</div></details>`).join(''));[...tb.children].forEach((b,i)=>b.classList.toggle('on',i===k))};
@@ -1377,11 +1682,11 @@ const pumpLogo=async mint=>{
 };
 // GeckoTerminal narrative explorer. The landing-page sample remains unchanged.
 const NARRATIVE_WINDOWS=[
- {label:'5 min',field:'m5',interval:'5m'},
- {label:'10 min',field:'m10',interval:'10m'},
- {label:'30 min',field:'m30',interval:'30m'},
- {label:'1 hour',field:'h1',interval:'1h'},
- {label:'24 hours',field:'h24',interval:'24h'}
+ {label:'5m',field:'m5',interval:'5m'},
+ {label:'10m',field:'m10',interval:'10m'},
+ {label:'30m',field:'m30',interval:'30m'},
+ {label:'1h',field:'h1',interval:'1h'},
+ {label:'24h',field:'h24',interval:'24h'}
 ];
 const NARRATIVE_ENTITY_RULES=[
  {name:'Jensen Huang',aliases:[['Jensen Huang',.99],['JensenHuang',.99],['Jensen',.96],['Huang',.72],['leather jacket',.93],['jacket',.82]],categories:['AI & Semiconductors']},
@@ -1422,8 +1727,7 @@ const NARRATIVE_CATEGORY_RULES=[
  {name:'Technology & Robotics',re:/\b(tesla|xai|spacex|robot|robotics|autonomous|electric vehicle|hardware|software|technology|quantum|cyber|drone)\b/i},
  {name:'News & Events',re:/\b(news|breaking|announcement|announced|reinstated|reinstatement|return|returns|appointed|resigned|fired|banned|unbanned|launch|launched|partnership|acquisition|lawsuit|court|policy|update|事件|breaking news)\b/i},
  {name:'Internet Culture',re:/\b(meme|memes|viral|brainrot|wojak|soyjak|doomer|coomer|bloomer|npc|sigma|rizz|skibidi|lore|ratio|troll|internet|4chan|greentext|copypasta|imageboard|anonymous|anon|kek|pepe|peepo|feels good man|feelsbadman|doge|cheems|harambe|nyan|grumpy|trollface|rage comic|cat|cats|dog|dogs|shiba|inu|frog|woof|meow|miao|mihao|kitten|puppy|panda|bear|hamster|animal|hippo|hippopotamus|capybara|duck|goose|otter|monkey|ape|gorilla|rat|mouse|rabbit|bunny|fox|wolf|lion|tiger|penguin|owl|whale|shark|turtle|toad|snake|lizard|horse|cow|pig|sheep|goat|chicken|pigeon|raccoon|sloth|lemur|seal|fish|bird)\b/i},
- {name:'Influencers & Creators',re:/\b(influencer|creator|content creator|youtuber|tiktok|streamer|social media|internet personality)\b/i},
- {name:'Celebrity & Creators',re:/\b(celebrity|celeb|rapper|singer|actor|actress|streamer|influencer|kardashian|star|fame|stan|youtuber|tiktok)\b/i},
+ {name:'Influencers & Creators',re:/\b(influencer|creator|content creator|youtuber|tiktok|streamer|social media|internet personality|celebrity|celeb|rapper|singer|actor|actress|kardashian|star|fame|stan)\b/i},
  {name:'Crypto & Finance',re:/\b(bitcoin|btc|ethereum|eth|solana|sol|defi|airdrop|etf|crypto|trading|finance|bank|fed|federal reserve)\b/i}
 ];
 const NARRATIVE_ENTITY_MIN_CONFIDENCE=.78;
@@ -1916,7 +2220,7 @@ setInterval(()=>{
  if(!document.hidden&&!A.W.t1.hidden&&$('#t1v2').hidden)loadT1(true)
 },60000);
 // 2 Categorized live news feed. No X API or sample posts are used.
-const NEWS_FILTERS=['All','Crypto','Altcoins','Memecoins','Animals','AI & Tech','Markets','Politics','Creators','World'];
+const NEWS_FILTERS=['All','Crypto','Altcoins','Memecoins','Animals','AI & Tech','Markets','Politics','Creators','Uncategorized'];
 let t2tab=0;
 const classifyNewsArticle=article=>{
  const detection=detectNewsEntities(article);
@@ -1935,7 +2239,7 @@ const classifyNewsArticle=article=>{
  if(memecoin)categories.push('Memecoins');
  if(animals)categories.push('Animals');
  if(narratives.has('Influencers & Creators')||narratives.has('Celebrity & Creators'))categories.push('Creators');
- if(!categories.length)categories.push('World');
+ if(!categories.length)categories.push('Uncategorized');
  const entities=(detection.entities||[]).map(entity=>entity.name);
  return {...article,_alphaDetection:detection,_alphaCategories:[...new Set(categories)],_alphaEntities:entities};
 };
