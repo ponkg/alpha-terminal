@@ -1457,6 +1457,13 @@ nav.s{background:transparent;border:0;backdrop-filter:none}
 #t4 .fixed-label{font:12px Inter,sans-serif;color:var(--text-secondary)}
 #t4 .hk-row.fixed{background:color-mix(in srgb,var(--surface) 45%,transparent)}
 #t2tabs button::after{display:none!important}
+
+#ub[hidden],#account-chip[hidden],.taskbar-apps[hidden],#taskbar-help[hidden]{display:none!important}
+#account-chip{font:600 12px "JetBrains Mono",monospace!important}
+body.app .bbar .hks{display:none!important}
+.win[role="dialog"]{overscroll-behavior:contain}
+.win.foc .tbar{background:#080f16;color:#fff}
+@media(max-width:767px){.hero .hl{top:25%}.hero .hero-copy{max-width:none}.hero .site-disclaimer{font-size:12px}.bbar{display:flex;flex-wrap:nowrap}.taskbar-apps{order:3;min-width:180px;flex:1}.bbar .gr{display:none}.bbar #thm{order:4}.bbar #taskbar-help{order:5}.bbar #local-clock{order:6}.win.tool:not([hidden]){position:fixed!important;inset:0 0 calc(58px + env(safe-area-inset-bottom,0px)) 0!important;width:100vw!important;height:calc(100svh - 58px - env(safe-area-inset-bottom,0px))!important;max-height:none!important;margin:0!important;border-radius:0!important;z-index:100001!important}body.app .win.tool:not(.foc){display:none!important}body.app .win.tool.foc:not([hidden]){display:flex!important}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a><a href="/docs/"><b>5</b>Field Manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a><a class="blk" href="/docs/">5 Field Manual ↗</a></div></nav>
@@ -1569,8 +1576,8 @@ document.addEventListener('pointerleave',()=>{g.style.opacity=0});
 (()=>{const hero=$('#top'),W={};let z=20,moved=false;document.querySelectorAll('.win').forEach(w=>W[w.id]=w);
 const clamp=w=>{const hw=hero.clientWidth,hh=hero.clientHeight;w.style.left=Math.min(Math.max(8,parseFloat(w.style.left)||0),Math.max(8,hw-w.offsetWidth-8))+'px';w.style.top=Math.min(Math.max(64,parseFloat(w.style.top)||0),Math.max(64,hh-w.offsetHeight-60))+'px'};
 const center=w=>{w.style.left=(hero.clientWidth-w.offsetWidth)/2+'px';w.style.top=(hero.clientHeight-w.offsetHeight)/2+'px';clamp(w)};
-const P={'auth':[.6,.12],'t1':[.04,.1],'t2':[.3,.18],'t3':[.56,.1],'t4':[.3,.3],'reg':[.36,.2],'w-ov':[.06,.16],'w-how':[.62,.14],'w-vis':[.14,.3],'w-faq':[.55,.28],'w-legal':[.3,.22]};
-const front=w=>{if(+w.style.zIndex!==z||!w.style.zIndex)w.style.zIndex=++z};
+const P={'auth':[.6,.12],'t1':[.04,.1],'t2':[.3,.18],'t3':[.56,.1],'t4':[.3,.3],'reg':[.36,.2],'w-ov':[.61,.16],'w-how':[.62,.14],'w-vis':[.14,.3],'w-faq':[.55,.28],'w-legal':[.3,.22]};
+const front=w=>{document.querySelectorAll('.win').forEach(item=>item.classList.toggle('foc',item===w));if(+w.style.zIndex!==z||!w.style.zIndex)w.style.zIndex=++z};
 const RM=matchMedia('(prefers-reduced-motion:reduce)').matches,GL='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/_-+*#';
 document.querySelectorAll('.tbar>span').forEach(s=>s.dataset.t=s.textContent);
 const scr=s=>{const t=s.dataset.t;clearInterval(s._s);if(RM){s.textContent=t;return}let i=0;const n=14;s._s=setInterval(()=>{i++;const k=Math.floor(t.length*i/n);s.textContent=t.slice(0,k)+[...t.slice(k)].map(c=>c===' '?c:GL[Math.random()*GL.length|0]).join('');if(i>=n){clearInterval(s._s);s.textContent=t}},26)};
@@ -2871,7 +2878,7 @@ let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light
 const cfg=window.ALPHA_SUPABASE_CONFIG||{};
 const authClient=(window.supabase&&window.supabase.createClient&&cfg.url&&cfg.publishableKey)?window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}):null;
 const U={name:'',addr:'',role:''},ub=$('#ub'),short=a=>a.slice(0,4)+'…'+a.slice(-4);
-const showU=()=>{ub.textContent=U.addr?`${U.name} · ${short(U.addr)}`:`${U.name} · connect wallet`};
+const showU=()=>{ub.textContent='Connect wallet';ub.title='Connect Phantom wallet';const chip=document.querySelector('#account-chip');if(chip){chip.hidden=!U.addr&&!U.name;chip.textContent=U.addr?short(U.addr):(U.name?'Member':'');chip.dataset.address=U.addr||'';chip.title=U.addr?'Copy wallet address':'Signed-in member';}ub.hidden=!!U.addr;};
 const phantom=()=>{const p=window.phantom&&window.phantom.solana;return p&&p.isPhantom?p:(window.solana&&window.solana.isPhantom?window.solana:null)};
 const conn=async o=>{const p=phantom();if(!p)throw new Error('Phantom not found. Install the Phantom extension.');return(await p.connect(o)).publicKey.toString()};
 const boot=cb=>{
@@ -3277,5 +3284,105 @@ addEventListener('keydown',event=>{
 },true);
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
 if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr='';boot(enter)}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+})();
+</script><script id="alpha-ui-controller">
+(function(){
+ const $=selector=>document.querySelector(selector);
+ const $$=selector=>[...document.querySelectorAll(selector)];
+ const ids=['t1','t2','t3','t4'];
+ const names={t1:'Tracker',t2:'Feed',t3:'Scanner',t4:'Hotkeys'};
+ const body=document.body,bar=$('.bbar'),wallet=$('#ub');
+ if(!bar||!wallet||!window.AW)return;
+ const account=document.createElement('button');
+ account.type='button';account.id='account-chip';account.className='blk appo';account.hidden=true;
+ account.setAttribute('aria-label','Signed-in member or connected wallet');
+ wallet.insertAdjacentElement('afterend',account);
+ account.addEventListener('click',async()=>{
+  const address=account.dataset.address||'';if(!address)return;
+  try{await navigator.clipboard.writeText(address);account.textContent='Copied';setTimeout(()=>{account.textContent=address.slice(0,4)+'…'+address.slice(-4)},1100)}catch{}
+ });
+ const apps=document.createElement('div');apps.className='taskbar-apps';apps.setAttribute('role','group');apps.setAttribute('aria-label','Terminal applications');
+ ids.forEach(id=>{
+  const button=document.createElement('button');button.type='button';button.dataset.taskwindow=id;button.textContent=names[id];
+  button.setAttribute('aria-controls',id);button.setAttribute('aria-label','Open '+names[id]);
+  button.addEventListener('click',()=>{window.AW.open(id);refresh()});
+  apps.appendChild(button);
+ });
+ account.insertAdjacentElement('afterend',apps);
+ const help=document.createElement('button');help.type='button';help.id='taskbar-help';help.className='blk appo';help.textContent='?';help.title='Keyboard shortcuts';help.setAttribute('aria-label','Show keyboard shortcuts');
+ help.addEventListener('click',()=>{const hint=$('#hint');if(hint){hint.hidden=!hint.hidden;hint.style.opacity='1'}});
+ $('#thm').insertAdjacentElement('beforebegin',help);
+ const empty=document.createElement('div');empty.id='desktop-empty';empty.className='desktop-empty';
+ empty.innerHTML='<b>Workspace ready</b><span>Press Alt+1 to open Tracker, or choose an app from the taskbar.</span>';
+ body.appendChild(empty);
+ const setDialogSemantics=()=>{
+  $$('.win').forEach((win,index)=>{
+   win.setAttribute('role','dialog');win.setAttribute('aria-modal','false');
+   const heading=win.querySelector('.tbar>span:first-child');
+   if(heading){if(!heading.id)heading.id='alpha-window-title-'+(win.id||index);win.setAttribute('aria-labelledby',heading.id)}
+   const close=win.querySelector('.tbar .x');if(close){close.title='Close window';close.setAttribute('aria-label','Close '+(heading?.textContent||'window'))}
+  });
+ };
+ const refresh=()=>{
+  const inApp=body.classList.contains('app');
+  const openIds=ids.filter(id=>$('#'+id)&&!$('#'+id).hidden);
+  apps.hidden=!inApp;help.hidden=!inApp;empty.hidden=!inApp||openIds.length>0;
+  apps.querySelectorAll('[data-taskwindow]').forEach(button=>{
+   const win=$('#'+button.dataset.taskwindow),open=!!win&&!win.hidden,focused=!!win&&win.classList.contains('foc');
+   button.classList.toggle('open',open);button.classList.toggle('focused',focused);
+   button.setAttribute('aria-pressed',String(focused));
+  });
+ };
+ window.AlphaUI={refresh};
+ setDialogSemantics();refresh();
+ const openers=new Map();
+ document.addEventListener('click',event=>{
+  const trigger=event.target.closest('[data-open]');if(!trigger)return;
+  const id=trigger.dataset.open;if(!id)return;
+  openers.set(id,trigger);
+  setTimeout(()=>{
+   const win=$('#'+CSS.escape(id));if(!win||win.hidden)return;
+   setDialogSemantics();const target=win.querySelector('input:not([type=hidden]):not([disabled]),button:not([disabled]),a[href],summary,[tabindex="0"]');
+   if(target)target.focus({preventScroll:true});
+   refresh();
+  },80);
+ },true);
+ document.addEventListener('click',event=>{
+  const close=event.target.closest('.win .x');if(!close)return;
+  const win=close.closest('.win');if(!win)return;
+  setTimeout(()=>{const opener=openers.get(win.id);if(opener&&opener.isConnected)opener.focus({preventScroll:true});refresh()},220);
+ });
+ document.addEventListener('pointerdown',event=>{
+  const win=event.target.closest('.win');if(!win||win.hidden)return;
+  $$('.win.foc').forEach(other=>{if(other!==win)other.classList.remove('foc')});
+  win.classList.add('foc');refresh();
+ },true);
+ document.addEventListener('keydown',event=>{
+  if(event.key!=='Escape'||$('.hk-record.recording'))return;
+  const win=$$('.win:not([hidden])').filter(item=>item.classList.contains('tool')).sort((a,b)=>(Number(b.style.zIndex)||0)-(Number(a.style.zIndex)||0))[0];
+  if(!win)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  const opener=openers.get(win.id);window.AW.hide(win);
+  setTimeout(()=>{if(opener&&opener.isConnected)opener.focus({preventScroll:true});refresh()},180);
+ },true);
+ const observer=new MutationObserver(()=>{setDialogSemantics();refresh()});
+ observer.observe(body,{subtree:true,attributes:true,attributeFilter:['hidden','class']});
+ $$('#w-faq details').forEach(detail=>{
+  const summary=detail.querySelector('summary');if(!summary)return;
+  summary.setAttribute('aria-expanded',String(detail.open));
+  detail.addEventListener('toggle',()=>summary.setAttribute('aria-expanded',String(detail.open)));
+ });
+ const hotkeyList=$('#t4list');
+ if(hotkeyList)hotkeyList.addEventListener('keydown',event=>{
+  if(event.key!=='Enter')return;
+  const row=event.target.closest('.hk-row');if(!row)return;
+  const button=row.querySelector('[data-hk]');if(button){event.preventDefault();button.click()}
+  else if(row.classList.contains('fixed'))$('#t4capturestatus').textContent='This navigation shortcut is fixed.';
+ });
+ if(!body.classList.contains('app')&&matchMedia('(min-width:768px)').matches){
+  const overview=$('#w-ov');
+  if(overview){overview.style.width='min(400px,38vw)';window.AW.open('w-ov')}
+ }
+ refresh();
 })();
 </script></body></html>
