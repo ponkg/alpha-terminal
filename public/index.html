@@ -3870,44 +3870,49 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
   const video=document.getElementById('alpha-hero-video');
   if(!video)return;
 
-  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-  const showLanding=root=>!root.classList.contains('terminal-route');
-  const holdFirstFrame=()=>{
-    video.autoplay=false;
-    video.loop=false;
-    video.pause();
-    const seekFirstFrame=()=>{
-      video.pause();
-      try{video.currentTime=0}catch(_){}
-    };
-    if(video.readyState>=2)seekFirstFrame();
-    else video.addEventListener('loadeddata',seekFirstFrame,{once:true});
-  };
-  const syncPlayback=()=>{
-    if(!showLanding(root)||reduceMotion.matches){
-      holdFirstFrame();
-      return;
-    }
-
-    // The hero animation should restart automatically after reaching its final frame.
+  const showLanding=()=>!root.classList.contains('terminal-route');
+  const playVideo=()=>{
+    if(!showLanding())return;
     video.muted=true;
+    video.defaultMuted=true;
     video.loop=true;
     video.autoplay=true;
-    const playAttempt=video.play();
-    if(playAttempt&&typeof playAttempt.catch==='function'){
-      playAttempt.catch(error=>{
-        // Retry when media becomes ready (for browsers that delay autoplay during load).
-        if(!showLanding(root)||reduceMotion.matches)return;
-        const retry=()=>video.play().catch(()=>{});
+    video.playsInline=true;
+    video.setAttribute('muted','');
+    video.setAttribute('autoplay','');
+    video.setAttribute('loop','');
+    video.setAttribute('playsinline','');
+    const attempt=video.play();
+    if(attempt&&typeof attempt.catch==='function'){
+      attempt.catch(()=>{
+        // Some browsers defer autoplay until the media is ready or the page is visible.
+        const retry=()=>{if(showLanding())video.play().catch(()=>{});};
         video.addEventListener('canplay',retry,{once:true});
+        video.addEventListener('loadeddata',retry,{once:true});
       });
     }
   };
+  const syncPlayback=()=>{
+    if(showLanding()){
+      playVideo();
+    }else{
+      video.pause();
+    }
+  };
 
-  syncPlayback();
-  if(typeof reduceMotion.addEventListener==='function')reduceMotion.addEventListener('change',syncPlayback);
-  else if(typeof reduceMotion.addListener==='function')reduceMotion.addListener(syncPlayback);
+  // Native looping handles the normal end-of-film transition; this is a fallback.
+  video.addEventListener('ended',()=>{
+    if(!showLanding())return;
+    try{video.currentTime=0}catch(_){}
+    playVideo();
+  });
+  video.addEventListener('canplay',syncPlayback);
+  window.addEventListener('pageshow',syncPlayback);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden)syncPlayback();
+  });
   window.addEventListener('hashchange',syncPlayback);
+  syncPlayback();
 })();
 </script>
 </body></html>
