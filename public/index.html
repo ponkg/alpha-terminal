@@ -1501,6 +1501,42 @@ html:not(.terminal-route) #nv #mm{
  backdrop-filter:none!important;
  -webkit-backdrop-filter:none!important
 }
+/* Centered landing lockup: See the [a] before everyone else. */
+html:not(.terminal-route) .hero .hero-lockup{
+ position:absolute;left:50%;right:auto;top:50%;width:min(92vw,760px);
+ transform:translate(-50%,-50%);z-index:4;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:clamp(8px,1.5vh,18px);
+ padding:0;text-align:center;pointer-events:none;
+ border:0;border-radius:0;background:transparent;box-shadow:none;
+ -webkit-backdrop-filter:none;backdrop-filter:none
+}
+html:not(.terminal-route) .hero .hero-eyebrow{
+ margin:0;color:#f4f8fc;font:500 clamp(17px,2vw,24px)/1.2 Inter,system-ui,sans-serif;
+ letter-spacing:.08em;text-transform:uppercase
+}
+html:not(.terminal-route) .hero .hero-mark{
+ color:#f7fbff;font:700 clamp(92px,15vw,172px)/.88 "JetBrains Mono",ui-monospace,monospace;
+ letter-spacing:-.09em;text-shadow:0 10px 45px rgba(4,24,44,.2)
+}
+html:not(.terminal-route) .hero .hero-mark span{color:#a8d7fb}
+html:not(.terminal-route) .hero .hero-lockup h1{
+ max-width:none;margin:0;color:#f7fbff;font:600 clamp(27px,4vw,46px)/1.12 Inter,system-ui,sans-serif;
+ letter-spacing:-.045em
+}
+html:not(.terminal-route) .hero .hero-access{
+ pointer-events:auto;display:inline-flex;align-items:center;justify-content:center;
+ min-height:46px;margin-top:clamp(8px,1.5vh,16px);padding:0 22px;
+ border:1px solid #b8ddf7;border-radius:4px;background:#a8d7fb;color:#102c45;
+ font:600 14px/1 Inter,system-ui,sans-serif;text-decoration:none;
+ box-shadow:0 8px 24px rgba(3,24,45,.18);transition:background .16s ease,transform .16s ease
+}
+html:not(.terminal-route) .hero .hero-access:hover{background:#d4edff;transform:translateY(-1px)}
+html:not(.terminal-route) .hero .hero-access:focus-visible{outline:2px solid #fff;outline-offset:4px}
+@media(max-width:767px){
+ html:not(.terminal-route) .hero .hero-lockup{width:calc(100% - 32px);gap:12px}
+ html:not(.terminal-route) .hero .hero-mark{font-size:clamp(88px,25vw,132px)}
+ html:not(.terminal-route) .hero .hero-lockup h1{font-size:clamp(27px,8vw,36px)}
+}
 /* Route-level isolation: the public landing page never renders terminal workspace UI. */
 html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-route) #t3,html:not(.terminal-route) #t4,html:not(.terminal-route) #desktop-empty,html:not(.terminal-route) .desktop-empty,html:not(.terminal-route) .bbar,html:not(.terminal-route) .taskbar-apps,html:not(.terminal-route) #taskbar-help,html:not(.terminal-route) #account-chip{display:none!important}
 </style>
@@ -1532,7 +1568,13 @@ html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-r
 <div class="glow"></div>
 <div class="xh" aria-hidden="true"><i class="xa"></i><i class="xb"></i><span class="xr"></span></div>
 
-<div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
+<div class="hl hero-lockup">
+  <p class="hero-eyebrow">See the</p>
+  <div class="hero-mark" aria-label="alpha">[<span>a</span>]</div>
+  <h1>Before everyone else</h1>
+  <a href="#" class="hero-access" data-open="reg">Request early access</a>
+ </div>
+ <div class="win card" id="auth" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>MEMBER LOGIN</span><button class="x" aria-label="Close">×</button></div><div class="wb"><h2>Alpha access</h2><p>Sign in with your invited beta account. New accounts are created by the Alpha team.</p><form id="af" novalidate><div class="in"><input id="au" type="email" placeholder="email address" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Email address" required></div><div class="in"><input id="ap" type="password" placeholder="password" autocomplete="current-password" aria-label="Password" minlength="6" required></div><button class="btn" style="width:100%" type="submit">Log in with password</button><button class="btn o" id="magic" style="width:100%;margin-top:8px" type="button">Email me a sign-in link</button></form><div id="ae" role="alert" aria-live="polite" style="min-height:20px;font-size:12px;color:#cc4b44;margin-top:10px"></div><p class="sm">Closed beta — <a href="#" data-open="reg" style="color:var(--ac);text-decoration:underline">Join the waitlist</a>. Invitations are sent by the Alpha team.</p></div></div>
 <div class="win card" id="wm" hidden><div class="tbar" data-drag><span>ALPHA / ACCESS CONTROL</span><span>WAITLIST MANAGER</span><button class="x" aria-label="Close">×</button></div><div class="wb wm-body"><div class="wm-head"><div><h2>Waitlist</h2><p>Approve a person by entering their email and sending a one-time invitation.</p></div><button class="btn o" id="wm-refresh" type="button">Refresh</button></div><div class="wm-meta" id="wm-meta">LOADING WAITLIST…</div><div class="wm-list" id="wm-list"><div class="mut">Loading entries…</div></div><div class="wm-foot">INVITES REQUIRE SUPABASE AUTH EMAIL DELIVERY / SMTP CONFIGURATION.</div></div></div><div class="win card tool wide" id="t1" hidden><div class="tbar" data-drag><span>Trending Coin Tracker</span><button class="x" aria-label="Close">×</button></div><div class="wb dm col"><div id="t1v1" class="tracker-terminal">
  <aside class="tracker-rail">
   <div class="tracker-panel-title"><span>01 / MARKET INDEX</span><b>ALPHA</b><a id="t1j7" class="tracker-utility" href="https://j7tracker.gg/" target="_blank" rel="noopener noreferrer">J7 ↗</a></div>
