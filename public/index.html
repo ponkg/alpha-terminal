@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en" data-theme="light"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>document.documentElement.classList.toggle('terminal-route',location.hash==='#terminal');addEventListener('hashchange',()=>document.documentElement.classList.toggle('terminal-route',location.hash==='#terminal'));</script>
 <title>alpha — See the meta before it moves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1484,6 +1485,9 @@ body.app .bbar .hks{display:none!important}
 #t1 .other-note{margin:6px 2px 8px;color:var(--text-secondary);font:12px/1.45 Inter,sans-serif}
 #t4capturestatus.hk-status-visible{position:static!important;display:block!important;clip:auto!important;width:auto!important;height:auto!important;margin:0!important;padding:7px 0!important;overflow:visible!important;white-space:normal!important;color:var(--text-secondary);font:13px/1.45 Inter,sans-serif;border-top:1px solid var(--border)}
 .desktop-empty[hidden],body:not(.app) #t1,body:not(.app) #t2,body:not(.app) #t3,body:not(.app) #t4{display:none!important};body:not(.app) #desktop-empty{display:none!important}
+
+/* Route-level isolation: the public landing page never renders terminal workspace UI. */
+html:not(.terminal-route) #t1,html:not(.terminal-route) #t2,html:not(.terminal-route) #t3,html:not(.terminal-route) #t4,html:not(.terminal-route) #desktop-empty,html:not(.terminal-route) .taskbar-apps,html:not(.terminal-route) #taskbar-help,html:not(.terminal-route) #account-chip{display:none!important}
 </style>
 </head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
