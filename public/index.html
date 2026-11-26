@@ -1474,6 +1474,9 @@ body.app .bbar .hks{display:none!important}
 #t2 .news-item-description{max-width:70ch}
 
 #t1 .tracker-grid{display:flex;flex-direction:column;flex:1;min-height:0}
+
+.bbar #thm{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.theme-icon{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 </style>
 #t1 .other-note{margin:6px 2px 8px;color:var(--text-secondary);font:12px/1.45 Inter,sans-serif}
 
@@ -2886,7 +2889,16 @@ const updateLocalClock=()=>{
 };
 updateLocalClock();
 setInterval(updateLocalClock,1000);
-const setTheme=t=>{rootEl.dataset.theme=t;thm.textContent=t==='dark'?'◑ Dark':'◐ Light';try{localStorage.setItem('alpha_theme',t)}catch(e){}if(chart)chart.applyOptions(copts())};
+const setTheme=t=>{
+ rootEl.dataset.theme=t;
+ const icon=t==='dark'
+  ?'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>'
+  :'<svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.4 15.4A8.8 8.8 0 0 1 8.6 3.6 8.9 8.9 0 1 0 20.4 15.4Z"></path></svg>';
+ thm.innerHTML=icon+'<span>'+ (t==='dark'?'Dark':'Light') +'</span>';
+ thm.setAttribute('aria-label','Switch to '+(t==='dark'?'light':'dark')+' theme');
+ try{localStorage.setItem('alpha_theme',t)}catch(e){}
+ if(chart)chart.applyOptions(copts());
+};
 thm.onclick=()=>setTheme(rootEl.dataset.theme==='dark'?'light':'dark');
 let t0='light';try{t0=localStorage.getItem('alpha_theme')==='dark'?'dark':'light'}catch(e){}setTheme(t0);
 // user block + wallet
