@@ -3921,9 +3921,34 @@ const exit=()=>{
 };
 $('#shutdown').addEventListener('click',()=>{void exit()});
 const verifyAccess=async session=>{if(!session?.access_token)throw new Error('Please sign in again.');let response;try{response=await fetch('/api/access/check',{method:'POST',headers:{Authorization:'Bearer '+session.access_token}})}catch{throw new Error('Could not verify Alpha access. Please try again.')};const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.error||'This account does not have beta access.');return result};
+let completedAuthToken='',authCompletionPromise=null,authCompletionOpenTerminal=false;
+const completeAuthSession=(session,openTerminal=true)=>{
+ const token=session?.access_token;
+ if(!token)return Promise.reject(new Error('Please sign in again.'));
+ authCompletionOpenTerminal=authCompletionOpenTerminal||openTerminal;
+ if(completedAuthToken===token){
+  if(authCompletionOpenTerminal&&!b.classList.contains('app'))login();
+  return Promise.resolve();
+ }
+ if(authCompletionPromise)return authCompletionPromise;
+ const current=(async()=>{
+  const access=await verifyAccess(session);
+  U.role=access.role;
+  U.name=session.user?.email?.split('@')[0]||access.handle||'member';
+  U.addr='';
+  completedAuthToken=token;
+  if(authCompletionOpenTerminal&&!b.classList.contains('app'))login();
+  return access;
+ })();
+ authCompletionPromise=current;
+ return current.catch(error=>{completedAuthToken='';throw error}).finally(()=>{
+  if(authCompletionPromise===current)authCompletionPromise=null;
+  authCompletionOpenTerminal=false;
+ });
+};
 $('#af').onsubmit=async e=>{e.preventDefault();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured yet. Add the Supabase project URL and publishable key to Render.';return}
  const button=$('#af').querySelector('button[type=submit]');button.disabled=true;button.textContent='Signing in…';
- try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;const access=await verifyAccess(data.session);U.role=access.role;U.name=data.user?.email?.split('@')[0]||access.handle||'member';U.addr='';$('#ap').value='';login()}
+ try{const {data,error}=await authClient.auth.signInWithPassword({email:$('#au').value.trim(),password:$('#ap').value});if(error)throw error;await completeAuthSession(data.session,true);$('#ap').value=''}
  catch(err){if(authClient)await authClient.auth.signOut({scope:'local'}).catch(()=>{});$('#ae').textContent=err.message||'Could not sign in. Please try again.'}
  finally{button.disabled=false;button.textContent='Log in with password'}};
 $('#magic').onclick=async()=>{const email=$('#au').value.trim();$('#ae').textContent='';if(!authClient){$('#ae').textContent='Authentication is not configured.';return}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ $('#ae').textContent='Enter your invited email address first.';return}
@@ -3931,7 +3956,19 @@ $('#magic').onclick=async()=>{const email=$('#au').value.trim();$('#ae').textCon
  try{const {error}=await authClient.auth.signInWithOtp({email,options:{shouldCreateUser:false,emailRedirectTo:location.origin+'/'}});if(error)throw error;$('#ae').style.color='var(--ac)';$('#ae').textContent='Sign-in link sent. Check your inbox.'}
  catch(error){$('#ae').style.color='#cc4b44';$('#ae').textContent=error.message||'Could not send a sign-in link.'}
  finally{button.disabled=false;button.textContent='Email me a sign-in link'}};
-if(authClient){authClient.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'&&b.classList.contains('app'))exit()})}
+if(authClient){authClient.auth.onAuthStateChange((event,session)=>{
+ if(event==='SIGNED_OUT'){
+  completedAuthToken='';
+  if(b.classList.contains('app'))exit();
+ }else if(event==='SIGNED_IN'&&session){
+  // Defer auth work outside Supabase's state-change callback to avoid locking the client.
+  setTimeout(()=>completeAuthSession(session,true).catch(async error=>{
+   $('#ae').style.color='#cc4b44';
+   $('#ae').textContent=error.message||'Could not verify Alpha access.';
+   if(authClient)await authClient.auth.signOut({scope:'local'}).catch(()=>{});
+  }),0);
+ }
+})}
 
 // Admin-only waitlist manager.
 const wm=$('#wm'),wmList=$('#wm-list'),wmMeta=$('#wm-meta');
@@ -4292,7 +4329,7 @@ addEventListener('keydown',event=>{
  event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
 },true);
 addEventListener('hashchange',()=>{if(location.hash!=='#terminal'&&b.classList.contains('app'))exit()});
-if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr='';if(location.hash==='#terminal')boot(enter)}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
+if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)throw error;if(data.session){if(location.hash==='#terminal'){await completeAuthSession(data.session,true)}else{const access=await verifyAccess(data.session);U.role=access.role;U.name=data.session.user?.email?.split('@')[0]||access.handle||'member';U.addr=''}}}).catch(async error=>{console.warn('Supabase access session restore failed:',error.message);await authClient.auth.signOut({scope:'local'}).catch(()=>{})})}
 })();
 </script><script id="alpha-ui-controller">
 (function(){
