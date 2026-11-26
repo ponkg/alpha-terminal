@@ -2102,7 +2102,8 @@ const renderT1=()=>{
  const tokenRows=tokens.map(token=>{
   const image=String(token.imageUrl||'').startsWith('https://')?token.imageUrl:'';
   const imageTag='<img data-pump-logo="'+esc(token.mint)+'" alt="" loading="lazy" '+(image?'src="'+esc(image)+'"':'hidden')+'><span class="narrative-logo-fallback" aria-hidden="true">◎</span>';
-  const changeValue=token.change==null?null:Number(token.change);
+  const selectedChange=token.changes?.[selectedWindow.field]??token.change;
+  const changeValue=selectedChange==null?null:Number(selectedChange);
   const change=changeValue==null?'<span class="change-value muted-value">—</span>':'<span class="change-value '+(changeValue>=0?'up':'dn')+(Math.abs(changeValue)>=100?' outlier':'')+'"><i aria-hidden="true">'+(changeValue>=0?'▲':'▼')+'</i> '+pct(changeValue)+'</span>';
   const label=token.detection.labels[0]||null;
   const narrative=label?'<span class="token-narrative '+(label.type==='ENTITY'?'entity':'')+'" title="'+esc(label.reason)+'">'+esc(label.name)+'</span>':'';
