@@ -1360,7 +1360,7 @@ nav.s{background:transparent;border:0;backdrop-filter:none}
 #t4 .hk-search input{width:100%;height:38px;padding:0 10px;border:1px solid var(--border);border-radius:5px;background:var(--surface-raised);color:var(--text-primary);font:14px Inter,sans-serif}
 #t4 .hk-output-head{display:flex;align-items:center;justify-content:space-between;padding:10px 0 7px;font:600 14px Inter,sans-serif;color:var(--text-primary);letter-spacing:0}
 #t4 .hk-output-head #t4reset{min-height:32px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:var(--surface-raised);color:var(--text-secondary);font:600 12px Inter,sans-serif}
-#t4 .hk-group-hint,#t4capturestatus{display:none!important}
+#t4 .hk-group-hint{display:none!important}
 #t4 #t4list{flex:1;min-height:0;overflow:auto}
 #t4 .hk-row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:8px 5px;border-bottom:1px solid color-mix(in srgb,var(--border) 60%,transparent)}
 #t4 .hk-row:focus-visible{background:color-mix(in srgb,var(--accent) 8%,var(--surface-raised))}
@@ -1472,7 +1472,9 @@ body.app .bbar .hks{display:none!important}
 #t2tabs button{font-size:12px}
 #t2 .news-item{max-width:100%}
 #t2 .news-item-description{max-width:70ch}
-</style></head><body>
+</style>
+#t4capturestatus.hk-status-visible{position:static!important;display:block!important;clip:auto!important;width:auto!important;height:auto!important;margin:0!important;padding:7px 0!important;overflow:visible!important;white-space:normal!important;color:var(--text-secondary);font:13px/1.45 Inter,sans-serif;border-top:1px solid var(--border)}
+</head><body>
 <svg width="0" height="0" style="position:absolute"><symbol id="lg" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="5.5"/></g><circle cx="12" cy="12" r="1.8" fill="#3f8fd0"/></symbol></svg>
 <nav id="nv"><div class="nbar"><a href="#" class="blk logo" data-open="reg" aria-label="alpha">[<span class="la">a</span>]</a><div class="blk ws"><a href="#" data-open="w-ov"><b>1</b>Overview</a><a href="#" data-open="w-how"><b>2</b>How it works</a><a href="#" data-open="w-vis"><b>3</b>The vision</a><a href="#" data-open="w-faq"><b>4</b>FAQ</a><a href="/docs/"><b>5</b>Field Manual</a></div><div class="rt"><a href="#" class="blk cta" data-open="auth">Member login</a><button id="mb" class="blk" aria-label="Menu">☰</button></div></div><div id="mm"><a class="blk" href="#" data-open="w-ov">1 Overview</a><a class="blk" href="#" data-open="w-how">2 How it works</a><a class="blk" href="#" data-open="w-vis">3 The vision</a><a class="blk" href="#" data-open="w-faq">4 FAQ</a><a class="blk" href="/docs/">5 Field Manual ↗</a></div></nav>
 
@@ -1531,7 +1533,7 @@ body.app .bbar .hks{display:none!important}
 </div><div id="t1v2" class="cv" hidden><div class="cvh"><button class="btn o" id="cvb" type="button">← Back</button><img id="cvi" class="av coin-logo" alt="" hidden referrerpolicy="no-referrer"><div class="coin-title"><div><b id="cvt"></b> <span class="mut" id="cvnm"></span></div><div class="coin-ca" id="cvca"></div><div class="so" id="cvso"></div></div><span class="feed-chip" id="pumpstatus">GECKOTERMINAL</span><button class="btn o" id="cvs" type="button">Scan</button><a class="mut" id="cvl" target="_blank" rel="noopener">POOL ↗</a></div><div class="stg" id="cvst"></div><div class="tabs" id="chtf"></div><div class="tabs" id="chtabs"></div><div class="chw" id="chc" tabindex="0" role="region" aria-label="Candlestick chart. Use left and right arrows to inspect candles."><div class="ldo" id="chl"><div class="ld"><i></i><i></i><i></i><span>LOADING CHART</span></div></div><div class="lg" id="chg"></div></div><div class="bmw" id="bmc" hidden></div><div class="tabs" id="chb"></div><p class="k" id="chn" style="margin-top:8px">LIVE · GECKOTERMINAL</p></div></div></div>
 <div class="win card tool wide" id="t2" hidden><div class="tbar" data-drag><span>2 NEWS FEED</span><button class="x" aria-label="Close">×</button></div><div class="wb news-terminal"><div class="news-shell"><section class="news-main"><div class="news-commandbar"><label class="news-search"><span aria-hidden="true">⌕</span><input id="t2q" placeholder="Search headlines, topics or people" autocomplete="off" spellcheck="false" aria-label="Search news feed"></label><div class="tabs news-tabs" id="t2tabs" aria-label="News categories"></div><span id="t2active" class="sr-only">All</span></div><div class="news-output-head"><span>News</span><div class="news-counts"><b id="t2count">0 stories</b><span id="t2new" class="new-pill" hidden>0 new</span></div></div><div id="t2list"></div><div class="news-status" id="t2n" role="status" title="RSS source details">● Live · awaiting first update</div></section></div></div></div>
 <div class="win card tool wide" id="t3" hidden><div class="tbar" data-drag><span>3 COIN SCANNER</span><span>LARP CHECK</span><button class="x" aria-label="Close">×</button></div><div class="wb"><form id="t3f" novalidate><div class="in"><input id="t3q" placeholder="Solana contract address or $ticker" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Scan input"></div><button class="btn" type="submit" style="width:100%">Scan</button></form><div id="t3r"></div></div></div>
-<div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>Hotkey Configuration</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="Search action or shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" class="sr-only" aria-live="polite">Select a binding to edit.</div><div class="hk-footer">↑↓ Select · Enter Edit · Esc Back</div></section></div></div>
+<div class="win card tool wide" id="t4" hidden><div class="tbar" data-drag><span>Hotkey Configuration</span><button class="x" aria-label="Close">×</button></div><div class="wb hk-terminal"><aside class="hk-rail"><div class="hk-panel-title"><span>01 / CONFIG INDEX</span><b>ALPHA</b></div><div class="hk-index-label">GROUPS</div><nav id="t4groups" aria-label="Hotkey groups"></nav></aside><section class="hk-main"><div class="hk-commandbar"><div class="hk-path"><span class="hk-user">alpha@terminal</span><span>:</span><span>~/.config/alpha/keybindings</span><span>$</span></div><label class="hk-search"><span>FIND</span><input id="t4q" placeholder="Search action or shortcut" autocomplete="off" spellcheck="false" aria-label="Search hotkeys"></label></div><div class="hk-output-head"><span id="t4activeGroup">NAVIGATION</span><span id="t4count">0 BINDINGS</span><button type="button" id="t4reset">RESET</button></div><div id="t4groupHint" class="hk-group-hint"></div><div id="t4list"></div><div id="t4capturestatus" class="sr-only" aria-live="polite"></div><div class="hk-footer">↑↓ Select · Enter Edit · Esc Back</div></section></div></div>
 
 <div class="hint" id="hint" hidden><kbd>Alt</kbd> + <kbd>1</kbd> Tracker · <kbd>Alt</kbd> + <kbd>2</kbd> Feed · <kbd>Alt</kbd> + <kbd>3</kbd> Scanner · <kbd>Alt</kbd> + <kbd>4</kbd> Hotkeys</div>
 <div class="win card" id="reg" hidden><div class="tbar" data-drag><span>ALPHA &lt;GO&gt;</span><span>WAITLIST</span><button class="x" aria-label="Close">×</button></div><div class="wb"><div id="fv"><h3>Get ahead of the next meta.</h3><p>alpha is launching in private beta. Join the waitlist and get priority access as we open the platform to our first users.</p>
@@ -3285,7 +3287,7 @@ addEventListener('keydown',event=>{
   recordingHotkeyAction=null;$('#t4capturestatus').textContent=saved?'SAVED · '+action.label.toUpperCase():'SESSION ONLY · BROWSER STORAGE UNAVAILABLE';
   rk();$('#t4list').querySelector('[data-hk="'+action.id+'"]')?.focus();return;
  }
- if(event.code==='Escape'){event.preventDefault();event.stopPropagation();backInWindow();return}
+ if(event.code==='Escape'){event.preventDefault();event.stopPropagation();const closing=foc,wasOpen=!!A.W[closing]&&!A.W[closing].hidden;backInWindow();if(wasOpen)setTimeout(()=>{if(A.W[closing]?.hidden)window.AlphaUI?.restoreFocus?.(closing)},180);return}
  if(isTypingTarget(event.target)||event.repeat)return;
  const action=findHotkeyAction(event);if(!action)return;
  event.preventDefault();event.stopPropagation();runHotkeyAction(action.id);
@@ -3341,7 +3343,7 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
    button.setAttribute('aria-pressed',String(focused));
   });
  };
- window.AlphaUI={refresh};
+ window.AlphaUI={refresh,restoreFocus:id=>{const opener=openers.get(id);if(opener&&opener.isConnected)opener.focus({preventScroll:true});else apps.querySelector('[data-taskwindow="'+id+'"]')?.focus({preventScroll:true});refresh()}};
  setDialogSemantics();refresh();
  const openers=new Map();
  document.addEventListener('click',event=>{
@@ -3366,8 +3368,8 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
   win.classList.add('foc');refresh();
  },true);
  document.addEventListener('keydown',event=>{
-  if(event.key!=='Escape'||$('.hk-record.recording'))return;
-  const win=$$('.win:not([hidden])').filter(item=>item.classList.contains('tool')).sort((a,b)=>(Number(b.style.zIndex)||0)-(Number(a.style.zIndex)||0))[0];
+  if(event.key!=='Escape'||event.defaultPrevented||$('.hk-record.recording'))return;
+  const win=$$('.win:not([hidden])').sort((a,b)=>(Number(b.style.zIndex)||0)-(Number(a.style.zIndex)||0))[0];
   if(!win)return;
   event.preventDefault();event.stopImmediatePropagation();
   const opener=openers.get(win.id);window.AW.hide(win);
@@ -3380,6 +3382,10 @@ if(authClient){authClient.auth.getSession().then(async({data,error})=>{if(error)
   summary.setAttribute('aria-expanded',String(detail.open));
   detail.addEventListener('toggle',()=>summary.setAttribute('aria-expanded',String(detail.open)));
  });
+ const captureStatus=$('#t4capturestatus');
+ if(captureStatus)new MutationObserver(()=>{
+  captureStatus.classList.toggle('hk-status-visible',!!captureStatus.textContent.trim());
+ }).observe(captureStatus,{childList:true,characterData:true,subtree:true});
  const hotkeyList=$('#t4list');
  if(hotkeyList)hotkeyList.addEventListener('keydown',event=>{
   if(event.key!=='Enter')return;
